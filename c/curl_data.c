@@ -5,26 +5,25 @@
 #include "curl/curl.h"
 #include "curl_data.h"
 
-struct curl_data * curl_data_init(JNIEnv *env, jobject jobj)
+struct curl_data * curl_data_init(JNIEnv *env, jobject jobjL)
 {
+    jbyteArray jbufL = NULL;
     jobject jbufG = NULL;
     jobject jobjG = NULL;
-    jbyteArray jbuf = NULL;
     struct curl_data * cd = NULL;
     size_t size = CURL_MAX_WRITE_SIZE;
 
-    jbuf = JNI_CALL(env, NewByteArray, size);
-    jbufG = JNI_CALL(env, NewGlobalRef, jbuf);
+    jbufL = JNI_CALL(env, NewByteArray, size);
+    jbufG = JNI_CALL(env, NewGlobalRef, jbufL);
     if (!jbufG) {
-        log_error("JNI NewGlobalRef(jbuf) has failed");
+        log_error("JNI NewGlobalRef() has failed");
         goto err;
     }
+    JNI_CALL(env, DeleteLocalRef, jbufL);
 
-    JNI_CALL(env, DeleteLocalRef, jbuf);
-
-    jobjG = JNI_CALL(env, NewGlobalRef, jobj);
+    jobjG = JNI_CALL(env, NewGlobalRef, jobjL);
     if (!jobjG) {
-        log_error("JNI NewGlobalRef(jobj) has failed");
+        log_error("JNI NewGlobalRef() has failed");
         goto err;
     }
 
@@ -52,7 +51,7 @@ err:
 void curl_data_free(struct curl_data * cd)
 {
     if (cd == NULL) return;
-    JNI_CALL(cd->env, DeleteLocalRef, cd->jbuf);
+    JNI_CALL(cd->env, DeleteGlobalRef, cd->jbuf);
     JNI_CALL(cd->env, DeleteGlobalRef, cd->jobj);
     free(cd);
 }

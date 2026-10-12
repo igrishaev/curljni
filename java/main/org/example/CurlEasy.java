@@ -12,12 +12,14 @@ public class CurlEasy implements IResource {
         ERROR_SIZE = _get_CURL_ERROR_SIZE(); // TODO?
     }
 
+    private final long threadId;
     private final long ptr;
     private final Arena arena;
     private boolean isClosed;
     private final static int ERROR_SIZE;
 
-    private CurlEasy(long ptr, Arena arena, boolean isClosed) {
+    private CurlEasy(long threadId, long ptr, Arena arena, boolean isClosed) {
+        this.threadId = threadId;
         this.ptr = ptr;
         this.arena = arena;
         this.isClosed = isClosed;
@@ -25,12 +27,13 @@ public class CurlEasy implements IResource {
 
     native private static long _curl_easy_init();
     public static CurlEasy make() {
+        final long threadId = Thread.currentThread().getId();
         final long ptr = _curl_easy_init();
         if (ptr == Native.NULL) {
             throw Err.error("failed to initialize cURL");
         }
         Arena arena = Arena.create(Const.ARENA_SIZE);
-        return new CurlEasy(ptr, arena, false).setErrorBuffer();
+        return new CurlEasy(threadId, ptr, arena, false).setErrorBuffer();
     }
 
     @Override
@@ -72,9 +75,17 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_method(ptr, method));
     }
 
+    private CurlEasy checkTread() {
+        if (threadId == Thread.currentThread().getId()) {
+            return this;
+        } else {
+            throw Err.error("you cannot call this method from another thread");
+        }
+    }
+
     native private static long _perform(final long curlPtr);
     public CurlEasy perform() {
-        return checkClosed().checkCode(_perform(ptr));
+        return checkClosed().checkTread().checkCode(_perform(ptr));
     }
 
     native private static long _set_error_buffer(long curl, long bb);
