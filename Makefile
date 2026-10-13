@@ -1,7 +1,7 @@
 
 SHARED_LIB = resources/curltest.dylib
 
-SRC_PATH = java/main/org/example
+SRC_PATH = java/main/org/curljni
 C_PATH = c
 
 JAVAFILES = \
@@ -26,15 +26,15 @@ MODULES = \
 	$(C_PATH)/read_data.c \
 	$(C_PATH)/curl_data.c \
 	$(C_PATH)/write_data.c \
-	$(C_PATH)/org_example_Arena.c \
-	$(C_PATH)/org_example_ReadStream.c \
-	$(C_PATH)/org_example_WriteCallback.c \
-	$(C_PATH)/org_example_WriteStream.c \
-	$(C_PATH)/org_example_Accumulator.c \
-	$(C_PATH)/org_example_Headers.c \
-	$(C_PATH)/org_example_FILE.c \
-	$(C_PATH)/org_example_Native.c \
-	$(C_PATH)/org_example_CurlEasy.c \
+	$(C_PATH)/org_curljni_Arena.c \
+	$(C_PATH)/org_curljni_ReadStream.c \
+	$(C_PATH)/org_curljni_WriteCallback.c \
+	$(C_PATH)/org_curljni_WriteStream.c \
+	$(C_PATH)/org_curljni_Accumulator.c \
+	$(C_PATH)/org_curljni_Headers.c \
+	$(C_PATH)/org_curljni_FILE.c \
+	$(C_PATH)/org_curljni_Native.c \
+	$(C_PATH)/org_curljni_CurlEasy.c \
 
 OBJECTS = $(MODULES:.c=.o)
 
@@ -53,7 +53,7 @@ CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL
 
 LIBS = -lcurl
 
-all: clear headers sep resources/$(shell java java/main/org/example/OS.java) sync-resources
+all: clear headers sep resources/$(shell java java/main/org/curljni/OS.java) sync-resources
 
 CLASSES_DIR = target/classes
 

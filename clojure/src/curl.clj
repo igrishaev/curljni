@@ -1,7 +1,7 @@
 (ns curl
   (:import
    (java.util Map)
-   (org.example CurlEasy
+   (org.curljni CurlEasy
                 IResource
                 Headers
                 Dummy

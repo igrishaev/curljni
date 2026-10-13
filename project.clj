@@ -1,6 +1,6 @@
 (def MIN_JAVA_VERSION "13")
 
-(defproject server "0.1.0-SNAPSHOT"
+(defproject io.github.igrishaev/curlclj "0.1.0-SNAPSHOT"
 
   :description
   "FIXME: write description"
