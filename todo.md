@@ -10,9 +10,7 @@
 - common name patterns
 - make response
 - response
-- CurlEasy: check thread
 - release local refs
-- rename package
 - global init and close
 - pass debug parameter
 - shared lib extension
@@ -24,7 +22,6 @@
 - global error codes
 - auth option
 - proxy option
-- rename the package
 - delete unused files
 - multi support
 - reuse curl pointer
