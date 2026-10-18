@@ -1,5 +1,5 @@
 
-SHARED_LIB = resources/curltest.dylib
+SHARED_LIB = resources/$(shell java java/main/org/curljni/OS.java)
 
 SRC_PATH = java/main/org/curljni
 C_PATH = c
@@ -53,7 +53,7 @@ CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL
 
 LIBS = -lcurl
 
-all: clear headers sep resources/$(shell java java/main/org/curljni/OS.java) sync-resources
+all: clear headers sep $(SHARED_LIB) sync-resources
 
 CLASSES_DIR = target/classes
 
@@ -72,7 +72,7 @@ headers:
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $*.c
 
-%.lib: $(OBJECTS)
+$(SHARED_LIB): $(OBJECTS)
 	$(CC) $(CFLAGS) $(LIBS) -shared -o $@ $(OBJECTS)
 
 clear:

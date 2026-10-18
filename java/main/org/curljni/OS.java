@@ -25,17 +25,20 @@ public class OS {
     }
 
     public static String getLibName() {
-        OSFamily osFamily = getOSFamily();
-        String osArch = System.getProperty("os.arch");
-        return "curl_"
+        final OSFamily osFamily = getOSFamily();
+        final String osArch = System.getProperty("os.arch");
+        return "curljni_"
                 + (osFamily.toString() + "_" + osArch)
-                    .replace("-", "_")
-                    .replace(" ", "_")
-                    .toLowerCase()
-                + ".lib";
+                .replace("-", "_")
+                .replace(" ", "_")
+                .toLowerCase();
+    }
+
+    public static String getLibFileName() {
+        return System.mapLibraryName(getLibName());
     }
 
     public static void main(String... args) {
-        System.out.print(getLibName());
+        System.out.print(getLibFileName());
     }
 }

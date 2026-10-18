@@ -13,12 +13,13 @@ public class Native {
 
     private static String writeLibToTemp() throws IOException {
         ClassLoader cl = Native.class.getClassLoader();
-        String resourcePath = OS.getLibName();
+        String resourcePath = OS.getLibFileName();
         final URL url = cl.getResource(resourcePath);
         if (url == null) {
             throw Err.error("failed to load a resource: %s", resourcePath);
         }
-        final File tmp = File.createTempFile("temp_", ".lib");
+        final String libFileName = OS.getLibFileName();
+        final File tmp = File.createTempFile("temp_", libFileName);
         final Path path = tmp.toPath();
         System.out.println(path);
         tmp.deleteOnExit();
