@@ -15,16 +15,18 @@ public class Main {
              WriteStream ws = WriteStream.create(out)
         ) {
             c
-                    .resetOptions()
-                    .setUrl("https://habr.com")
-                    .setHeaders(hh)
-                    .setFollowLocation(3)
-                    .setAccumulator(acc)
-                    // .setWriteFile(wf)
-                    // .setWriteStream(ws)
-                    .setMethod(1);
-                    // .setVerbose(true);
-                    // .setPostData(new byte[] {1, 2, 3})
+                .resetOptions()
+                .setUrl("https://habr.com")
+                .setHeaders(hh)
+                .setFollowLocation(3)
+                .setAccumulator(acc)
+                // .setWriteFile(wf)
+                // .setWriteStream(ws)
+                .setMethod(1);
+                // .setVerbose(true);
+                // .setPostData(new byte[] {1, 2, 3})
+
+            System.out.println(Foo.getFoo(333));
 
             try {
                 c.perform();
