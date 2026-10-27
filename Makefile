@@ -54,7 +54,7 @@ CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL
 
 LIBS = -lcurl
 
-all: clear headers sep $(SHARED_LIB) sync-resources
+all: clear headers sep $(SHARED_LIB) sync-resources clear
 
 CLASSES_DIR = target/classes
 
@@ -80,10 +80,6 @@ clear:
 	rm -rf target
 	find . -name '*.log'     -delete
 	find . -name '*.o'       -delete
-	find . -name '*.dylib'   -delete
-	find . -name '*.lib'     -delete
-	find . -name '*.so'      -delete
-	find . -name '*.dll'     -delete
 	find . -name '*.class'   -delete
 	find . -name '.DS_Store' -delete
 

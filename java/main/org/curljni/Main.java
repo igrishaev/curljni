@@ -23,8 +23,8 @@ public class Main {
                 .setFollowLocation(3)
                 .setAccumulator(acc)
                 .setServerResponseTimeoutMs(5000)
-                // .setTimeoutMs(5)
-                // .setConnectTimeoutMs(5)
+                .setTimeoutMs(5000)
+                .setConnectTimeoutMs(5000)
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
                 .setMethod(1);

@@ -40,7 +40,3 @@ build/
 
 .idea
 *.o
-*.dylib
-*.lib
-*.html
-*.log
