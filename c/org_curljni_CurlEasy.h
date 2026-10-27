@@ -201,6 +201,38 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
 
 /*
  * Class:     org_curljni_CurlEasy
+ * Method:    _set_tcp_fast_open
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1fast_1open
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_tcp_keep_alive
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1keep_1alive
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_xoauth2_bearer
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1xoauth2_1bearer
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_custom_request
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1custom_1request
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
  * Method:    _set_accumulator
  * Signature: (JJ)J
  */

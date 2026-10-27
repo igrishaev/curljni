@@ -205,6 +205,30 @@ public class CurlEasy implements IResource {
     public CurlEasy setFailOnError(boolean value) {
         return checkClosed().checkCode(_set_fail_on_error(ptr, value ? 1L : 0L));
     }
+
+    // CURLOPT_TCP_FASTOPEN
+    native private static long _set_tcp_fast_open(long curl, long value);
+    public CurlEasy setTCPFastOpen(boolean value) {
+        return checkClosed().checkCode(_set_tcp_fast_open(ptr, value ? 1L : 0L));
+    }
+
+    // CURLOPT_TCP_KEEPALIVE
+    native private static long _set_tcp_keep_alive(long curl, long value);
+    public CurlEasy setTPCKeepAlive(boolean value) {
+        return checkClosed().checkCode(_set_tcp_keep_alive(ptr, value ? 1L : 0L));
+    }
+
+    // CURLOPT_XOAUTH2_BEARER
+    native private static long _set_xoauth2_bearer(long curl, String value);
+    public CurlEasy setXOauth2Bearer(String value) {
+        return checkClosed().checkCode(_set_xoauth2_bearer(ptr, value));
+    }
+
+    // CURLOPT_CUSTOMREQUEST
+    native private static long _set_custom_request(long curl, String method);
+    public CurlEasy setCustomRequest(String method) {
+        return checkClosed().checkCode(_set_custom_request(ptr, method));
+    }
     
     native private static long _set_accumulator(long curl, long acc);
     public CurlEasy setAccumulator(IResource acc) {

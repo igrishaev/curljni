@@ -29,7 +29,8 @@ public class Main {
                     .setPassword("secret")
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
-                .setMethod(1)
+                // .setMethod(1)
+                    .setCustomRequest("GET")
                 .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 

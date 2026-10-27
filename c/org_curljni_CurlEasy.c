@@ -480,25 +480,36 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
     return _curl_easy_set_long(jcurl, CURLOPT_FAILONERROR, jvalue);
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1fast_1open
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_TCP_FASTOPEN, jvalue);
+}
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1keep_1alive
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_TCP_KEEPALIVE, jvalue);
+}
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1xoauth2_1bearer
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_XOAUTH2_BEARER, jvalue);
+}
 
-
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1custom_1request
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_CUSTOMREQUEST, jvalue);
+}
 
 // error: proxy error, errno
 /* https://curl.se/libcurl/c/CURLINFO_HTTP_VERSION.html */
 /* headers */
 
-/* https://curl.se/libcurl/c/CURLOPT_CUSTOMREQUEST.html */
 /* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
 
-/* https://curl.se/libcurl/c/CURLOPT_TCP_FASTOPEN.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPALIVE.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPCNT.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPIDLE.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPINTVL.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_NODELAY.html */
-/* https://curl.se/libcurl/c/CURLOPT_XOAUTH2_BEARER.html */
 
 /* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
 /* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
@@ -507,7 +518,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIESESSION.html */
 /* https://curl.se/libcurl/c/CURLOPT_DEFAULT_PROTOCOL.html */
-/* https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPPROXYTUNNEL.html */
 /* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
 /* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
