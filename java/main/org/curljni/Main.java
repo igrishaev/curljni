@@ -25,10 +25,12 @@ public class Main {
                 .setServerResponseTimeoutMs(5000)
                 .setTimeoutMs(5000)
                 .setConnectTimeoutMs(5000)
+                    .setUsername("Ivan")
+                    .setPassword("secret")
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
-                .setMethod(1);
-                // .setVerbose(true);
+                .setMethod(1)
+                .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
             System.out.println(Foo.getFoo(333));

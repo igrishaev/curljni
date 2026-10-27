@@ -145,6 +145,38 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
 
 /*
  * Class:     org_curljni_CurlEasy
+ * Method:    _set_max_connects
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1connects
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_max_redirs
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1redirs
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_password
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1password
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_username
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
  * Method:    _set_accumulator
  * Signature: (JJ)J
  */

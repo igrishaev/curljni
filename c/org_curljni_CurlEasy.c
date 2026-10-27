@@ -445,29 +445,55 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
     return _curl_easy_set_long(jcurl, CURLOPT_CONNECTTIMEOUT_MS, jvalue);
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1connects
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_MAXCONNECTS, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1redirs
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_MAXREDIRS, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1password
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_PASSWORD, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_USERNAME, jvalue);
+}
+
+
 // error: proxy error, errno
 /* https://curl.se/libcurl/c/CURLINFO_HTTP_VERSION.html */
 /* headers */
 
-/* https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html */
-/* https://curl.se/libcurl/c/CURLOPT_MAXREDIRS.html */
-/* https://curl.se/libcurl/c/CURLOPT_PASSWORD.html */
-/* https://curl.se/libcurl/c/CURLOPT_USERNAME.html */
-
-/* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
 /* https://curl.se/libcurl/c/CURLOPT_BUFFERSIZE.html */
+/* https://curl.se/libcurl/c/CURLOPT_CUSTOMREQUEST.html */
+/* https://curl.se/libcurl/c/CURLOPT_NOBODY.html */
+/* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
+/* https://curl.se/libcurl/c/CURLOPT_FAILONERROR.html */
+
+/* https://curl.se/libcurl/c/CURLOPT_TCP_FASTOPEN.html */
+/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPALIVE.html */
+/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPCNT.html */
+/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPIDLE.html */
+/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPINTVL.html */
+/* https://curl.se/libcurl/c/CURLOPT_TCP_NODELAY.html */
+/* https://curl.se/libcurl/c/CURLOPT_XOAUTH2_BEARER.html */
+
+/* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
+/* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIESESSION.html */
-/* https://curl.se/libcurl/c/CURLOPT_CUSTOMREQUEST.html */
 /* https://curl.se/libcurl/c/CURLOPT_DEFAULT_PROTOCOL.html */
-/* https://curl.se/libcurl/c/CURLOPT_FAILONERROR.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPPROXYTUNNEL.html */
-/* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
 /* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
-/* https://curl.se/libcurl/c/CURLOPT_NOBODY.html */
 /* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYAUTH.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYPASSWORD.html */
@@ -475,13 +501,4 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
 /* https://curl.se/libcurl/c/CURLOPT_PROXYTYPE.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYUSERNAME.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYUSERPWD.html */
-/* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
 /* https://curl.se/libcurl/c/CURLOPT_SSLCERT.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_FASTOPEN.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPALIVE.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPCNT.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPIDLE.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPINTVL.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_NODELAY.html */
-/* https://curl.se/libcurl/c/CURLOPT_USERNAME.html */
-/* https://curl.se/libcurl/c/CURLOPT_XOAUTH2_BEARER.html */

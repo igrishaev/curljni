@@ -164,6 +164,31 @@ public class CurlEasy implements IResource {
         return setConnectTimeoutMs(duration.toMillis());
     }
 
+    // CURLOPT_MAXCONNECTS
+    native private static long _set_max_connects(long curl, long amount);
+    public CurlEasy setMaxConnects(long amount) {
+        return checkClosed().checkCode(_set_max_connects(ptr, amount));
+    }
+
+    // CURLOPT_MAXREDIRS
+    native private static long _set_max_redirs(long curl, long amount);
+    public CurlEasy setMaxRedirects(long amount) {
+        return checkClosed().checkCode(_set_max_redirs(ptr, amount));
+    }
+
+    // CURLOPT_PASSWORD
+    native private static long _set_password(long curl, String password);
+    public CurlEasy setPassword(String password) {
+        return checkClosed().checkCode(_set_password(ptr, password));
+    }
+
+    // CURLOPT_USERNAME
+    native private static long _set_username(long curl, String username);
+    public CurlEasy setUsername(String username) {
+        return checkClosed().checkCode(_set_username(ptr, username));
+    }
+
+
     native private static long _set_accumulator(long curl, long acc);
     public CurlEasy setAccumulator(IResource acc) {
         Objects.requireNonNull(acc, "the accumulator cannot be null");
