@@ -188,7 +188,24 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_username(ptr, username));
     }
 
+    // CURLOPT_BUFFERSIZE
+    native private static long _set_buffer_size(long curl, long size);
+    public CurlEasy setBufferSize(long size) {
+        return checkClosed().checkCode(_set_buffer_size(ptr, size));
+    }
 
+    // CURLOPT_NOBODY
+    native private static long _set_no_body(long curl, long value);
+    public CurlEasy setNoBody(boolean value) {
+        return checkClosed().checkCode(_set_no_body(ptr, value ? 1L : 0L));
+    }
+
+    // CURLOPT_FAILONERROR
+    native private static long _set_fail_on_error(long curl, long value);
+    public CurlEasy setFailOnError(boolean value) {
+        return checkClosed().checkCode(_set_fail_on_error(ptr, value ? 1L : 0L));
+    }
+    
     native private static long _set_accumulator(long curl, long acc);
     public CurlEasy setAccumulator(IResource acc) {
         Objects.requireNonNull(acc, "the accumulator cannot be null");

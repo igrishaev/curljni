@@ -465,16 +465,32 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
     return _curl_easy_set_string(env, jcurl, CURLOPT_USERNAME, jvalue);
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1buffer_1size
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_BUFFERSIZE, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1no_1body
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_NOBODY, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_FAILONERROR, jvalue);
+}
+
+
+
+
+
 
 // error: proxy error, errno
 /* https://curl.se/libcurl/c/CURLINFO_HTTP_VERSION.html */
 /* headers */
 
-/* https://curl.se/libcurl/c/CURLOPT_BUFFERSIZE.html */
 /* https://curl.se/libcurl/c/CURLOPT_CUSTOMREQUEST.html */
-/* https://curl.se/libcurl/c/CURLOPT_NOBODY.html */
 /* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
-/* https://curl.se/libcurl/c/CURLOPT_FAILONERROR.html */
 
 /* https://curl.se/libcurl/c/CURLOPT_TCP_FASTOPEN.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPALIVE.html */

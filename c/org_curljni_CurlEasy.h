@@ -177,6 +177,30 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
 
 /*
  * Class:     org_curljni_CurlEasy
+ * Method:    _set_buffer_size
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1buffer_1size
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_no_body
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1no_1body
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_fail_on_error
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
  * Method:    _set_accumulator
  * Signature: (JJ)J
  */
