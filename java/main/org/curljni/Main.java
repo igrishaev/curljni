@@ -17,9 +17,14 @@ public class Main {
             c
                 .resetOptions()
                 .setUrl("https://habr.com")
+                .setProxy(null)
                 .setHeaders(hh)
+                .setUserAgent(null)
                 .setFollowLocation(3)
                 .setAccumulator(acc)
+                .setServerResponseTimeoutMs(5000)
+                // .setTimeoutMs(5)
+                // .setConnectTimeoutMs(5)
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
                 .setMethod(1);

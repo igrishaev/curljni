@@ -105,6 +105,46 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1callback
 
 /*
  * Class:     org_curljni_CurlEasy
+ * Method:    _set_proxy
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1proxy
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_user_agent
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1user_1agent
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_server_response_timeout_ms
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1server_1response_1timeout_1ms
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_timeout_ms
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1timeout_1ms
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_connect_timeout_ms
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
  * Method:    _set_accumulator
  * Signature: (JJ)J
  */

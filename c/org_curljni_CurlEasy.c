@@ -12,6 +12,64 @@
 #include "curl/curl.h"
 
 
+static jlong _curl_easy_set_string(JNIEnv *env, jlong jcurl, CURLoption option, jstring jvalue) {
+
+    CURL *curl = (CURL *) jcurl;
+    CURLcode code;
+    char *value = NULL;
+
+    if (jvalue == NULL) {
+        code = curl_easy_setopt(curl, option, NULL);
+        goto cleanup;
+    }
+
+    value = JNI_CALL(env, GetStringUTFChars, jvalue, NULL);
+    if (!value) {
+        code = CURLE_OUT_OF_MEMORY;
+        goto cleanup;
+    }
+
+    code = curl_easy_setopt(curl, option, value);
+
+cleanup:
+    if (value) JNI_CALL(env, ReleaseStringUTFChars, jvalue, value);
+    return code;
+}
+
+
+static jlong _curl_easy_set_long(jlong jcurl, CURLoption option, jlong jvalue) {
+    CURL *curl = (CURL *) jcurl;
+    return curl_easy_setopt(curl, option, jvalue);
+}
+
+static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO info) {
+    CURL *curl = (CURL *) jcurl;
+    char *bb = (char *) jbb;
+    char *ptr;
+    CURLcode code = curl_easy_getinfo(curl, info, &ptr);
+    put_long(bb, code);
+    if (code == CURLE_OK) {
+        return JNI_CALL(env, NewStringUTF, ptr);
+    } else {
+        return NULL;
+    }
+}
+
+static CURLcode _get_info_as_long(jlong jcurl, jlong jbb, CURLINFO info) {
+    CURL *curl = (CURL *) jcurl;
+    char *bb = (char *) jbb;
+    long value;
+    CURLcode code = curl_easy_getinfo(curl, info, &value);
+    put_long(bb, value);
+    return code;
+}
+
+
+//
+// JNI
+//
+
+
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1init
   (JNIEnv *env, jclass jcls) {
     return (jlong) curl_easy_init();
@@ -25,43 +83,13 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1cleanup
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1url
   (JNIEnv *env, jclass jcls, jlong jcurl, jstring jurl) {
-
-    CURLcode code;
-    char *url;
-    CURL *curl = (CURL *) jcurl;
-
-    // TODO: check in java
-    if (!jurl) {
-        log_debug("HTTP URL is NULL, setting NULL");
-        code = curl_easy_setopt(curl, CURLOPT_URL, NULL);
-        if (code != CURLE_OK) {
-            log_error("curl_easy_setopt(CURLOPT_URL, NULL) has failed");
-        }
-        goto exit;
-    }
-
-    url = JNI_CALL(env, GetStringUTFChars, jurl, NULL);
-    if (!url) {
-        code = CURLE_OUT_OF_MEMORY;
-        log_error("JNI GetStringUTFChars() has failed");
-        goto exit;
-    }
-
-    code = curl_easy_setopt(curl, CURLOPT_URL, url);
-    JNI_CALL(env, ReleaseStringUTFChars, jurl, url);
-    if (code != CURLE_OK) {
-        log_error("curl_easy_setopt() has failed, url: %s", url);
-        goto exit;
-    }
-
-exit:
-    return code;
+    return _curl_easy_set_string(env, jcurl, CURLOPT_URL, jurl);
 }
-
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jmethod) {
 
+    // TODO
     CURLcode code;
     CURL *curl = (CURL *) jcurl;
 
@@ -136,6 +164,7 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
     return CURLE_OK;
 }
 
+
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1set_1headers
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jheaders) {
     CURL *curl = (CURL *) jcurl;
@@ -203,8 +232,7 @@ exit:
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1verbose
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    CURL *curl = (CURL *) jcurl;
-    return curl_easy_setopt(curl, CURLOPT_VERBOSE, jvalue);
+    return _curl_easy_set_long(jcurl, CURLOPT_VERBOSE, jvalue);
 }
 
 static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
@@ -277,18 +305,19 @@ exit:
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1follow_1location
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    CURL *curl = (CURL *) jcurl;
-    return curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, jvalue);
+    return _curl_easy_set_long(jcurl, CURLOPT_FOLLOWLOCATION, jvalue);
 }
 
 
-static CURLcode _get_info_as_long(jlong jcurl, jlong jbb, CURLINFO info) {
-    CURL *curl = (CURL *) jcurl;
-    char *bb = (char *) jbb;
-    long value;
-    CURLcode code = curl_easy_getinfo(curl, info, &value);
-    put_long(bb, value);
-    return code;
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1proxy
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jproxy) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_PROXY, jproxy);
+}
+
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1user_1agent
+  (JNIEnv *env, jclass jcls, jlong jcurl, jstring juser_agent) {
+    return _curl_easy_set_string(env, jcurl, CURLOPT_USERAGENT, juser_agent);
 }
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1response_1code
@@ -361,19 +390,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1os_1errno
     return _get_info_as_long(jcurl, jbb, CURLINFO_OS_ERRNO);
 }
 
-static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO info) {
-    CURL *curl = (CURL *) jcurl;
-    char *bb = (char *) jbb;
-    char *ptr;
-    CURLcode code = curl_easy_getinfo(curl, info, &ptr);
-    put_long(bb, code);
-    if (code == CURLE_OK) {
-        return JNI_CALL(env, NewStringUTF, ptr);
-    } else {
-        return NULL;
-    }
-}
-
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1primary_1ip
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
     return _get_info_as_string(env, jcurl, jbb, CURLINFO_PRIMARY_IP);
@@ -414,15 +430,32 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
     return JNI_CALL(env, NewStringUTF, h->value);
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1server_1response_1timeout_1ms
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_SERVER_RESPONSE_TIMEOUT_MS, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1timeout_1ms
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_TIMEOUT_MS, jvalue);
+}
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
+    return _curl_easy_set_long(jcurl, CURLOPT_CONNECTTIMEOUT_MS, jvalue);
+}
 
 // error: proxy error, errno
 /* https://curl.se/libcurl/c/CURLINFO_HTTP_VERSION.html */
 /* headers */
 
+/* https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html */
+/* https://curl.se/libcurl/c/CURLOPT_MAXREDIRS.html */
+/* https://curl.se/libcurl/c/CURLOPT_PASSWORD.html */
+/* https://curl.se/libcurl/c/CURLOPT_USERNAME.html */
 
 /* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
 /* https://curl.se/libcurl/c/CURLOPT_BUFFERSIZE.html */
-/* https://curl.se/libcurl/c/CURLOPT_CONNECTTIMEOUT_MS.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
@@ -432,14 +465,9 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 /* https://curl.se/libcurl/c/CURLOPT_FAILONERROR.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPPROXYTUNNEL.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXY.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
 /* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
-/* https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html */
-/* https://curl.se/libcurl/c/CURLOPT_MAXREDIRS.html */
 /* https://curl.se/libcurl/c/CURLOPT_NOBODY.html */
-/* https://curl.se/libcurl/c/CURLOPT_PASSWORD.html */
-/* https://curl.se/libcurl/c/CURLOPT_USERNAME.html */
 /* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYAUTH.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYPASSWORD.html */
@@ -448,7 +476,6 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 /* https://curl.se/libcurl/c/CURLOPT_PROXYUSERNAME.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYUSERPWD.html */
 /* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
-/* https://curl.se/libcurl/c/CURLOPT_SERVER_RESPONSE_TIMEOUT_MS.html */
 /* https://curl.se/libcurl/c/CURLOPT_SSLCERT.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_FASTOPEN.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPALIVE.html */
@@ -456,8 +483,5 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPIDLE.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPINTVL.html */
 /* https://curl.se/libcurl/c/CURLOPT_TCP_NODELAY.html */
-/* https://curl.se/libcurl/c/CURLOPT_USERAGENT.html */
-/* https://curl.se/libcurl/c/CURLOPT_TIMEOUT_MS.html */
-/* https://curl.se/libcurl/c/CURLOPT_USERAGENT.html */
 /* https://curl.se/libcurl/c/CURLOPT_USERNAME.html */
 /* https://curl.se/libcurl/c/CURLOPT_XOAUTH2_BEARER.html */

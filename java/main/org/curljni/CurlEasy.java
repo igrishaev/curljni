@@ -1,6 +1,7 @@
 package org.curljni;
 
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -124,6 +125,43 @@ public class CurlEasy implements IResource {
     public CurlEasy setWriteCallback(IResource callback) {
         Objects.requireNonNull(callback, "write callback cannot be null");
         return checkClosed().checkCode(_set_write_callback(ptr, callback.ptr()));
+    }
+
+    native private static long _set_proxy(long curl, String proxy);
+    public CurlEasy setProxy(String proxy) {
+        return checkClosed().checkCode(_set_proxy(ptr, proxy));
+    }
+
+    native private static long _set_user_agent(long curl, String userAgent);
+    public CurlEasy setUserAgent(String userAgent) {
+        return checkClosed().checkCode(_set_user_agent(ptr, userAgent));
+    }
+
+    // CURLOPT_SERVER_RESPONSE_TIMEOUT_MS
+    native private static long _set_server_response_timeout_ms(long curl, long ms);
+    public CurlEasy setServerResponseTimeoutMs(long ms) {
+        return checkClosed().checkCode(_set_server_response_timeout_ms(ptr, ms));
+    }
+    public CurlEasy setServerResponseTimeout(Duration duration) {
+        return setServerResponseTimeoutMs(duration.toMillis());
+    }
+
+    // CURLOPT_TIMEOUT_MS
+    native private static long _set_timeout_ms(long curl, long ms);
+    public CurlEasy setTimeoutMs(long ms) {
+        return checkClosed().checkCode(_set_timeout_ms(ptr, ms));
+    }
+    public CurlEasy setTimeoutMs(Duration duration) {
+        return setTimeoutMs(duration.toMillis());
+    }
+
+    // CURLOPT_CONNECTTIMEOUT_MS
+    native private static long _set_connect_timeout_ms(long curl, long ms);
+    public CurlEasy setConnectTimeoutMs(long ms) {
+        return checkClosed().checkCode(_set_connect_timeout_ms(ptr, ms));
+    }
+    public CurlEasy setConnectTimeoutMs(Duration duration) {
+        return setConnectTimeoutMs(duration.toMillis());
     }
 
     native private static long _set_accumulator(long curl, long acc);
