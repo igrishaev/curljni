@@ -135,13 +135,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1file
 }
 
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1stream
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jstream) {
-    CURL *curl = (CURL *) jcurl;
-    return set_write_params(curl, (void *) jstream, write_callback_stream);
-}
-
-
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1callback
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jptr) {
     CURL *curl = (CURL *) jcurl;

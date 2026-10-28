@@ -122,10 +122,12 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_write_file(ptr, file.ptr()));
     }
 
-    native private static long _set_write_stream(long curl, long stream);
+    // TODO
     public CurlEasy setWriteStream(IResource stream) {
         Objects.requireNonNull(stream, "the stream object cannot be null");
-        return checkClosed().checkCode(_set_write_stream(ptr, stream.ptr()));
+        setOptionLong(CURLOPT.WRITEDATA, stream.ptr());
+        setOptionLong(CURLOPT.WRITEFUNCTION, FN.write_callback_stream);
+        return this;
     }
 
     native private static long _set_write_callback(long curl, long callback);

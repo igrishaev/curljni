@@ -6,6 +6,7 @@ C_PATH = c
 
 JAVAFILES = \
 	$(SRC_PATH)/CURLINFO.java \
+	$(SRC_PATH)/FN.java \
 	$(SRC_PATH)/CURLOPT.java \
 	$(SRC_PATH)/Arena.java \
 	$(SRC_PATH)/Const.java \
@@ -29,6 +30,7 @@ MODULES = \
 	$(C_PATH)/read_data.c \
 	$(C_PATH)/curl_data.c \
 	$(C_PATH)/write_data.c \
+	$(C_PATH)/org_curljni_FN.c \
 	$(C_PATH)/org_curljni_CURLINFO.c \
 	$(C_PATH)/org_curljni_CURLOPT.c \
 	$(C_PATH)/org_curljni_Arena.c \
@@ -54,7 +56,7 @@ JAVA_INC = \
 CURL_HOME = /opt/homebrew/opt/curl
 
 CC = gcc
-CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL_HOME}/lib # -DDEBUG
+CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL_HOME}/lib -DDEBUG
 
 LIBS = -lcurl
 

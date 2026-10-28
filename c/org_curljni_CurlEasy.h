@@ -81,14 +81,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1file
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_write_stream
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1stream
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _set_write_callback
  * Signature: (JJ)J
  */

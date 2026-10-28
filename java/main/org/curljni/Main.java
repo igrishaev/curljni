@@ -21,7 +21,7 @@ public class Main {
                 .setHeaders(hh)
                 .setUserAgent(null)
                 .setFollowLocation(3)
-                .setAccumulator(acc)
+                // .setAccumulator(acc)
                 .setServerResponseTimeoutMs(5000)
                 .setTimeoutMs(5000)
                     .setBufferSize(9999)
@@ -29,12 +29,13 @@ public class Main {
                     .setUsername("Ivan")
                     .setPassword("secret")
                 // .setWriteFile(wf)
-                // .setWriteStream(ws)
+                .setWriteStream(ws)
                 .setMethod(1);
                 // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
-            System.out.println(Foo.getFoo(333));
+            // System.out.println(Foo.getFoo(333));
+            // System.out.println(out.toString().substring(0, 5));
 
             try {
                 c.perform();
