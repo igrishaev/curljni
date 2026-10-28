@@ -89,6 +89,11 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_option_string(ptr, option, value));
     }
 
+    native private static long _perform(final long curlPtr);
+    public CurlEasy perform() {
+        return checkClosed().checkTread().checkCode(_perform(ptr));
+    }
+
     public CurlEasy setUrl(final String url) {
         return setOptionString(CURLOPT.URL, url);
     }
@@ -97,11 +102,6 @@ public class CurlEasy implements IResource {
     native private static long _set_method(final long curlPtr, final long method);
     public CurlEasy setMethod(final long method) {
         return checkClosed().checkCode(_set_method(ptr, method));
-    }
-
-    native private static long _perform(final long curlPtr);
-    public CurlEasy perform() {
-        return checkClosed().checkTread().checkCode(_perform(ptr));
     }
 
     private CurlEasy setErrorBuffer() {
@@ -143,6 +143,26 @@ public class CurlEasy implements IResource {
 
     public CurlEasy setProxy(String proxy) {
         return setOptionString(CURLOPT.PROXY, proxy);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_USERPWD.html
+    public CurlEasy setUserPwd(String userPwd) {
+        return setOptionString(CURLOPT.USERPWD, userPwd);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_PROXYUSERPWD.html
+    public CurlEasy setProxyUserPwd(String proxyUserPwd) {
+        return setOptionString(CURLOPT.PROXYUSERPWD, proxyUserPwd);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_PROXYPASSWORD.html
+    public CurlEasy setProxyPassword(String password) {
+        return setOptionString(CURLOPT.PROXYPASSWORD, password);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_PROXYUSERNAME.html
+    public CurlEasy setProxyUsername(String username) {
+        return setOptionString(CURLOPT.PROXYUSERNAME, username);
     }
 
     public CurlEasy setUserAgent(String userAgent) {
@@ -218,6 +238,26 @@ public class CurlEasy implements IResource {
         return setOptionLong(CURLOPT.TCP_KEEPALIVE, value ? 1 : 0);
     }
 
+    // CURLOPT_TCP_KEEPCNT
+    public CurlEasy setTCPKeepCNT(long cnt) {
+        return setOptionLong(CURLOPT.TCP_KEEPCNT, cnt);
+    }
+
+    // CURLOPT_TCP_KEEPIDLE
+    public CurlEasy setTPCKeepIdle(long delay) {
+        return setOptionLong(CURLOPT.TCP_KEEPIDLE, delay);
+    }
+
+    // CURLOPT_TCP_KEEPINTVL
+    public CurlEasy setTCPKeepIntvl(long value) {
+        return setOptionLong(CURLOPT.TCP_KEEPINTVL, value);
+    }
+
+    // CURLOPT_TCP_NODELAY
+    public CurlEasy setTPCNoDelay(boolean flag) {
+        return setOptionLong(CURLOPT.TCP_NODELAY, flag ? 1 : 0);
+    }
+
     // CURLOPT_XOAUTH2_BEARER
     public CurlEasy setXOauth2Bearer(String value) {
         return setOptionString(CURLOPT.XOAUTH2_BEARER, value);
@@ -226,6 +266,11 @@ public class CurlEasy implements IResource {
     // CURLOPT_CUSTOMREQUEST
     public CurlEasy setCustomRequest(String method) {
         return setOptionString(CURLOPT.CUSTOMREQUEST, method);
+    }
+
+    // CURLOPT_COOKIE
+    public CurlEasy setCookie(String cookie) {
+        return setOptionString(CURLOPT.COOKIE, cookie);
     }
 
     public CurlEasy setAccumulator(IResource acc) {
@@ -261,14 +306,25 @@ public class CurlEasy implements IResource {
         return setOptionLong(CURLOPT.FOLLOWLOCATION, value);
     }
 
+    // https://curl.se/libcurl/c/CURLOPT_SSLCERT.html
+    public CurlEasy setSSLCert(String path) {
+        return setOptionString(CURLOPT.SSLCERT, path);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_SSLKEY.html
+    public CurlEasy setSSLKey(String path){
+        return setOptionString(CURLOPT.SSLKEY, path);
+    }
+
+    // https://curl.se/libcurl/c/CURLOPT_KEYPASSWD.html
+    public CurlEasy setKeyPasswd(String passwd){
+        return setOptionString(CURLOPT.KEYPASSWD, passwd);
+    }
+
     native private static long _set_read_stream(long curl, long value);
     public CurlEasy setReadStream(ReadStream stream) {
         Objects.requireNonNull(stream, "read stream cannot be null");
         return checkClosed().checkCode(_set_read_stream(ptr, stream.ptr()));
-    }
-
-    private long curlLong() {
-        return arena.orderJNI().getLong(0);
     }
 
     native private static long _get_info_as_long(long curl, int info, long bb);
@@ -336,6 +392,10 @@ public class CurlEasy implements IResource {
 
     public long getPrimaryPort() {
         return getInfoLong(CURLINFO.PRIMARY_PORT);
+    }
+
+    public long getHTTPVersion() {
+        return getInfoLong(CURLINFO.HTTP_VERSION);
     }
 
     public long getOsErrno() {

@@ -289,30 +289,20 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 
 
 // error: proxy error, errno
-/* https://curl.se/libcurl/c/CURLINFO_HTTP_VERSION.html */
 /* headers */
 
-/* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
-
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPCNT.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPIDLE.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_KEEPINTVL.html */
-/* https://curl.se/libcurl/c/CURLOPT_TCP_NODELAY.html */
-
-/* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
-/* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
-/* https://curl.se/libcurl/c/CURLOPT_COOKIE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIESESSION.html */
+
+/* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
+/* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
+/* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
 /* https://curl.se/libcurl/c/CURLOPT_DEFAULT_PROTOCOL.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTPPROXYTUNNEL.html */
 /* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
 /* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYAUTH.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYPASSWORD.html */
+
 /* https://curl.se/libcurl/c/CURLOPT_PROXYPORT.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYTYPE.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYUSERNAME.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYUSERPWD.html */
-/* https://curl.se/libcurl/c/CURLOPT_SSLCERT.html */

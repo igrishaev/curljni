@@ -49,19 +49,19 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_method
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _perform
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1perform
   (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_method
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
+  (JNIEnv *, jclass, jlong, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy
