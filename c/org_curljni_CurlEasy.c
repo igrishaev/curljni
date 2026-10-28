@@ -341,35 +341,20 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
     return code;
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1num_1connects
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_NUM_CONNECTS);
-}
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1redirect_1count
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_REDIRECT_COUNT);
-}
+/* static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO info) { */
+/*     CURL *curl = (CURL *) jcurl; */
+/*     char *bb = (char *) jbb; */
+/*     char *ptr; */
+/*     CURLcode code = curl_easy_getinfo(curl, info, &ptr); */
+/*     put_long(bb, code); */
+/*     if (code == CURLE_OK) { */
+/*         return JNI_CALL(env, NewStringUTF, ptr); */
+/*     } else { */
+/*         return NULL; */
+/*     } */
+/* } */
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1local_1port
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_LOCAL_PORT);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1proxy_1error
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_PROXY_ERROR);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1primary_1port
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_PRIMARY_PORT);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1os_1errno
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_long(jcurl, jbb, CURLINFO_OS_ERRNO);
-}
 
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1primary_1ip
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {

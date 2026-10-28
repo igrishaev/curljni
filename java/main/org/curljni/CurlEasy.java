@@ -224,7 +224,7 @@ public class CurlEasy implements IResource {
     public CurlEasy setCustomRequest(String method) {
         return checkClosed().checkCode(_set_custom_request(ptr, method));
     }
-    
+
     native private static long _set_accumulator(long curl, long acc);
     public CurlEasy setAccumulator(IResource acc) {
         Objects.requireNonNull(acc, "the accumulator cannot be null");
@@ -308,42 +308,30 @@ public class CurlEasy implements IResource {
         return getInfoLong(CURLINFO.USED_PROXY) != 0;
     }
 
-    native private static long _get_num_connects(long curl, long bb);
     public long getNumConnects() {
-        checkClosed().checkCode(_get_num_connects(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.NUM_CONNECTS);
     }
 
-    native private static long _get_redirect_count(long curl, long bb);
     public long getRedirectCount() {
-        checkClosed().checkCode(_get_redirect_count(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.REDIRECT_COUNT);
     }
 
-    native private static long _get_local_port(long curl, long bb);
     public long getLocalPort() {
-        checkClosed().checkCode(_get_local_port(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.LOCAL_PORT);
     }
 
-    native private static long _get_proxy_error(long curl, long bb);
     public long getProxyError() {
-        checkClosed().checkCode(_get_proxy_error(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.PROXY_ERROR);
     }
 
-    native private static long _get_primary_port(long curl, long bb);
     public long getPrimaryPort() {
-        checkClosed().checkCode(_get_primary_port(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.PRIMARY_PORT);
     }
 
-    native private static long _get_os_errno(long curl, long bb);
     public long getOsErrno() {
-        checkClosed().checkCode(_get_os_errno(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.OS_ERRNO);
     }
-    
+
     native private static String _get_primary_ip(long curl, long bb);
     public String getPrimaryIP() {
         final String result = _get_primary_ip(ptr, arena.ptr());
