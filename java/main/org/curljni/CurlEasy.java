@@ -66,9 +66,18 @@ public class CurlEasy implements IResource {
 
     native private static int _get_CURL_ERROR_SIZE();
 
-    native private static long _set_url(final long curlPtr, final String url);
+    native private static long _set_option_long(long curl, int option, long value);
+    public CurlEasy setOptionLong(int option, long value) {
+        return checkClosed().checkCode(_set_option_long(ptr, option, value));
+    }
+
+    native private static long _set_option_string(long curl, int option, String value);
+    public CurlEasy setOptionString(int option, String value) {
+        return checkClosed().checkCode(_set_option_string(ptr, option, value));
+    }
+
     public CurlEasy setUrl(final String url) {
-        return checkClosed().checkCode(_set_url(ptr, url));
+        return setOptionString(CURLOPT.URL, url);
     }
 
     native private static long _set_method(final long curlPtr, final long method);
@@ -89,9 +98,8 @@ public class CurlEasy implements IResource {
         return checkClosed().checkTread().checkCode(_perform(ptr));
     }
 
-    native private static long _set_error_buffer(long curl, long bb);
     private CurlEasy setErrorBuffer() {
-        return checkClosed().checkCode(_set_error_buffer(ptr, arena.ptr()));
+        return setOptionLong(CURLOPT.ERRORBUFFER, arena.ptr());
     }
 
     native private static long _curl_easy_reset(long curlPtr);
@@ -103,10 +111,9 @@ public class CurlEasy implements IResource {
 
     native private static String _curl_easy_strerror(long curlCode);
 
-    native private static long _curl_set_headers(long curl, long headers);
     public CurlEasy setHeaders(IResource headers) {
         final long hhPtr = (headers == null) ? Native.NULL : headers.ptr();
-        return checkClosed().checkCode(_curl_set_headers(ptr, hhPtr));
+        return setOptionLong(CURLOPT.HTTPHEADER, hhPtr);
     }
 
     native private static long _set_write_file(long curl, long file);
@@ -127,80 +134,71 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_write_callback(ptr, callback.ptr()));
     }
 
-    native private static long _set_proxy(long curl, String proxy);
     public CurlEasy setProxy(String proxy) {
-        return checkClosed().checkCode(_set_proxy(ptr, proxy));
+        return setOptionString(CURLOPT.PROXY, proxy);
     }
 
-    native private static long _set_user_agent(long curl, String userAgent);
     public CurlEasy setUserAgent(String userAgent) {
-        return checkClosed().checkCode(_set_user_agent(ptr, userAgent));
+        return setOptionString(CURLOPT.USERAGENT, userAgent);
     }
 
-    // CURLOPT_SERVER_RESPONSE_TIMEOUT_MS
+    // SERVER_RESPONSE_TIMEOUT_MS
     public CurlEasy setServerResponseTimeoutMs(long ms) {
-        return setOptionLong(CURL.CURLOPT_SERVER_RESPONSE_TIMEOUT_MS, ms);
+        return setOptionLong(CURLOPT.SERVER_RESPONSE_TIMEOUT_MS, ms);
     }
     public CurlEasy setServerResponseTimeout(Duration duration) {
         return setServerResponseTimeoutMs(duration.toMillis());
     }
 
-    // CURLOPT_TIMEOUT_MS
+    // TIMEOUT_MS
     public CurlEasy setTimeoutMs(long ms) {
-        return setOptionLong(CURL.CURLOPT_TIMEOUT_MS, ms);
+        return setOptionLong(CURLOPT.TIMEOUT_MS, ms);
     }
     public CurlEasy setTimeoutMs(Duration duration) {
         return setTimeoutMs(duration.toMillis());
     }
 
-    // CURLOPT_CONNECTTIMEOUT_MS
+    // CONNECTTIMEOUT_MS
     public CurlEasy setConnectTimeoutMs(long ms) {
-        return setOptionLong(CURL.CURLOPT_CONNECTTIMEOUT_MS, ms);
+        return setOptionLong(CURLOPT.CONNECTTIMEOUT_MS, ms);
     }
     public CurlEasy setConnectTimeoutMs(Duration duration) {
         return setConnectTimeoutMs(duration.toMillis());
     }
 
-    // CURLOPT_MAXCONNECTS
+    // MAXCONNECTS
     public CurlEasy setMaxConnects(long amount) {
-        return setOptionLong(CURL.CURLOPT_MAXCONNECTS, amount);
+        return setOptionLong(CURLOPT.MAXCONNECTS, amount);
     }
 
-    // CURLOPT_MAXREDIRS
+    // MAXREDIRS
     public CurlEasy setMaxRedirects(long amount) {
-        return setOptionLong(CURL.CURLOPT_MAXREDIRS, amount);
+        return setOptionLong(CURLOPT.MAXREDIRS, amount);
     }
 
-    // CURLOPT_PASSWORD
-    native private static long _set_password(long curl, String password);
+    // PASSWORD
     public CurlEasy setPassword(String password) {
-        return checkClosed().checkCode(_set_password(ptr, password));
+        return setOptionString(CURLOPT.PASSWORD, password);
     }
 
-    // CURLOPT_USERNAME
-    native private static long _set_username(long curl, String username);
+    // USERNAME
     public CurlEasy setUsername(String username) {
-        return checkClosed().checkCode(_set_username(ptr, username));
+        return setOptionString(CURLOPT.USERNAME, username);
     }
 
-    native private static long _set_option_long(long curl, int option, long value);
-    public CurlEasy setOptionLong(int option, long value) {
-        return checkClosed().checkCode(_set_option_long(ptr, option, value));
-    }
-
-    // CURLOPT_BUFFERSIZE
+    // BUFFERSIZE
     public CurlEasy setBufferSize(long size) {
-        return setOptionLong(CURL.CURLOPT_BUFFERSIZE, size);
+        return setOptionLong(CURLOPT.BUFFERSIZE, size);
     }
 
-    // CURLOPT_NOBODY
+    // NOBODY
     public CurlEasy setNoBody(boolean value) {
-        return setOptionLong(CURL.CURLOPT_NOBODY, value ? 1L : 0L);
+        return setOptionLong(CURLOPT.NOBODY, value ? 1L : 0L);
     }
 
-    // CURLOPT_FAILONERROR
+    // FAILONERROR
     public CurlEasy setFailOnError(boolean value) {
-        return setOptionLong(CURL.CURLOPT_FAILONERROR, value ? 1L : 0L);
+        return setOptionLong(CURLOPT.FAILONERROR, value ? 1L : 0L);
     }
 
     // CURLOPT_TCP_FASTOPEN
@@ -247,10 +245,8 @@ public class CurlEasy implements IResource {
         return setPostData(string, Charset.forName(charset)); // TODO fallback?
     }
 
-    native private static long _set_verbose(long curl, long value);
     public CurlEasy setVerbose(boolean flag) {
-        long value = flag ? 1 : 0;
-        return checkClosed().checkCode(_set_verbose(ptr, value));
+        return setOptionLong(CURLOPT.VERBOSE, flag ? 1 : 0);
     }
 
     native private static long _set_read_file(long curl, long file);
@@ -259,9 +255,8 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_read_file(ptr, file.ptr()));
     }
 
-    native private static long _set_follow_location(long curl, long value);
     public CurlEasy setFollowLocation(long value) {
-        return checkClosed().checkCode(_set_follow_location(ptr, value));
+        return setOptionLong(CURLOPT.FOLLOWLOCATION, value);
     }
 
     native private static long _set_read_stream(long curl, long value);
@@ -272,6 +267,11 @@ public class CurlEasy implements IResource {
 
     private long curlLong() {
         return arena.orderJNI().getLong(0);
+    }
+
+    native private static long _get_info_as_long(long curl, int info, long bb);
+    public long getInfoLong(int info) {
+        return checkClosed()._get_info_as_long(ptr, info, arena.ptr);
     }
 
     native private static long _get_response_code(long curl, long bb);

@@ -2,7 +2,7 @@
 #include "macros.h"
 #include "curl/curl.h"
 
-JNIEXPORT jintArray JNICALL Java_org_curljni_CURL__1get_1values
+JNIEXPORT jintArray JNICALL Java_org_curljni_CURLOPT__1get_1values
   (JNIEnv *env, jclass jcls) {
 
     CURLoption options[] = {

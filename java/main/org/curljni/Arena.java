@@ -9,7 +9,7 @@ public class Arena {
 
     final int bbLen;
     final private ByteBuffer bb;
-    final private long ptr;
+    final protected long ptr;
     final private ByteOrder BO_JVM;
     final private ByteOrder BO_JNI;
     final private long NULL;

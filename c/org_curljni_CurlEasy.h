@@ -25,11 +25,19 @@ JNIEXPORT jint JNICALL Java_org_curljni_CurlEasy__1get_1CURL_1ERROR_1SIZE
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_url
- * Signature: (JLjava/lang/String;)J
+ * Method:    _set_option_long
+ * Signature: (JIJ)J
  */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1url
-  (JNIEnv *, jclass, jlong, jstring);
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
+  (JNIEnv *, jclass, jlong, jint, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _set_option_string
+ * Signature: (JILjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
+  (JNIEnv *, jclass, jlong, jint, jstring);
 
 /*
  * Class:     org_curljni_CurlEasy
@@ -49,14 +57,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1perform
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_error_buffer
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1error_1buffer
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _curl_easy_reset
  * Signature: (J)J
  */
@@ -70,14 +70,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
  */
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
   (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _curl_set_headers
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1set_1headers
-  (JNIEnv *, jclass, jlong, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy
@@ -102,46 +94,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1stream
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1callback
   (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_proxy
- * Signature: (JLjava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1proxy
-  (JNIEnv *, jclass, jlong, jstring);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_user_agent
- * Signature: (JLjava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1user_1agent
-  (JNIEnv *, jclass, jlong, jstring);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_password
- * Signature: (JLjava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1password
-  (JNIEnv *, jclass, jlong, jstring);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_username
- * Signature: (JLjava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
-  (JNIEnv *, jclass, jlong, jstring);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_option_long
- * Signature: (JIJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
-  (JNIEnv *, jclass, jlong, jint, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy
@@ -193,26 +145,10 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_verbose
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1verbose
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _set_read_file
  * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1file
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_follow_location
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1follow_1location
   (JNIEnv *, jclass, jlong, jlong);
 
 /*
@@ -222,6 +158,14 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1follow_1location
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1stream
   (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
+ * Method:    _get_info_as_long
+ * Signature: (JIJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
+  (JNIEnv *, jclass, jlong, jint, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy

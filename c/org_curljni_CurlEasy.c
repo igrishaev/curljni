@@ -55,6 +55,7 @@ static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO
     }
 }
 
+// TODO
 static CURLcode _get_info_as_long(jlong jcurl, jlong jbb, CURLINFO info) {
     CURL *curl = (CURL *) jcurl;
     char *bb = (char *) jbb;
@@ -79,11 +80,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1cleanup
   (JNIEnv *env, jclass jcls, jlong jcurl) {
     curl_easy_cleanup((CURL *) jcurl);
     return 0;
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1url
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jurl) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_URL, jurl);
 }
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
@@ -129,19 +125,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1perform
 }
 
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1error_1buffer
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    CURL *curl = (CURL *) jcurl;
-    char *ptr = (char *) jbb;
-    log_debug("setting error buffer, curl: %lu, ptr: %lu", curl, ptr);
-    CURLcode code = curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ptr);
-    if (code != CURLE_OK) {
-        log_error("curl_easy_setopt(CURLOPT_ERRORBUFFER) has failed");
-    }
-    return code;
-}
-
-
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
   (JNIEnv *env, jclass jcls, jlong jcode) {
     const char *str = curl_easy_strerror(jcode);
@@ -162,13 +145,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
     CURL *curl = (CURL *) jcurl;
     curl_easy_reset(curl);
     return CURLE_OK;
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1set_1headers
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jheaders) {
-    CURL *curl = (CURL *) jcurl;
-    return curl_easy_setopt(curl, CURLOPT_HTTPHEADER, (struct curl_slist *) jheaders);
 }
 
 static CURLcode set_write_params(CURL *curl, void *write_data, void *write_function) {
@@ -227,12 +203,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
 
 exit:
     return code;
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1verbose
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_VERBOSE, jvalue);
 }
 
 static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
@@ -302,23 +272,41 @@ exit:
     return code;
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong joption, jlong jvalue) {
+    CURL *curl = (CURL *) jcurl;
+    return curl_easy_setopt(curl, joption, jvalue);
+}
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1follow_1location
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_FOLLOWLOCATION, jvalue);
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
+  (JNIEnv *env, jclass jcls, jlong jcurl, jint joption, jstring jvalue) {
+
+    CURL *curl = (CURL *) jcurl;
+    CURLcode code;
+    char *value = NULL;
+
+    if (jvalue == NULL) {
+        code = curl_easy_setopt(curl, joption, NULL);
+        goto cleanup;
+    }
+
+    value = JNI_CALL(env, GetStringUTFChars, jvalue, NULL);
+    if (!value) {
+        code = CURLE_OUT_OF_MEMORY;
+        goto cleanup;
+    }
+
+    code = curl_easy_setopt(curl, joption, value);
+
+cleanup:
+    if (value) JNI_CALL(env, ReleaseStringUTFChars, jvalue, value);
+    return code;
 }
 
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1proxy
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jproxy) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_PROXY, jproxy);
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1user_1agent
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring juser_agent) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_USERAGENT, juser_agent);
-}
+//
+// Getters
+//
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1response_1code
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
@@ -430,21 +418,6 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
     return JNI_CALL(env, NewStringUTF, h->value);
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1password
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_PASSWORD, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_USERNAME, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong joption, jlong jvalue) {
-    CURL *curl = (CURL *) jcurl;
-    return curl_easy_setopt(curl, joption, jvalue);
-}
 
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1fast_1open
