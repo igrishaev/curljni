@@ -12,15 +12,6 @@
 #include "curl/curl.h"
 
 
-static CURLcode set_write_params(CURL *curl, void *write_data, void *write_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_WRITEDATA, write_data);
-    if (code != CURLE_OK) return code;
-    code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
-    if (code != CURLE_OK) return code;
-    return code;
-}
-
 static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
     CURLcode code;
     code = curl_easy_setopt(curl, CURLOPT_READDATA, read_data);
@@ -128,25 +119,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
 // Setters
 //
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1file
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jfile) {
-    CURL *curl = (CURL *) jcurl;
-    return set_write_params(curl, (FILE *) jfile, fwrite);
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1callback
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jptr) {
-    CURL *curl = (CURL *) jcurl;
-    return set_write_params(curl, (void *) jptr, write_callback_handler);
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1accumulator
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jacc) {
-    CURL *curl = (CURL *) jcurl;
-    return set_write_params(curl, (void *) jacc, accum_write_callback);
-}
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
   (JNIEnv *env, jclass jcls, jlong jcurl, jbyteArray jbuf, jint jlen) {
@@ -222,6 +194,18 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
     CURL *curl = (CURL *) jcurl;
     return curl_easy_setopt(curl, joption, jvalue);
 }
+
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long2
+  (JNIEnv *env, jclass jcls, jlong jcurl, jint jopt1, jlong jval1, jint jopt2, jlong jval2) {
+    CURL *curl = (CURL *) jcurl;
+    CURLcode code;
+    code = curl_easy_setopt(curl, jopt1, jval1);
+    if (code != CURLE_OK) return code;
+    code = curl_easy_setopt(curl, jopt2, jval2);
+    if (code != CURLE_OK) return code;
+    return code;
+}
+
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
   (JNIEnv *env, jclass jcls, jlong jcurl, jint joption, jstring jvalue) {

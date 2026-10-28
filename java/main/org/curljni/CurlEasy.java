@@ -64,11 +64,24 @@ public class CurlEasy implements IResource {
         }
     }
 
+    private CurlEasy checkTread() {
+        if (threadId == Thread.currentThread().getId()) {
+            return this;
+        } else {
+            throw Err.error("you cannot call this method from another thread");
+        }
+    }
+
     native private static int _get_CURL_ERROR_SIZE();
 
     native private static long _set_option_long(long curl, int option, long value);
     public CurlEasy setOptionLong(int option, long value) {
         return checkClosed().checkCode(_set_option_long(ptr, option, value));
+    }
+
+    native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);
+    public CurlEasy setOptionLongLong(int opt1, long val1, int opt2, long val2) {
+        return checkClosed().checkCode(_set_option_long2(ptr, opt1, val1, opt2, val2));
     }
 
     native private static long _set_option_string(long curl, int option, String value);
@@ -80,17 +93,10 @@ public class CurlEasy implements IResource {
         return setOptionString(CURLOPT.URL, url);
     }
 
+    // TODO
     native private static long _set_method(final long curlPtr, final long method);
     public CurlEasy setMethod(final long method) {
         return checkClosed().checkCode(_set_method(ptr, method));
-    }
-
-    private CurlEasy checkTread() {
-        if (threadId == Thread.currentThread().getId()) {
-            return this;
-        } else {
-            throw Err.error("you cannot call this method from another thread");
-        }
     }
 
     native private static long _perform(final long curlPtr);
@@ -116,24 +122,23 @@ public class CurlEasy implements IResource {
         return setOptionLong(CURLOPT.HTTPHEADER, hhPtr);
     }
 
-    native private static long _set_write_file(long curl, long file);
     public CurlEasy setWriteFile(IResource file) {
         Objects.requireNonNull(file, "the file object cannot be null");
-        return checkClosed().checkCode(_set_write_file(ptr, file.ptr()));
+        return setWriteParams(file.ptr(), FN.fwrite);
     }
 
-    // TODO
+    private CurlEasy setWriteParams(long writeData, long writeFunc) {
+        return setOptionLongLong(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
+    }
+
     public CurlEasy setWriteStream(IResource stream) {
         Objects.requireNonNull(stream, "the stream object cannot be null");
-        setOptionLong(CURLOPT.WRITEDATA, stream.ptr());
-        setOptionLong(CURLOPT.WRITEFUNCTION, FN.write_callback_stream);
-        return this;
+        return setWriteParams(stream.ptr(), FN.write_callback_stream);
     }
 
-    native private static long _set_write_callback(long curl, long callback);
     public CurlEasy setWriteCallback(IResource callback) {
         Objects.requireNonNull(callback, "write callback cannot be null");
-        return checkClosed().checkCode(_set_write_callback(ptr, callback.ptr()));
+        return setWriteParams(callback.ptr(), FN.write_callback_handler);
     }
 
     public CurlEasy setProxy(String proxy) {
@@ -223,10 +228,9 @@ public class CurlEasy implements IResource {
         return setOptionString(CURLOPT.CUSTOMREQUEST, method);
     }
 
-    native private static long _set_accumulator(long curl, long acc);
     public CurlEasy setAccumulator(IResource acc) {
         Objects.requireNonNull(acc, "the accumulator cannot be null");
-        return checkClosed().checkCode(_set_accumulator(ptr, acc.ptr()));
+        return setWriteParams(acc.ptr(), FN.accum_write_callback);
     }
 
     // TODO: check for null

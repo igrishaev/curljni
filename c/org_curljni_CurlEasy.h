@@ -33,6 +33,14 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
 
 /*
  * Class:     org_curljni_CurlEasy
+ * Method:    _set_option_long2
+ * Signature: (JIJIJ)J
+ */
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long2
+  (JNIEnv *, jclass, jlong, jint, jlong, jint, jlong);
+
+/*
+ * Class:     org_curljni_CurlEasy
  * Method:    _set_option_string
  * Signature: (JILjava/lang/String;)J
  */
@@ -70,30 +78,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
  */
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
   (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_write_file
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1file
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_write_callback
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1callback
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_accumulator
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1accumulator
-  (JNIEnv *, jclass, jlong, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy

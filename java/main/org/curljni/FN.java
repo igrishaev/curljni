@@ -6,6 +6,8 @@ public class FN {
 
     public final static long fwrite;
     public final static long write_callback_stream;
+    public final static long write_callback_handler;
+    public final static long accum_write_callback;
 
     native private static long[] _get_values();
 
@@ -14,8 +16,10 @@ public class FN {
         final long[] values = _get_values();
         final LongBuffer bb = LongBuffer.wrap(values);
 
-        fwrite                = bb.get();
-        write_callback_stream = bb.get();
+        fwrite                 = bb.get();
+        write_callback_stream  = bb.get();
+        write_callback_handler = bb.get();
+        accum_write_callback   = bb.get();
     }
 
     public static void main(String... args) {
