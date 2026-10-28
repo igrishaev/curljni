@@ -169,27 +169,11 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _get_primary_ip
- * Signature: (JJ)Ljava/lang/String;
+ * Method:    _get_info_as_string
+ * Signature: (JIJ)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1primary_1ip
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _get_effective_url
- * Signature: (JJ)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1effective_1url
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _get_local_ip
- * Signature: (JJ)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1local_1ip
-  (JNIEnv *, jclass, jlong, jlong);
+JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1string
+  (JNIEnv *, jclass, jlong, jint, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy

@@ -11,7 +11,7 @@
 #include "bytebuffer.h"
 #include "curl/curl.h"
 
-
+// TODO
 static jlong _curl_easy_set_string(JNIEnv *env, jlong jcurl, CURLoption option, jstring jvalue) {
 
     CURL *curl = (CURL *) jcurl;
@@ -37,31 +37,38 @@ cleanup:
 }
 
 
+// TODO
 static jlong _curl_easy_set_long(jlong jcurl, CURLoption option, jlong jvalue) {
     CURL *curl = (CURL *) jcurl;
     return curl_easy_setopt(curl, option, jvalue);
 }
 
-static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO info) {
-    CURL *curl = (CURL *) jcurl;
-    char *bb = (char *) jbb;
-    char *ptr;
-    CURLcode code = curl_easy_getinfo(curl, info, &ptr);
-    put_long(bb, code);
-    if (code == CURLE_OK) {
-        return JNI_CALL(env, NewStringUTF, ptr);
-    } else {
-        return NULL;
-    }
+static CURLcode set_write_params(CURL *curl, void *write_data, void *write_function) {
+    CURLcode code;
+    code = curl_easy_setopt(curl, CURLOPT_WRITEDATA, write_data);
+    if (code != CURLE_OK) return code;
+    code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
+    if (code != CURLE_OK) return code;
+    return code;
 }
 
-// TODO
-static CURLcode _get_info_as_long(jlong jcurl, jlong jbb, CURLINFO info) {
-    CURL *curl = (CURL *) jcurl;
-    char *bb = (char *) jbb;
-    long value;
-    CURLcode code = curl_easy_getinfo(curl, info, &value);
-    put_long(bb, value);
+static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
+    CURLcode code;
+    code = curl_easy_setopt(curl, CURLOPT_READDATA, read_data);
+    if (code != CURLE_OK) return code;
+    code = curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_function);
+    if (code != CURLE_OK) return code;
+    return code;
+}
+
+
+static CURLcode set_seek_params(CURL *curl, void *seek_data, void *seek_function) {
+    CURLcode code;
+    code = curl_easy_setopt(curl, CURLOPT_SEEKDATA, seek_data);
+    if (code != CURLE_OK) goto exit;
+    code = curl_easy_setopt(curl, CURLOPT_SEEKFUNCTION, seek_function);
+    if (code != CURLE_OK) goto exit;
+exit:
     return code;
 }
 
@@ -135,6 +142,7 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
     }
 }
 
+// TODO
 JNIEXPORT jint JNICALL Java_org_curljni_CurlEasy__1get_1CURL_1ERROR_1SIZE
   (JNIEnv *env, jclass jcls) {
     return CURL_ERROR_SIZE;
@@ -150,15 +158,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
 //
 // Setters
 //
-
-static CURLcode set_write_params(CURL *curl, void *write_data, void *write_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_WRITEDATA, write_data);
-    if (code != CURLE_OK) return code;
-    code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
-    if (code != CURLE_OK) return code;
-    return code;
-}
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1write_1file
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jfile) {
@@ -205,26 +204,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
     code = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, jlen);
     if (code != CURLE_OK) goto exit;
 
-exit:
-    return code;
-}
-
-static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_READDATA, read_data);
-    if (code != CURLE_OK) return code;
-    code = curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_function);
-    if (code != CURLE_OK) return code;
-    return code;
-}
-
-
-static CURLcode set_seek_params(CURL *curl, void *seek_data, void *seek_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_SEEKDATA, seek_data);
-    if (code != CURLE_OK) goto exit;
-    code = curl_easy_setopt(curl, CURLOPT_SEEKFUNCTION, seek_function);
-    if (code != CURLE_OK) goto exit;
 exit:
     return code;
 }
@@ -342,33 +321,18 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
 }
 
 
-/* static jstring _get_info_as_string(JNIEnv *env, jlong jcurl, jlong jbb, CURLINFO info) { */
-/*     CURL *curl = (CURL *) jcurl; */
-/*     char *bb = (char *) jbb; */
-/*     char *ptr; */
-/*     CURLcode code = curl_easy_getinfo(curl, info, &ptr); */
-/*     put_long(bb, code); */
-/*     if (code == CURLE_OK) { */
-/*         return JNI_CALL(env, NewStringUTF, ptr); */
-/*     } else { */
-/*         return NULL; */
-/*     } */
-/* } */
-
-
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1primary_1ip
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_string(env, jcurl, jbb, CURLINFO_PRIMARY_IP);
-}
-
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1effective_1url
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_string(env, jcurl, jbb, CURLINFO_EFFECTIVE_URL);
-}
-
-JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1local_1ip
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jbb) {
-    return _get_info_as_string(env, jcurl, jbb, CURLINFO_LOCAL_IP);
+JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1string
+  (JNIEnv *env, jclass jcls, jlong jcurl, jint jinfo, jlong jbb) {
+    CURL *curl = (CURL *) jcurl;
+    char *bb = (char *) jbb;
+    char *ptr;
+    CURLcode code = curl_easy_getinfo(curl, jinfo, &ptr);
+    put_long(bb, code);
+    if (code == CURLE_OK) {
+        return JNI_CALL(env, NewStringUTF, ptr);
+    } else {
+        return NULL;
+    }
 }
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1nextheader

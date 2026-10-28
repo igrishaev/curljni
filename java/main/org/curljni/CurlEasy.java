@@ -99,7 +99,7 @@ public class CurlEasy implements IResource {
     }
 
     private CurlEasy setErrorBuffer() {
-        return setOptionLong(CURLOPT.ERRORBUFFER, arena.ptr());
+        return setOptionLong(CURLOPT.ERRORBUFFER, arena.ptr);
     }
 
     native private static long _curl_easy_reset(long curlPtr);
@@ -275,6 +275,14 @@ public class CurlEasy implements IResource {
         return arena.orderJNI().getLong(0);
     }
 
+    native private static String _get_info_as_string(long curl, int info, long bb);
+    public String getInfoString(int info) {
+        final String result = checkClosed()._get_info_as_string(ptr, info, arena.ptr);
+        final long code = arena.orderJNI().getLong(0);
+        checkCode(code);
+        return result;
+    }
+
 
     public long getResponseCode() {
         return getInfoLong(CURLINFO.RESPONSE_CODE);
@@ -332,25 +340,16 @@ public class CurlEasy implements IResource {
         return getInfoLong(CURLINFO.OS_ERRNO);
     }
 
-    native private static String _get_primary_ip(long curl, long bb);
     public String getPrimaryIP() {
-        final String result = _get_primary_ip(ptr, arena.ptr());
-        checkCode(curlLong());
-        return result;
+        return getInfoString(CURLINFO.PRIMARY_IP);
     }
 
-    native private static String _get_effective_url(long curl, long bb);
     public String getEffectiveURL() {
-        final String result = _get_effective_url(ptr, arena.ptr());
-        checkCode(curlLong());
-        return result;
+        return getInfoString(CURLINFO.EFFECTIVE_URL);
     }
 
-    native private static String _get_local_ip(long curl, long bb);
     public String getLocalIP() {
-        final String result = _get_local_ip(ptr, arena.ptr());
-        checkCode(curlLong());
-        return result;
+        return getInfoString(CURLINFO.LOCAL_IP);
     }
 
     native private static long _curl_easy_nextheader(long curl, long prev);
