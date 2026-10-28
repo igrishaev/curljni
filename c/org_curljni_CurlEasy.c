@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// TODO: remove unused deps
+
 #include "accum.h"
 #include "logging.h"
 #include "globals.h"
