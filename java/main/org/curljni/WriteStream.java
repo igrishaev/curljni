@@ -37,6 +37,11 @@ public class WriteStream implements IResource {
     }
 
     @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    @Override
     public void close() {
         if (isClosed) return;
         final long code = _free(ptr);

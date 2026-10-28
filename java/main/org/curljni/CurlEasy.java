@@ -42,6 +42,11 @@ public class CurlEasy implements IResource {
         return ptr;
     }
 
+    @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     private CurlEasy checkClosed() {
         if (isClosed) {
             throw new RuntimeException("This CurlEasy resource has been closed");
@@ -129,6 +134,14 @@ public class CurlEasy implements IResource {
 
     private CurlEasy setWriteParams(long writeData, long writeFunc) {
         return setOptionLongLong(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
+    }
+
+    private CurlEasy setReadParams(long readData, long readFunc) {
+        return setOptionLongLong(CURLOPT.READDATA, readData, CURLOPT.READFUNCTION, readFunc);
+    }
+
+    private CurlEasy setSeekParams(long seekData, long seekFunc) {
+        return setOptionLongLong(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
     }
 
     public CurlEasy setWriteStream(IResource stream) {
@@ -296,10 +309,14 @@ public class CurlEasy implements IResource {
         return setOptionLong(CURLOPT.VERBOSE, flag ? 1 : 0);
     }
 
-    native private static long _set_read_file(long curl, long file);
     public CurlEasy setReadFile(IResource file) {
         Objects.requireNonNull(file, "read file cannot be null");
-        return checkClosed().checkCode(_set_read_file(ptr, file.ptr()));
+        return setReadParams(file.ptr(), FN.fread);
+        // setSeekParams
+        // TODO: windows: read_callback_file
+        // TODO: seek file, read_seek_file
+        // TODO: CURLOPT_UPLOAD=1
+        // TODO: CURLOPT_POSTFIELDSIZE
     }
 
     public CurlEasy setFollowLocation(long value) {
@@ -321,10 +338,13 @@ public class CurlEasy implements IResource {
         return setOptionString(CURLOPT.KEYPASSWD, passwd);
     }
 
-    native private static long _set_read_stream(long curl, long value);
+    // TODO: set3 opts
+    // TODO: rename set1opt set2opts
     public CurlEasy setReadStream(ReadStream stream) {
         Objects.requireNonNull(stream, "read stream cannot be null");
-        return checkClosed().checkCode(_set_read_stream(ptr, stream.ptr()));
+        return setReadParams(stream.ptr(), FN.read_callback_stream)
+                .setSeekParams(Native.NULL, FN.read_seek_cannot);
+        // TODO: curl_easy_setopt(curl, CURLOPT_UPLOAD, 1);
     }
 
     native private static long _get_info_as_long(long curl, int info, long bb);

@@ -27,6 +27,11 @@ public class FILE implements IResource {
     }
 
     @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    @Override
     public String toString() {
         return String.format("<FILE %s %s>", mode, path);
     }

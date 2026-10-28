@@ -12,32 +12,6 @@
 #include "curl/curl.h"
 
 
-static CURLcode set_read_params(CURL *curl, void *read_data, void *read_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_READDATA, read_data);
-    if (code != CURLE_OK) return code;
-    code = curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_function);
-    if (code != CURLE_OK) return code;
-    return code;
-}
-
-
-static CURLcode set_seek_params(CURL *curl, void *seek_data, void *seek_function) {
-    CURLcode code;
-    code = curl_easy_setopt(curl, CURLOPT_SEEKDATA, seek_data);
-    if (code != CURLE_OK) goto exit;
-    code = curl_easy_setopt(curl, CURLOPT_SEEKFUNCTION, seek_function);
-    if (code != CURLE_OK) goto exit;
-exit:
-    return code;
-}
-
-
-//
-// JNI
-//
-
-
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1init
   (JNIEnv *env, jclass jcls) {
     return (jlong) curl_easy_init();
@@ -136,53 +110,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
     if (code != CURLE_OK) goto exit;
 
     code = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, jlen);
-    if (code != CURLE_OK) goto exit;
-
-exit:
-    return code;
-}
-
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1file
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jfile) {
-    CURL *curl = (CURL *) jcurl;
-    CURLcode code;
-
-    code = set_read_params(curl, (FILE *) jfile, fread);
-    if (code != CURLE_OK) goto exit;
-
-    // TODO windows
-    /* code = set_read_params(curl, (FILE *) jfile, read_callback_file); */
-    /* if (code != CURLE_OK) goto exit; */
-
-    /* code = set_seek_params(curl, (FILE *) jfile, read_seek_file); */
-    /* if (code != CURLE_OK) goto exit; */
-
-    /* code = curl_easy_setopt(curl, CURLOPT_UPLOAD, 1); */
-    /* if (code != CURLE_OK) goto exit; */
-
-    // TODO: set size?
-    /* code = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, ????); */
-    /* if (code != CURLE_OK) goto exit; */
-
-exit:
-    return code;
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1stream
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jstream) {
-
-    CURL *curl = (CURL *) jcurl;
-    CURLcode code;
-
-    // TODO
-    code = set_read_params(curl, (void *) jstream, read_callback_stream);
-    if (code != CURLE_OK) goto exit;
-
-    code = set_seek_params(curl, NULL, read_seek_cannot);
-    if (code != CURLE_OK) goto exit;
-
-    code = curl_easy_setopt(curl, CURLOPT_UPLOAD, 1);
     if (code != CURLE_OK) goto exit;
 
 exit:

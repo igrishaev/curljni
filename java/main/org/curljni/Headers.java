@@ -58,6 +58,11 @@ public class Headers implements IResource {
         return ptr;
     }
 
+    @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     private static native long _allocate(String[] headers, int size);
     private static native long _free(long ptr);
 

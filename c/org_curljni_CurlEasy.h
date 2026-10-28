@@ -89,22 +89,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_read_file
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1file
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_read_stream
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1stream
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _get_info_as_long
  * Signature: (JIJ)J
  */

@@ -32,6 +32,11 @@ public class WriteCallback implements IResource {
     }
 
     @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    @Override
     public void close() {
         if (isClosed) return;
         long code = _free(ptr);

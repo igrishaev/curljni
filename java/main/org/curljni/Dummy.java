@@ -14,6 +14,11 @@ public class Dummy implements IResource {
     }
 
     @Override
+    public boolean isClosed() {
+        return true;
+    }
+
+    @Override
     public void close() {
     }
 }

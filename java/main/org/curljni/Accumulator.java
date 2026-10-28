@@ -19,6 +19,11 @@ public class Accumulator implements IResource {
         return ptr;
     }
 
+    @Override
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     private Accumulator(long ptr, boolean isClosed) {
         this.ptr = ptr;
         this.isClosed = isClosed;
