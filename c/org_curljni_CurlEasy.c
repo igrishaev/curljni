@@ -11,37 +11,6 @@
 #include "bytebuffer.h"
 #include "curl/curl.h"
 
-// TODO
-static jlong _curl_easy_set_string(JNIEnv *env, jlong jcurl, CURLoption option, jstring jvalue) {
-
-    CURL *curl = (CURL *) jcurl;
-    CURLcode code;
-    char *value = NULL;
-
-    if (jvalue == NULL) {
-        code = curl_easy_setopt(curl, option, NULL);
-        goto cleanup;
-    }
-
-    value = JNI_CALL(env, GetStringUTFChars, jvalue, NULL);
-    if (!value) {
-        code = CURLE_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-
-    code = curl_easy_setopt(curl, option, value);
-
-cleanup:
-    if (value) JNI_CALL(env, ReleaseStringUTFChars, jvalue, value);
-    return code;
-}
-
-
-// TODO
-static jlong _curl_easy_set_long(jlong jcurl, CURLoption option, jlong jvalue) {
-    CURL *curl = (CURL *) jcurl;
-    return curl_easy_setopt(curl, option, jvalue);
-}
 
 static CURLcode set_write_params(CURL *curl, void *write_data, void *write_function) {
     CURLcode code;
@@ -208,25 +177,6 @@ exit:
     return code;
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1fast_1open
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_TCP_FASTOPEN, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1keep_1alive
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_TCP_KEEPALIVE, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1xoauth2_1bearer
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_XOAUTH2_BEARER, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1custom_1request
-  (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
-    return _curl_easy_set_string(env, jcurl, CURLOPT_CUSTOMREQUEST, jvalue);
-}
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1read_1file
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jfile) {

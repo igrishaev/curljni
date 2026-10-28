@@ -202,27 +202,23 @@ public class CurlEasy implements IResource {
     }
 
     // CURLOPT_TCP_FASTOPEN
-    native private static long _set_tcp_fast_open(long curl, long value);
     public CurlEasy setTCPFastOpen(boolean value) {
-        return checkClosed().checkCode(_set_tcp_fast_open(ptr, value ? 1L : 0L));
+        return setOptionLong(CURLOPT.TCP_FASTOPEN, value ? 1 : 0);
     }
 
     // CURLOPT_TCP_KEEPALIVE
-    native private static long _set_tcp_keep_alive(long curl, long value);
     public CurlEasy setTPCKeepAlive(boolean value) {
-        return checkClosed().checkCode(_set_tcp_keep_alive(ptr, value ? 1L : 0L));
+        return setOptionLong(CURLOPT.TCP_KEEPALIVE, value ? 1 : 0);
     }
 
     // CURLOPT_XOAUTH2_BEARER
-    native private static long _set_xoauth2_bearer(long curl, String value);
     public CurlEasy setXOauth2Bearer(String value) {
-        return checkClosed().checkCode(_set_xoauth2_bearer(ptr, value));
+        return setOptionString(CURLOPT.XOAUTH2_BEARER, value);
     }
 
     // CURLOPT_CUSTOMREQUEST
-    native private static long _set_custom_request(long curl, String method);
     public CurlEasy setCustomRequest(String method) {
-        return checkClosed().checkCode(_set_custom_request(ptr, method));
+        return setOptionString(CURLOPT.CUSTOMREQUEST, method);
     }
 
     native private static long _set_accumulator(long curl, long acc);
