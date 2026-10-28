@@ -271,55 +271,41 @@ public class CurlEasy implements IResource {
 
     native private static long _get_info_as_long(long curl, int info, long bb);
     public long getInfoLong(int info) {
-        return checkClosed()._get_info_as_long(ptr, info, arena.ptr);
+        checkClosed().checkCode(_get_info_as_long(ptr, info, arena.ptr));
+        return arena.orderJNI().getLong(0);
     }
 
-    native private static long _get_response_code(long curl, long bb);
+
     public long getResponseCode() {
-        checkClosed().checkCode(_get_response_code(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.RESPONSE_CODE);
     }
 
-    native private static long _get_connect_time_t(long curl, long bb);
     public long getConnectTimeMs() {
-        checkClosed().checkCode(_get_connect_time_t(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.CONNECT_TIME_T);
     }
 
-    native private static long _get_content_length_download_t(long curl, long bb);
     public long getContentLengthDownload() {
-        checkClosed().checkCode(_get_content_length_download_t(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.CONTENT_LENGTH_DOWNLOAD_T);
     }
 
-    native private static long _get_redirect_time_t(long curl, long bb);
     public long getRedirectTime() {
-        checkClosed().checkCode(_get_connect_time_t(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.REDIRECT_TIME_T);
     }
 
-    native private static long _get_retry_after(long curl, long bb);
     public long getRetryCount() {
-        checkClosed().checkCode(_get_retry_after(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.RETRY_AFTER);
     }
 
-    native private static long _get_speed_download_t(long curl, long bb);
     public long getSpeedDownload() {
-        checkClosed().checkCode(_get_speed_download_t(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.SPEED_DOWNLOAD_T);
     }
 
-    native private static long _get_speed_upload_t(long curl, long bb);
     public long getSpeedUpload() {
-        checkClosed().checkCode(_get_speed_upload_t(ptr, arena.ptr()));
-        return curlLong();
+        return getInfoLong(CURLINFO.SPEED_UPLOAD_T);
     }
 
-    native private static long _get_used_proxy(long curl, long bb);
     public boolean getUsedProxy() {
-        checkClosed().checkCode(_get_used_proxy(ptr, arena.ptr()));
-        return curlLong() != 0;
+        return getInfoLong(CURLINFO.USED_PROXY) != 0;
     }
 
     native private static long _get_num_connects(long curl, long bb);
