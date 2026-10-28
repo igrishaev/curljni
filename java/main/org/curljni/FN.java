@@ -14,10 +14,6 @@ public class FN {
     public final static long read_callback_stream;
     public final static long read_seek_cannot;
 
-    // TODO
-    // CURLOPT_UPLOAD
-    // CURLOPT_POSTFIELDSIZE
-
     native private static long[] _get_values();
 
     static {

@@ -1,6 +1,9 @@
 #include <string.h>
 #include "bytebuffer.h"
 
+
+// TODO rename
+
 char * put_byte(char *bb, char value) {
     memcpy(bb, &value, sizeof value);
     return bb += sizeof value;

@@ -1,3 +1,11 @@
+
+- CURLOPT_UPLOAD
+- CURLOPT_POSTFIELDSIZE
+- set_long2 and set_long3
+- rename bytebuffer functions
+- fix error buffer size
+- set http method
+
 - rename accum to collector
 - CURLException
 - set CURLOPT_ERRORBUFFER (len CURL_ERROR_SIZE)

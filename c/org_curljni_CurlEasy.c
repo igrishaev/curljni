@@ -1,16 +1,6 @@
 #include <jni.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// TODO: remove unused deps
-
-#include "accum.h"
 #include "logging.h"
-#include "globals.h"
 #include "macros.h"
-#include "write_data.h"
-#include "read_data.h"
 #include "bytebuffer.h"
 #include "curl/curl.h"
 
@@ -29,7 +19,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1cleanup
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jmethod) {
 
-    // TODO
     CURLcode code;
     CURL *curl = (CURL *) jcurl;
 
