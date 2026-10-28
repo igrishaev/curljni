@@ -24,14 +24,14 @@ public class Main {
                 .setAccumulator(acc)
                 .setServerResponseTimeoutMs(5000)
                 .setTimeoutMs(5000)
+                    .setBufferSize(9999)
                 .setConnectTimeoutMs(5000)
                     .setUsername("Ivan")
                     .setPassword("secret")
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
-                // .setMethod(1)
-                    .setCustomRequest("GET")
-                .setVerbose(true);
+                .setMethod(1);
+                // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
             System.out.println(Foo.getFoo(333));

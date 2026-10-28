@@ -121,46 +121,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1user_1agent
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_server_response_timeout_ms
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1server_1response_1timeout_1ms
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_timeout_ms
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1timeout_1ms
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_connect_timeout_ms
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_max_connects
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1connects
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_max_redirs
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1redirs
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _set_password
  * Signature: (JLjava/lang/String;)J
  */
@@ -177,27 +137,11 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_buffer_size
- * Signature: (JJ)J
+ * Method:    _set_option_long
+ * Signature: (JIJ)J
  */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1buffer_1size
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_no_body
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1no_1body
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
- * Method:    _set_fail_on_error
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
-  (JNIEnv *, jclass, jlong, jlong);
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
+  (JNIEnv *, jclass, jlong, jint, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy

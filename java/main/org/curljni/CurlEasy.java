@@ -138,42 +138,37 @@ public class CurlEasy implements IResource {
     }
 
     // CURLOPT_SERVER_RESPONSE_TIMEOUT_MS
-    native private static long _set_server_response_timeout_ms(long curl, long ms);
     public CurlEasy setServerResponseTimeoutMs(long ms) {
-        return checkClosed().checkCode(_set_server_response_timeout_ms(ptr, ms));
+        return setOptionLong(CURL.CURLOPT_SERVER_RESPONSE_TIMEOUT_MS, ms);
     }
     public CurlEasy setServerResponseTimeout(Duration duration) {
         return setServerResponseTimeoutMs(duration.toMillis());
     }
 
     // CURLOPT_TIMEOUT_MS
-    native private static long _set_timeout_ms(long curl, long ms);
     public CurlEasy setTimeoutMs(long ms) {
-        return checkClosed().checkCode(_set_timeout_ms(ptr, ms));
+        return setOptionLong(CURL.CURLOPT_TIMEOUT_MS, ms);
     }
     public CurlEasy setTimeoutMs(Duration duration) {
         return setTimeoutMs(duration.toMillis());
     }
 
     // CURLOPT_CONNECTTIMEOUT_MS
-    native private static long _set_connect_timeout_ms(long curl, long ms);
     public CurlEasy setConnectTimeoutMs(long ms) {
-        return checkClosed().checkCode(_set_connect_timeout_ms(ptr, ms));
+        return setOptionLong(CURL.CURLOPT_CONNECTTIMEOUT_MS, ms);
     }
     public CurlEasy setConnectTimeoutMs(Duration duration) {
         return setConnectTimeoutMs(duration.toMillis());
     }
 
     // CURLOPT_MAXCONNECTS
-    native private static long _set_max_connects(long curl, long amount);
     public CurlEasy setMaxConnects(long amount) {
-        return checkClosed().checkCode(_set_max_connects(ptr, amount));
+        return setOptionLong(CURL.CURLOPT_MAXCONNECTS, amount);
     }
 
     // CURLOPT_MAXREDIRS
-    native private static long _set_max_redirs(long curl, long amount);
     public CurlEasy setMaxRedirects(long amount) {
-        return checkClosed().checkCode(_set_max_redirs(ptr, amount));
+        return setOptionLong(CURL.CURLOPT_MAXREDIRS, amount);
     }
 
     // CURLOPT_PASSWORD
@@ -188,22 +183,24 @@ public class CurlEasy implements IResource {
         return checkClosed().checkCode(_set_username(ptr, username));
     }
 
+    native private static long _set_option_long(long curl, int option, long value);
+    public CurlEasy setOptionLong(int option, long value) {
+        return checkClosed().checkCode(_set_option_long(ptr, option, value));
+    }
+
     // CURLOPT_BUFFERSIZE
-    native private static long _set_buffer_size(long curl, long size);
     public CurlEasy setBufferSize(long size) {
-        return checkClosed().checkCode(_set_buffer_size(ptr, size));
+        return setOptionLong(CURL.CURLOPT_BUFFERSIZE, size);
     }
 
     // CURLOPT_NOBODY
-    native private static long _set_no_body(long curl, long value);
     public CurlEasy setNoBody(boolean value) {
-        return checkClosed().checkCode(_set_no_body(ptr, value ? 1L : 0L));
+        return setOptionLong(CURL.CURLOPT_NOBODY, value ? 1L : 0L);
     }
 
     // CURLOPT_FAILONERROR
-    native private static long _set_fail_on_error(long curl, long value);
     public CurlEasy setFailOnError(boolean value) {
-        return checkClosed().checkCode(_set_fail_on_error(ptr, value ? 1L : 0L));
+        return setOptionLong(CURL.CURLOPT_FAILONERROR, value ? 1L : 0L);
     }
 
     // CURLOPT_TCP_FASTOPEN

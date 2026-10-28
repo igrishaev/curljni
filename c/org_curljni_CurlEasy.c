@@ -430,31 +430,6 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
     return JNI_CALL(env, NewStringUTF, h->value);
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1server_1response_1timeout_1ms
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_SERVER_RESPONSE_TIMEOUT_MS, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1timeout_1ms
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_TIMEOUT_MS, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1connect_1timeout_1ms
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_CONNECTTIMEOUT_MS, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1connects
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_MAXCONNECTS, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1max_1redirs
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_MAXREDIRS, jvalue);
-}
-
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1password
   (JNIEnv *env, jclass jcls, jlong jcurl, jstring jvalue) {
     return _curl_easy_set_string(env, jcurl, CURLOPT_PASSWORD, jvalue);
@@ -465,20 +440,12 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1username
     return _curl_easy_set_string(env, jcurl, CURLOPT_USERNAME, jvalue);
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1buffer_1size
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_BUFFERSIZE, jvalue);
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long
+  (JNIEnv *env, jclass jcls, jlong jcurl, jlong joption, jlong jvalue) {
+    CURL *curl = (CURL *) jcurl;
+    return curl_easy_setopt(curl, joption, jvalue);
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1no_1body
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_NOBODY, jvalue);
-}
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1fail_1on_1error
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
-    return _curl_easy_set_long(jcurl, CURLOPT_FAILONERROR, jvalue);
-}
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1tcp_1fast_1open
   (JNIEnv *env, jclass jcls, jlong jcurl, jlong jvalue) {
