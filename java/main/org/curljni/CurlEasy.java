@@ -85,8 +85,13 @@ public class CurlEasy implements IResource {
     }
 
     native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);
-    public CurlEasy setOptionLongLong(int opt1, long val1, int opt2, long val2) {
+    public CurlEasy setOptionLong2(int opt1, long val1, int opt2, long val2) {
         return checkClosed().checkCode(_set_option_long2(ptr, opt1, val1, opt2, val2));
+    }
+
+    native private static long _set_option_long3(long curl, int opt1, long val1, int opt2, long val2, int opt3, long val3);
+    public CurlEasy setOptionLong3(int opt1, long val1, int opt2, long val2, int opt3, long val3) {
+        return checkClosed().checkCode(_set_option_long3(ptr, opt1, val1, opt2, val2, opt3, val3));
     }
 
     native private static long _set_option_string(long curl, int option, String value);
@@ -133,15 +138,15 @@ public class CurlEasy implements IResource {
     }
 
     private CurlEasy setWriteParams(long writeData, long writeFunc) {
-        return setOptionLongLong(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
+        return setOptionLong2(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
     }
 
     private CurlEasy setReadParams(long readData, long readFunc) {
-        return setOptionLongLong(CURLOPT.READDATA, readData, CURLOPT.READFUNCTION, readFunc);
+        return setOptionLong2(CURLOPT.READDATA, readData, CURLOPT.READFUNCTION, readFunc);
     }
 
     private CurlEasy setSeekParams(long seekData, long seekFunc) {
-        return setOptionLongLong(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
+        return setOptionLong2(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
     }
 
     public CurlEasy setWriteStream(IResource stream) {

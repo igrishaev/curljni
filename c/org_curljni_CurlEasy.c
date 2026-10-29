@@ -125,6 +125,19 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long2
     return code;
 }
 
+JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long3
+  (JNIEnv *env, jclass jcls, jlong jcurl, jint jopt1, jlong jval1, jint jopt2, jlong jval2, jint jopt3, jlong jval3) {
+    CURL *curl = (CURL *) jcurl;
+    CURLcode code;
+    code = curl_easy_setopt(curl, jopt1, jval1);
+    if (code != CURLE_OK) return code;
+    code = curl_easy_setopt(curl, jopt2, jval2);
+    if (code != CURLE_OK) return code;
+    code = curl_easy_setopt(curl, jopt3, jval3);
+    if (code != CURLE_OK) return code;
+    return code;
+}
+
 
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
   (JNIEnv *env, jclass jcls, jlong jcurl, jint joption, jstring jvalue) {
