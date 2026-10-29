@@ -10,14 +10,12 @@ public class CurlEasy implements IResource {
 
     static {
         Native.loadLib();
-        ERROR_SIZE = _get_CURL_ERROR_SIZE(); // TODO?
     }
 
     private final long threadId;
     private final long ptr;
     private final Arena arena;
     private boolean isClosed;
-    private final static int ERROR_SIZE;
 
     private CurlEasy(long threadId, long ptr, Arena arena, boolean isClosed) {
         this.threadId = threadId;
@@ -55,17 +53,22 @@ public class CurlEasy implements IResource {
         }
     }
 
+    native private static void _get_errno_and_message(long bb);
+
     private CurlEasy checkCode(final long code) {
-        if (code == 0) {
+        if (code == CURLE.OK) {
             return this;
         } else {
-            String errorDescription = _curl_easy_strerror(code);
+            String strError = _curl_easy_strerror(code);
             arena.rewind();
-            String errorExplanation = arena.readCString();
-            // TODO: check errno?
+            String errBufferStr = arena.getCString();
+            _get_errno_and_message(arena.ptr);
+            arena.rewind().orderJNI();
+            final long errno = arena.getLong();
+            final String strerror = arena.getCString();
             throw new RuntimeException(
-                    String.format("curl code: %d, description: %s, explanation: %s",
-                            code, errorDescription, errorExplanation));
+                    String.format("curl error, code: %d, strerror: %s, error buffer: %s, errno: %s, strerror: %s",
+                            code, strError, errBufferStr, errno, strerror));
         }
     }
 
@@ -76,8 +79,6 @@ public class CurlEasy implements IResource {
             throw Err.error("you cannot call this method from another thread");
         }
     }
-
-    native private static int _get_CURL_ERROR_SIZE();
 
     native private static long _set_option_long(long curl, int option, long value);
     public CurlEasy setOptionLong(int option, long value) {

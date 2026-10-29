@@ -14,7 +14,11 @@ char * put_int(char *bb, int value) {
     return bb += sizeof value;
 }
 
-char * put_long(char* bb, long value) {
+char * put_long(char *bb, long value) {
     memcpy(bb, &value, sizeof value);
     return bb += sizeof value;
+}
+
+char * put_char(char *bb, char *str) {
+    return stpcpy(bb, str);
 }

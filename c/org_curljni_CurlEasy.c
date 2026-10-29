@@ -1,4 +1,6 @@
 #include <jni.h>
+#include <errno.h>
+#include <string.h>
 #include "logging.h"
 #include "macros.h"
 #include "bytebuffer.h"
@@ -68,18 +70,22 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
     }
 }
 
-// TODO
-JNIEXPORT jint JNICALL Java_org_curljni_CurlEasy__1get_1CURL_1ERROR_1SIZE
-  (JNIEnv *env, jclass jcls) {
-    return CURL_ERROR_SIZE;
-}
-
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1reset
   (JNIEnv *env, jclass jcls, jlong jcurl) {
     CURL *curl = (CURL *) jcurl;
     curl_easy_reset(curl);
     return CURLE_OK;
 }
+
+
+JNIEXPORT void JNICALL Java_org_curljni_CurlEasy__1get_1errno_1and_1message
+  (JNIEnv *env, jclass jcls, jlong jbb) {
+    char *bb = (char *) jbb;
+    char *err = strerror(errno);
+    bb = put_long(bb, errno);
+    bb = put_char(bb, err);
+}
+
 
 //
 // Setters
@@ -220,13 +226,9 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 }
 
 
-// error: proxy error, errno
-/* headers */
-
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
 /* https://curl.se/libcurl/c/CURLOPT_COOKIESESSION.html */
-
 /* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
 /* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
 /* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
@@ -235,6 +237,5 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
 /* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
 /* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYAUTH.html */
-
 /* https://curl.se/libcurl/c/CURLOPT_PROXYPORT.html */
 /* https://curl.se/libcurl/c/CURLOPT_PROXYTYPE.html */

@@ -95,20 +95,19 @@ public class Arena {
         return buf.length + 1;
     }
 
-    public String readCString() {
-        int start = bb.position();
-        if (bb.get(start) == 0) {
+    public String getCString() {
+        int pos = bb.position();
+        if (bb.get(pos) == 0) {
             return null;
         }
-        int len = bb.limit();
-        int end = start;
-        for (int i = start; i < len; i++) {
-            if (bb.get(end) == 0) {
+        int len = 0;
+        for (int i = pos; i < bb.limit(); i++) {
+            if (bb.get(pos + len) == 0) {
                 break;
             }
-            end++;
+            len++;
         }
-        ByteBuffer slice = bb.slice(start, end);
+        ByteBuffer slice = bb.slice(pos, len);
         return StandardCharsets.UTF_8.decode(slice).toString();
     }
 

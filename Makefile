@@ -5,6 +5,7 @@ SRC_PATH = java/main/org/curljni
 C_PATH = c
 
 JAVAFILES = \
+	$(SRC_PATH)/CURLE.java \
 	$(SRC_PATH)/CURLINFO.java \
 	$(SRC_PATH)/FN.java \
 	$(SRC_PATH)/CURLOPT.java \
@@ -31,6 +32,7 @@ MODULES = \
 	$(C_PATH)/curl_data.c \
 	$(C_PATH)/write_data.c \
 	$(C_PATH)/org_curljni_FN.c \
+	$(C_PATH)/org_curljni_CURLE.c \
 	$(C_PATH)/org_curljni_CURLINFO.c \
 	$(C_PATH)/org_curljni_CURLOPT.c \
 	$(C_PATH)/org_curljni_Arena.c \

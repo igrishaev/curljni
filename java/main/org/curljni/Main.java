@@ -16,7 +16,7 @@ public class Main {
         ) {
             c
                 .resetOptions()
-                .setUrl("https://habr.com")
+                // .setUrl("https://habr.com")
                 .setProxy(null)
                 .setHeaders(hh)
                 .setUserAgent(null)

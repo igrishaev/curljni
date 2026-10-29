@@ -1,25 +1,18 @@
 
-- CURLE support
-- set CURLOPT_ERRORBUFFER (len CURL_ERROR_SIZE)
+- CURLException
 - CURLOPT_UPLOAD
 - CURLOPT_POSTFIELDSIZE
 - rename bytebuffer functions
-- fix error buffer size
 - set http method
-- CURLException
-- errno and error codes (todo in CurlEasy.c)
 - remove debug print in Native
 - rename accum to collector
-
-- set options method
-- user_data module
-- separate perform and setting options
-- error codes
-- request autocloaseable
+- accum input stream
+- clojure module
+- clojure tests
+- set multi long method
+- get multi long method
 - FILE: open temp
-- common name patterns
-- make response
-- response
+
 - release local refs
 - global init and close
 - pass debug parameter
@@ -45,11 +38,4 @@
 - custom dns
 - fail on 4xx
 - proxy tunnel
-- max redirects
 - post mime
-- socks proxy
-- referer
-- http keep alive
-- tcp no delay
-- timeout
-- user-agent

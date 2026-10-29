@@ -17,11 +17,11 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1init
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _get_CURL_ERROR_SIZE
- * Signature: ()I
+ * Method:    _get_errno_and_message
+ * Signature: (J)V
  */
-JNIEXPORT jint JNICALL Java_org_curljni_CurlEasy__1get_1CURL_1ERROR_1SIZE
-  (JNIEnv *, jclass);
+JNIEXPORT void JNICALL Java_org_curljni_CurlEasy__1get_1errno_1and_1message
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_curljni_CurlEasy
