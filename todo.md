@@ -1,4 +1,5 @@
 
+- CURLE support
 - set CURLOPT_ERRORBUFFER (len CURL_ERROR_SIZE)
 - CURLOPT_UPLOAD
 - CURLOPT_POSTFIELDSIZE
@@ -7,9 +8,9 @@
 - set http method
 - CURLException
 - errno and error codes (todo in CurlEasy.c)
-
 - remove debug print in Native
 - rename accum to collector
+
 - set options method
 - user_data module
 - separate perform and setting options
