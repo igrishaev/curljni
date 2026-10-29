@@ -60,7 +60,7 @@ CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL
 
 LIBS = -lcurl
 
-all: clear headers sep $(SHARED_LIB) sync-resources clear
+all: headers sep $(SHARED_LIB) sync-resources clear
 
 CLASSES_DIR = target/classes
 

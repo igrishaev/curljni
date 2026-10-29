@@ -1,13 +1,15 @@
 
+- set CURLOPT_ERRORBUFFER (len CURL_ERROR_SIZE)
 - CURLOPT_UPLOAD
 - CURLOPT_POSTFIELDSIZE
 - rename bytebuffer functions
 - fix error buffer size
 - set http method
-
-- rename accum to collector
 - CURLException
-- set CURLOPT_ERRORBUFFER (len CURL_ERROR_SIZE)
+- errno and error codes (todo in CurlEasy.c)
+
+- remove debug print in Native
+- rename accum to collector
 - set options method
 - user_data module
 - separate perform and setting options

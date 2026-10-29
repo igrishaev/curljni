@@ -1,6 +1,7 @@
 package org.curljni;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,16 @@ public class Accumulator implements IResource {
     private Accumulator(long ptr, boolean isClosed) {
         this.ptr = ptr;
         this.isClosed = isClosed;
+    }
+
+    public InputStream asInputSteam() {
+        // TODO: implement
+        return new InputStream() {
+            @Override
+            public int read() throws IOException {
+                return 0;
+            }
+        };
     }
 
     @SuppressWarnings("unused")
