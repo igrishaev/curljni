@@ -66,9 +66,7 @@ public class CurlEasy implements IResource {
             arena.rewind().orderJNI();
             final long errno = arena.getLong();
             final String strerror = arena.getCString();
-            throw new RuntimeException(
-                    String.format("curl error, code: %d, strerror: %s, error buffer: %s, errno: %s, strerror: %s",
-                            code, strError, errBufferStr, errno, strerror));
+            throw new CURLException(code, strError, errBufferStr, errno, strerror);
         }
     }
 
@@ -83,6 +81,10 @@ public class CurlEasy implements IResource {
     native private static long _set_option_long(long curl, int option, long value);
     public CurlEasy setOptionLong(int option, long value) {
         return checkClosed().checkCode(_set_option_long(ptr, option, value));
+    }
+
+    public CurlEasy setOptionBool(int option, boolean value) {
+        return setOptionLong(option, value ? 1L : 0L);
     }
 
     native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);
@@ -204,6 +206,16 @@ public class CurlEasy implements IResource {
         return setTimeoutMs(duration.toMillis());
     }
 
+    // CURLOPT_UPLOAD
+    public CurlEasy setUpload(boolean flag) {
+        return setOptionBool(CURLOPT.UPLOAD, flag);
+    }
+
+    // CURLOPT_POSTFIELDSIZE
+    public CurlEasy setPostFieldSize(long value) {
+        return setOptionLong(CURLOPT.POSTFIELDSIZE, value);
+    }
+
     // CONNECTTIMEOUT_MS
     public CurlEasy setConnectTimeoutMs(long ms) {
         return setOptionLong(CURLOPT.CONNECTTIMEOUT_MS, ms);
@@ -239,22 +251,22 @@ public class CurlEasy implements IResource {
 
     // NOBODY
     public CurlEasy setNoBody(boolean value) {
-        return setOptionLong(CURLOPT.NOBODY, value ? 1L : 0L);
+        return setOptionBool(CURLOPT.NOBODY, value);
     }
 
     // FAILONERROR
     public CurlEasy setFailOnError(boolean value) {
-        return setOptionLong(CURLOPT.FAILONERROR, value ? 1L : 0L);
+        return setOptionBool(CURLOPT.FAILONERROR, value);
     }
 
     // CURLOPT_TCP_FASTOPEN
     public CurlEasy setTCPFastOpen(boolean value) {
-        return setOptionLong(CURLOPT.TCP_FASTOPEN, value ? 1 : 0);
+        return setOptionBool(CURLOPT.TCP_FASTOPEN, value);
     }
 
     // CURLOPT_TCP_KEEPALIVE
     public CurlEasy setTPCKeepAlive(boolean value) {
-        return setOptionLong(CURLOPT.TCP_KEEPALIVE, value ? 1 : 0);
+        return setOptionBool(CURLOPT.TCP_KEEPALIVE, value);
     }
 
     // CURLOPT_TCP_KEEPCNT
@@ -312,7 +324,7 @@ public class CurlEasy implements IResource {
     }
 
     public CurlEasy setVerbose(boolean flag) {
-        return setOptionLong(CURLOPT.VERBOSE, flag ? 1 : 0);
+        return setOptionBool(CURLOPT.VERBOSE, flag);
     }
 
     public CurlEasy setReadFile(IResource file) {

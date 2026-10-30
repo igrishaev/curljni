@@ -1,7 +1,4 @@
 
-- CURLException
-- CURLOPT_UPLOAD
-- CURLOPT_POSTFIELDSIZE
 - rename bytebuffer functions
 - set http method
 - remove debug print in Native
@@ -12,6 +9,7 @@
 - set multi long method
 - get multi long method
 - FILE: open temp
+- remove Foo
 
 - release local refs
 - global init and close

@@ -5,6 +5,7 @@ SRC_PATH = java/main/org/curljni
 C_PATH = c
 
 JAVAFILES = \
+	$(SRC_PATH)/CURLException.java \
 	$(SRC_PATH)/CURLE.java \
 	$(SRC_PATH)/CURLINFO.java \
 	$(SRC_PATH)/FN.java \
