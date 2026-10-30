@@ -87,6 +87,16 @@ public class CurlEasy implements IResource {
         return setOptionLong(option, value ? 1L : 0L);
     }
 
+    // CURLOPT_HTTPGET
+    public CurlEasy setHTTPGet(boolean flag) {
+        return setOptionBool(CURLOPT.HTTPGET, flag);
+    }
+
+    // CURLOPT_HTTPPOST
+    public CurlEasy setHTTPPost(boolean flag) {
+        return setOptionBool(CURLOPT.HTTPPOST, flag);
+    }
+
     native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);
     public CurlEasy setOptionLong2(int opt1, long val1, int opt2, long val2) {
         return checkClosed().checkCode(_set_option_long2(ptr, opt1, val1, opt2, val2));
@@ -109,12 +119,6 @@ public class CurlEasy implements IResource {
 
     public CurlEasy setUrl(final String url) {
         return setOptionString(CURLOPT.URL, url);
-    }
-
-    // TODO
-    native private static long _set_method(final long curlPtr, final long method);
-    public CurlEasy setMethod(final long method) {
-        return checkClosed().checkCode(_set_method(ptr, method));
     }
 
     private CurlEasy setErrorBuffer() {

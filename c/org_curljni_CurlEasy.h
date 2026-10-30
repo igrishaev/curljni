@@ -65,14 +65,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1perform
 
 /*
  * Class:     org_curljni_CurlEasy
- * Method:    _set_method
- * Signature: (JJ)J
- */
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
-  (JNIEnv *, jclass, jlong, jlong);
-
-/*
- * Class:     org_curljni_CurlEasy
  * Method:    _curl_easy_reset
  * Signature: (J)J
  */

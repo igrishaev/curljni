@@ -16,7 +16,7 @@ public class Main {
         ) {
             c
                 .resetOptions()
-                // .setUrl("https://habr.com")
+                .setUrl("https://habr.com")
                 .setProxy(null)
                 .setHeaders(hh)
                 .setUserAgent(null)
@@ -30,7 +30,7 @@ public class Main {
                     .setPassword("secret")
                 // .setWriteFile(wf)
                 // .setWriteStream(ws)
-                .setMethod(1);
+                        .setHTTPGet(true);
                 // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 

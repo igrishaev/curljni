@@ -18,47 +18,11 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1cleanup
     return 0;
 }
 
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1method
-  (JNIEnv *env, jclass jcls, jlong jcurl, jlong jmethod) {
-
-    CURLcode code;
-    CURL *curl = (CURL *) jcurl;
-
-    switch (jmethod) {
-        case 1: { // TODO use enum
-            code = curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
-            if (code != CURLE_OK) {
-                log_error("curl_easy_setopt() CURLOPT_HTTPGET has failed");
-                goto exit;
-            }
-            break;
-        }
-        case 2: {
-            code = curl_easy_setopt(curl, CURLOPT_HTTPPOST, 1);
-            if (code != CURLE_OK) {
-                log_error("curl_easy_setopt() CURLOPT_HTTPPOST has failed");
-                goto exit;
-            }
-            break;
-        }
-        default: {
-            log_error("unknown HTTP method: %d", jmethod);
-            code = CURLE_UNKNOWN_OPTION;
-            goto exit;
-        }
-    }
-
-exit:
-    return code;
-
-}
-
 JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1perform
   (JNIEnv *env, jclass jcls, jlong jcurl) {
     CURL *curl = (CURL *) jcurl;
     return curl_easy_perform(curl);
 }
-
 
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1curl_1easy_1strerror
   (JNIEnv *env, jclass jcls, jlong jcode) {
@@ -224,18 +188,3 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1header_1value
     }
     return JNI_CALL(env, NewStringUTF, h->value);
 }
-
-
-/* https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html */
-/* https://curl.se/libcurl/c/CURLOPT_COOKIEJAR.html */
-/* https://curl.se/libcurl/c/CURLOPT_COOKIESESSION.html */
-/* https://curl.se/libcurl/c/CURLOPT_RANGE.html */
-/* https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html */
-/* https://curl.se/libcurl/c/CURLOPT_AWS_SIGV4.html */
-/* https://curl.se/libcurl/c/CURLOPT_DEFAULT_PROTOCOL.html */
-/* https://curl.se/libcurl/c/CURLOPT_HTTPPROXYTUNNEL.html */
-/* https://curl.se/libcurl/c/CURLOPT_LOGIN_OPTIONS.html */
-/* https://curl.se/libcurl/c/CURLOPT_PRE_PROXY.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYAUTH.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYPORT.html */
-/* https://curl.se/libcurl/c/CURLOPT_PROXYTYPE.html */
