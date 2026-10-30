@@ -7,9 +7,9 @@
 - get multi long method
 - FILE: open temp
 - remove Foo
-- follow redirect enum
 - set post fields
 
+- refactor globals init
 - release local refs
 - global init and close
 - pass debug parameter

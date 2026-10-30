@@ -8,6 +8,7 @@ JAVAFILES = \
 	$(SRC_PATH)/CURLException.java \
 	$(SRC_PATH)/CURLE.java \
 	$(SRC_PATH)/CURLINFO.java \
+	$(SRC_PATH)/CURLFOLLOW.java \
 	$(SRC_PATH)/FN.java \
 	$(SRC_PATH)/CURLOPT.java \
 	$(SRC_PATH)/Arena.java \
@@ -32,6 +33,7 @@ MODULES = \
 	$(C_PATH)/read_data.c \
 	$(C_PATH)/curl_data.c \
 	$(C_PATH)/write_data.c \
+	$(C_PATH)/org_curljni_CURLFOLLOW.c \
 	$(C_PATH)/org_curljni_FN.c \
 	$(C_PATH)/org_curljni_CURLE.c \
 	$(C_PATH)/org_curljni_CURLINFO.c \

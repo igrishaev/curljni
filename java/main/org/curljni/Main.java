@@ -20,7 +20,7 @@ public class Main {
                 .setProxy(null)
                 .setHeaders(hh)
                 .setUserAgent(null)
-                .setFollowLocation(3)
+                .setFollowLocation(CURLFOLLOW.OFF)
                 .setAccumulator(acc)
                 .setServerResponseTimeoutMs(5000)
                 .setTimeoutMs(5000)
