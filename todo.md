@@ -1,7 +1,5 @@
 
-- rename bytebuffer functions
 - set http method
-- remove debug print in Native
 - rename accum to collector
 - accum input stream
 - clojure module

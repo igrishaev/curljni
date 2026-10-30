@@ -21,7 +21,6 @@ public class Native {
         final String libFileName = OS.getLibFileName();
         final File tmp = File.createTempFile("temp_", libFileName);
         final Path path = tmp.toPath();
-        System.out.println(path);
         tmp.deleteOnExit();
         try (InputStream in = url.openStream();
              OutputStream out = Files.newOutputStream(tmp.toPath())) {
@@ -43,9 +42,9 @@ public class Native {
         System.load(libPath);
     }
 
+    native private static long _get_null();
     static {
         loadLib();
         NULL = _get_null();
     }
-    native private static long _get_null();
 }

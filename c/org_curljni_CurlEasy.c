@@ -82,8 +82,8 @@ JNIEXPORT void JNICALL Java_org_curljni_CurlEasy__1get_1errno_1and_1message
   (JNIEnv *env, jclass jcls, jlong jbb) {
     char *bb = (char *) jbb;
     char *err = strerror(errno);
-    bb = put_long(bb, errno);
-    bb = put_char(bb, err);
+    bb = bb_put_long(bb, errno);
+    bb = bb_put_char(bb, err);
 }
 
 
@@ -181,7 +181,7 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
     char *bb = (char *) jbb;
     long value;
     CURLcode code = curl_easy_getinfo(curl, jinfo, &value);
-    put_long(bb, value);
+    bb_put_long(bb, value);
     return code;
 }
 
@@ -192,7 +192,7 @@ JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1string
     char *bb = (char *) jbb;
     char *ptr;
     CURLcode code = curl_easy_getinfo(curl, jinfo, &ptr);
-    put_long(bb, code);
+    bb_put_long(bb, code);
     if (code == CURLE_OK) {
         return JNI_CALL(env, NewStringUTF, ptr);
     } else {
