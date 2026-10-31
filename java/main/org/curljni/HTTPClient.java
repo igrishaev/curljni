@@ -34,10 +34,11 @@ public class HTTPClient implements Closeable {
         c.setCustomRequest(request.method);
 
         try (IResource file = FILE.open(request.writeFile, "wb");
-             IResource foo = null;
-             IResource headers = request.headers == null ? Headers.create(request.headers) : null) {
+             IResource headers = Headers.create(request.headers)) {
             c.setWriteFile(file);
-            c.setHeaders(headers);
+            if (headers != null) {
+                c.setHeaders(headers);
+            }
             c.perform();
         }
 

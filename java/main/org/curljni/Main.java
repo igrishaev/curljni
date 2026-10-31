@@ -3,12 +3,13 @@ package org.curljni;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class Main {
 
     public static void main(String... args) throws IOException {
         try (CurlEasy c = CurlEasy.make();
-             Headers hh = Headers.create(new String[] {"foo: bar"});
+             Headers hh = Headers.create(Map.of("foo", "bar"));
              FILE wf = FILE.open("aaa.txt", "wb");
              OutputStream out = new ByteArrayOutputStream(32);
              Accumulator acc = Accumulator.create(2048);
