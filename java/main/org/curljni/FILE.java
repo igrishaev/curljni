@@ -44,6 +44,14 @@ public class FILE implements IResource {
         return new FILE(fd, path, mode, false);
     }
 
+    public static FILE maybeOpen(String path, String mode) {
+        if (path == null) {
+            return null;
+        } else {
+            return open(path, mode);
+        }
+    }
+
     @SuppressWarnings("unused")
     public static FILE open(final File file, final String mode) {
         return open(file.getAbsolutePath(), mode);

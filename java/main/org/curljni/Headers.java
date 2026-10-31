@@ -35,13 +35,21 @@ public class Headers implements IResource {
         return headersArr;
     }
 
-    public static Headers create(final Map<String, String> headersMap) {
+    public static Headers create(final String[] headers) {
+        long ptr = _allocate(headers, headers.length);
+        return new Headers(ptr, headers, false);
+    }
+
+    public static Headers maybeCreate(final Map<String, String> headersMap) {
         if (headersMap == null) {
             return null;
+        } else {
+            return create(headersMap);
         }
-        String[] headersArr = convertHeaders(headersMap);
-        long ptr = _allocate(headersArr, headersArr.length);
-        return new Headers(ptr, headersArr, false);
+    }
+
+    public static Headers create(final Map<String, String> headersMap) {
+        return create(convertHeaders(headersMap));
     }
 
     static {
