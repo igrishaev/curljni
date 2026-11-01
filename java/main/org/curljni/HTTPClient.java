@@ -33,23 +33,56 @@ public class HTTPClient implements Closeable {
         c.setUrl(request.url);
         c.setCustomRequest(request.method);
 
-        try (IResource writeFile = FILE.maybeOpen(request.writeFile, "wb");
-             IResource headers = Headers.maybeCreate(request.headers))
+        final boolean isAccum = request.asBytes || request.asString;
+
+        try (FILE writeFile = FILE.maybeOpen(request.writeFile, "wb");
+             Headers headers = Headers.maybeCreate(request.headers);
+             Accumulator accum = Accumulator.create(123))
         {
-            if (writeFile != null) {
-                c.setWriteFile(writeFile);
-            }
+            // headers
             if (headers != null) {
                 c.setHeaders(headers);
             }
+
+            // input
+            // read file
+            // read stream
+            // read callback?
+
+            // output
+            if (writeFile != null) {
+                c.setWriteFile(writeFile);
+            } else if (false) {
+                c.setWriteStream(null);
+            } else if (false) {
+                c.setWriteCallback(null);
+            } else if (isAccum) {
+                c.setAccumulator(accum);
+            }
+
             c.perform();
+
+            // response
+            HTTPResponse response = new HTTPResponse();
+            response.status = c.getResponseCode();
+            response.headers = c.getHeaders();
+
+            // body stream
+            // body callback
+            // body file
+
+            if (isAccum) {
+                if (request.asBytes) {
+                    response.bodyBytes = accum.getBytes();
+                } else if (request.asString) {
+                    response.bodyString = accum.getString();
+                }
+            }
+
+            return response;
         }
 
-        HTTPResponse response = new HTTPResponse();
-        response.status = c.getResponseCode();
-        response.headers = c.getHeaders();
-        response.bodyString = "123";
-        return response;
+
     }
 
     @Override

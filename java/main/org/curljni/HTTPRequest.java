@@ -8,5 +8,8 @@ public class HTTPRequest {
     protected String url;
     protected Map<String, String> headers;
     protected String writeFile;
+    protected boolean asBytes;
+    protected boolean asString;
+
 
 }
