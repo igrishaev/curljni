@@ -23,6 +23,14 @@ public class WriteCallback implements IResource {
         return new WriteCallback(ptr, false);
     }
 
+    public static WriteCallback maybeCreate(IWriteHandler handler) {
+        if (handler == null) {
+            return null;
+        } else {
+            return create(handler);
+        }
+    }
+
     private static native long _allocate(IWriteHandler handler);
     private static native long _free(long ptr);
 

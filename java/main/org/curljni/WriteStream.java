@@ -28,6 +28,14 @@ public class WriteStream implements IResource {
         return new WriteStream(ptr, out, false);
     }
 
+    public static WriteStream maybeCreate(OutputStream out) {
+        if (out == null) {
+            return null;
+        } else {
+            return create(out);
+        }
+    }
+
     private static native long _allocate(OutputStream out);
     private static native long _free(long ptr);
 

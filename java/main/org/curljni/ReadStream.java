@@ -29,6 +29,14 @@ public class ReadStream implements IResource {
         return new ReadStream(ptr, in, false);
     }
 
+    public static ReadStream maybeCreate(InputStream in) {
+        if (in == null) {
+            return null;
+        } else {
+            return create(in);
+        }
+    }
+
     private static native long _allocate(InputStream in);
     private static native long _free(long ptr);
 

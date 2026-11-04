@@ -5,9 +5,11 @@
 - clojure tests
 - set multi long method
 - get multi long method
-- FILE: open temp
 - remove Foo
 - set post fields
+- implement read callback (request too)
+- store global vm instance
+- get env from vm in callback
 
 - refactor globals init
 - release local refs

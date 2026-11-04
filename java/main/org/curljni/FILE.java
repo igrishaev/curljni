@@ -1,6 +1,8 @@
 package org.curljni;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 public class FILE implements IResource {
@@ -19,6 +21,21 @@ public class FILE implements IResource {
         this.path = path;
         this.mode = mode;
         this.isClosed = isClosed;
+    }
+
+    public File asFile() {
+        return new File(path);
+    }
+
+    public static FILE asTemp(String prefix, String suffix) {
+        final File f;
+        try {
+            f = File.createTempFile(prefix, suffix);
+            f.deleteOnExit();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return open(f.getAbsolutePath(), "wb");
     }
 
     @Override
