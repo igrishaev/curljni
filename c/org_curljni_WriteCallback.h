@@ -10,7 +10,7 @@ extern "C" {
 /*
  * Class:     org_curljni_WriteCallback
  * Method:    _allocate
- * Signature: (Lorg/curljni/IWriteHandler;)J
+ * Signature: (Lorg/curljni/WriteCallback/IHandler;)J
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteCallback__1allocate
   (JNIEnv *, jclass, jobject);

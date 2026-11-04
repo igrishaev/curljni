@@ -9,13 +9,18 @@ public class WriteCallback implements IResource {
         Native.loadLib();
     }
 
+    @FunctionalInterface
+    public interface IHandler {
+        void handle(byte[] buf, int off, int len);
+    }
+
     private WriteCallback(long ptr, boolean isClosed) {
         this.ptr = ptr;
         this.isClosed = isClosed;
     }
 
     @SuppressWarnings("unused")
-    public static WriteCallback create(IWriteHandler handler) {
+    public static WriteCallback create(IHandler handler) {
         long ptr = _allocate(handler);
         if (ptr == Native.NULL) {
             throw Err.error("failed to allocate WriteCallback");
@@ -23,7 +28,7 @@ public class WriteCallback implements IResource {
         return new WriteCallback(ptr, false);
     }
 
-    public static WriteCallback maybeCreate(IWriteHandler handler) {
+    public static WriteCallback maybeCreate(IHandler handler) {
         if (handler == null) {
             return null;
         } else {
@@ -31,7 +36,7 @@ public class WriteCallback implements IResource {
         }
     }
 
-    private static native long _allocate(IWriteHandler handler);
+    private static native long _allocate(IHandler handler);
     private static native long _free(long ptr);
 
     @Override

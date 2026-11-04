@@ -71,8 +71,8 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
         jfieldID jfield;
 
         /* IWriteHandler */
-        GET_CLASS(env, "org/curljni/IWriteHandler", jcls);
-        SET_METHOD(env, jcls, "handle", "([BII)V", _g.IWriteHandler.handle_BaII);
+        GET_CLASS(env, "org/curljni/WriteCallback$IHandler", jcls);
+        SET_METHOD(env, jcls, "handle", "([BII)V", _g.WriteCallback_IHandler.handle_BaII);
 
         /* OutputStream */
         GET_CLASS(env, "java/io/OutputStream", jcls);

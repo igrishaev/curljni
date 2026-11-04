@@ -23,8 +23,7 @@ JAVAFILES = \
 	$(SRC_PATH)/FILE.java \
 	$(SRC_PATH)/Native.java \
 	$(SRC_PATH)/CurlEasy.java \
-	$(SRC_PATH)/Err.java \
-	$(SRC_PATH)/IWriteHandler.java
+	$(SRC_PATH)/Err.java
 
 MODULES = \
 	$(C_PATH)/Foo.c \

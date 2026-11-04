@@ -3,7 +3,7 @@
 
 #include <jni.h>
 
-struct J_IWriteHandler {
+struct J_WriteCallback_IHandler {
     jmethodID handle_BaII;
 };
 
@@ -18,9 +18,9 @@ struct J_InputStream {
 };
 
 struct J_Globals {
-    struct J_OutputStream  OutputStream;
-    struct J_InputStream   InputStream;
-    struct J_IWriteHandler IWriteHandler;
+    struct J_OutputStream OutputStream;
+    struct J_InputStream InputStream;
+    struct J_WriteCallback_IHandler WriteCallback_IHandler;
 };
 
 extern struct J_Globals _g;

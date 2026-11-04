@@ -1,6 +1,5 @@
 package org.curljni.http;
 
-import org.curljni.IWriteHandler;
 import org.curljni.WriteCallback;
 
 import java.io.InputStream;
@@ -13,7 +12,7 @@ public class Request {
     protected Map<String, String> headers;
     protected String writeFile;
     protected OutputStream writeStream;
-    protected IWriteHandler writeHandler;
+    protected WriteCallback.IHandler writeHandler;
     protected boolean asBytes;
     protected boolean asString;
     protected int accumSize;

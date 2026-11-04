@@ -53,7 +53,10 @@ size_t write_callback_handler(char *data, size_t size, size_t nmemb, void *userd
         return CURL_WRITEFUNC_ERROR;
     }
 
-    JNI_CALL(env, CallVoidMethod, cd->jobj, _g.IWriteHandler.handle_BaII, cd->jbuf, 0, total);
+    JNI_CALL(env, CallVoidMethod, cd->jobj,
+             _g.WriteCallback_IHandler.handle_BaII,
+             cd->jbuf, 0, total
+    );
     if (JNI_CALL(env, ExceptionCheck)) {
         log_error("JNI IWriteHandler.handle() call has failed");
 #ifdef DEBIG

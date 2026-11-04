@@ -24,16 +24,26 @@ public class Client implements Closeable {
         }
     }
 
-    public static Response requestStatic(Request request) throws Exception {
+    public static Response requestStatic(Request request) {
         try (Client c = make()) {
             return c.request(request);
         }
     }
 
-    public Response request(Request request) throws Exception {
+    public Response request(Request request) {
         checkClosed();
+        c.resetOptions();
+
         c.setUrl(request.url);
-        c.setCustomRequest(request.method);
+
+        final String method = request.method;
+        if (method.equals("GET")) {
+            c.setHTTPGet(true);
+        } else if (method.equals("POST")) {
+            c.setHTTPPost(true);
+        } else {
+            c.setCustomRequest(method);
+        }
 
         final boolean isAccum = request.asBytes || request.asString;
 
@@ -75,7 +85,7 @@ public class Client implements Closeable {
             Response response = new Response();
             response.status = c.getResponseCode();
             response.headers = c.getHeaders();
-            
+
             if (isAccum) {
                 if (request.asBytes) {
                     response.bodyBytes = accum.getBytes();
@@ -96,5 +106,12 @@ public class Client implements Closeable {
             c.close();
             isClosed = true;
         }
+    }
+
+    public static void main(String... args) {
+        Request req = new Request();
+        req.method = "GET";
+        req.url = "https://habr.com";
+        System.out.println(requestStatic(req));
     }
 }
