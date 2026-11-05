@@ -1,4 +1,7 @@
 
+- use direct buffer for write handler?
+- process_callback function
+
 - rename accum to collector
 - accum input stream
 - clojure module
