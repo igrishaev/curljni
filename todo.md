@@ -11,7 +11,6 @@
 - remove Foo
 - set post fields
 - implement read callback (request too)
-- store global vm instance
 - get env from vm in callback
 
 - refactor globals init

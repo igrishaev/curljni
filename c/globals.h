@@ -18,6 +18,7 @@ struct J_InputStream {
 };
 
 struct J_Globals {
+    JavaVM *vm;
     struct J_OutputStream OutputStream;
     struct J_InputStream InputStream;
     struct J_WriteCallback_IHandler WriteCallback_IHandler;

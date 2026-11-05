@@ -43,7 +43,7 @@ jint register_natives(JNIEnv *env) {
     return JNI_CALL(env, RegisterNatives, jcls, methods, nMethods);
 }
 
-jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     log_debug("JNI_OnLoad start");
 
@@ -70,7 +70,9 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
         jmethodID jmeth;
         jfieldID jfield;
 
-        /* IWriteHandler */
+        _g.vm = vm;
+
+        /* WriteCallback */
         GET_CLASS(env, "org/curljni/WriteCallback$IHandler", jcls);
         SET_METHOD(env, jcls, "handle", "([BII)V", _g.WriteCallback_IHandler.handle_BaII);
 
@@ -91,6 +93,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
     log_debug("JNI_OnUnload");
+    _g.vm = NULL;
     curl_global_cleanup();
     log_debug("cURL has been globally cleaned up");
 }
