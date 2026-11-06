@@ -1,6 +1,5 @@
 #include <string.h>
 #include <jni.h>
-#include "curl_data.h"
 #include "macros.h"
 #include "globals.h"
 #include "logging.h"

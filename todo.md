@@ -1,9 +1,10 @@
 
-- drop curl_data
 - drop read_data
 
 - CURL_MAX_WRITE_SIZE
 - CURL_MAX_HTTP_HEADER
+- bb default size everywhere
+- share arena bb?
 
 - rename WriteStrem to WriteChannel
 - rename WriteCallback to WriteHandler
