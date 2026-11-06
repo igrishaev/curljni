@@ -8,6 +8,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_WriteCallback__1allocate
 
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteCallback__1free
   (JNIEnv *env, jclass jcls, jlong jptr) {
-    WriteCallback_delete(env, (struct WriteCallback *) jptr);
+    WriteCallback_delete(env, (WriteCallback *) jptr);
     return 0;
 }

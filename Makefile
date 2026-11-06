@@ -38,6 +38,7 @@ MODULES = \
 	$(C_PATH)/org_curljni_CURLOPT.c \
 	$(C_PATH)/org_curljni_Arena.c \
 	$(C_PATH)/org_curljni_ReadStream.c \
+	$(C_PATH)/ReadStream.c \
 	$(C_PATH)/WriteCallback.c \
 	$(C_PATH)/WriteStream.c \
 	$(C_PATH)/org_curljni_WriteCallback.c \

@@ -3,30 +3,50 @@ package org.curljni;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class ReadStream implements IResource {
 
-    private final long ptr;
-    private final InputStream in;
+    private long ptr;
     private boolean isClosed;
+    private ByteBuffer bb;
+    private int bbSize;
+    private ReadableByteChannel channel;
 
     static {
         Native.loadLib();
     }
 
-    private ReadStream(long ptr, InputStream in, boolean isClosed) {
-        this.ptr = ptr;
-        this.in = in;
-        this.isClosed = isClosed;
+    private ReadStream() {}
+
+    @SuppressWarnings("unused")
+    private int callback(int limit) throws IOException {
+        bb.clear();
+        bb.limit(limit);
+        return channel.read(bb);
+    }
+
+    public static ReadStream create(InputStream in) {
+        return create(Channels.newChannel(in));
     }
 
     @SuppressWarnings("unused")
-    public static ReadStream create(InputStream in) {
-        long ptr = _allocate(in);
+    public static ReadStream create(ReadableByteChannel channel) {
+        int bbSize = 1024 * 16; // TODO
+        ByteBuffer bb = ByteBuffer.allocateDirect(bbSize);
+        ReadStream rs = new ReadStream();
+        long ptr = rs._allocate(bb, bbSize);
         if (ptr == Native.NULL) {
             throw Err.error("failed to allocate read stream");
         }
-        return new ReadStream(ptr, in, false);
+        rs.ptr = ptr;
+        rs.isClosed = false;
+        rs.bb = bb;
+        rs.bbSize = bbSize;
+        rs.channel = channel;
+        return rs;
     }
 
     public static ReadStream maybeCreate(InputStream in) {
@@ -37,7 +57,7 @@ public class ReadStream implements IResource {
         }
     }
 
-    private static native long _allocate(InputStream in);
+    private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 
     @Override
@@ -56,7 +76,7 @@ public class ReadStream implements IResource {
         final long code = _free(ptr);
         isClosed = true;
         try {
-            in.close();
+            channel.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

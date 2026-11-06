@@ -1,5 +1,6 @@
 
 - drop curl_data
+- drop read_data
 
 - CURL_MAX_WRITE_SIZE
 - CURL_MAX_HTTP_HEADER

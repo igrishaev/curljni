@@ -364,8 +364,8 @@ public class CurlEasy implements IResource {
     // TODO: rename set1opt set2opts
     public CurlEasy setReadStream(ReadStream stream) {
         Objects.requireNonNull(stream, "read stream cannot be null");
-        return setReadParams(stream.ptr(), FN.read_callback_stream)
-                .setSeekParams(Native.NULL, FN.read_seek_cannot);
+        return setReadParams(stream.ptr(), FN.ReadStream_handler)
+                .setSeekParams(Native.NULL, FN.ReadStream_seek);
         // TODO: curl_easy_setopt(curl, CURLOPT_UPLOAD, 1);
     }
 

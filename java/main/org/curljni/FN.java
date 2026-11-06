@@ -11,8 +11,8 @@ public class FN {
     public final static long fread;
     public final static long read_callback_file;
     public final static long read_seek_file;
-    public final static long read_callback_stream;
-    public final static long read_seek_cannot;
+    public final static long ReadStream_handler;
+    public final static long ReadStream_seek;
 
     native private static long[] _get_values();
 
@@ -28,8 +28,8 @@ public class FN {
         fread                  = bb.get();
         read_callback_file     = bb.get();
         read_seek_file         = bb.get();
-        read_callback_stream   = bb.get();
-        read_seek_cannot       = bb.get();
+        ReadStream_handler     = bb.get();
+        ReadStream_seek        = bb.get();
     }
 
     public static void main(String... args) {
