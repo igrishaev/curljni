@@ -1,6 +1,5 @@
 #include <jni.h>
 #include "macros.h"
-#include "write_data.h"
 #include "read_data.h"
 #include "accum.h"
 #include "WriteCallback.h"

@@ -7,7 +7,6 @@
 #include "curl/curl.h"
 #include "read_data.h"
 
-
 size_t read_callback_stream(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     size_t total = size * nmemb;

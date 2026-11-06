@@ -80,11 +80,6 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         GET_CLASS(env, "org/curljni/WriteStream", jcls);
         SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteStream.callback);
 
-        /* OutputStream */
-        GET_CLASS(env, "java/io/OutputStream", jcls);
-        SET_METHOD(env, jcls, "write", "([BII)V", _g.OutputStream.write_BaII);
-        SET_METHOD(env, jcls, "close", "()V",     _g.OutputStream.close);
-
         /* InputStream */
         GET_CLASS(env, "java/io/InputStream", jcls);
         SET_METHOD(env, jcls, "read",  "([BII)I", _g.InputStream.read_BaII);

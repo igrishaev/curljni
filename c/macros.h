@@ -9,7 +9,6 @@
 #define J_INT        "I"
 #define J_LONG       "J"
 #define J_BOOL       "Z"
-#define J_OS         "Ljava/io/OutputStream;"
 #define J_BA         "[B"
 
 #define _MAX(a, b) (((a) > (b)) ? (a) : (b))

@@ -11,11 +11,6 @@ struct J_WriteStream {
     jmethodID callback;
 };
 
-struct J_OutputStream {
-    jmethodID write_BaII;
-    jmethodID close;
-};
-
 struct J_InputStream {
     jmethodID read_BaII;
     jmethodID close;
@@ -23,7 +18,6 @@ struct J_InputStream {
 
 struct J_Globals {
     JavaVM *vm;
-    struct J_OutputStream OutputStream; // TODO
     struct J_InputStream InputStream;   // TODO
     struct J_WriteStream WriteStream;
     struct J_WriteCallback WriteCallback; // TODO rename

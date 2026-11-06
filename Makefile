@@ -31,7 +31,6 @@ MODULES = \
 	$(C_PATH)/accum.c \
 	$(C_PATH)/read_data.c \
 	$(C_PATH)/curl_data.c \
-	$(C_PATH)/write_data.c \
 	$(C_PATH)/org_curljni_CURLFOLLOW.c \
 	$(C_PATH)/org_curljni_FN.c \
 	$(C_PATH)/org_curljni_CURLE.c \
