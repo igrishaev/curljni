@@ -163,7 +163,7 @@ public class CurlEasy implements IResource {
 
     public CurlEasy setWriteCallback(IResource callback) {
         Objects.requireNonNull(callback, "write callback cannot be null");
-        return setWriteParams(callback.ptr(), FN.write_callback_handler);
+        return setWriteParams(callback.ptr(), FN.WriteCallback_handler);
     }
 
     public CurlEasy setProxy(String proxy) {

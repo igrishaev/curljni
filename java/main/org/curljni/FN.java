@@ -6,7 +6,7 @@ public class FN {
 
     public final static long fwrite;
     public final static long write_callback_stream;
-    public final static long write_callback_handler;
+    public final static long WriteCallback_handler;
     public final static long accum_write_callback;
     public final static long fread;
     public final static long read_callback_file;
@@ -23,7 +23,7 @@ public class FN {
 
         fwrite                 = bb.get();
         write_callback_stream  = bb.get();
-        write_callback_handler = bb.get();
+        WriteCallback_handler  = bb.get();
         accum_write_callback   = bb.get();
         fread                  = bb.get();
         read_callback_file     = bb.get();

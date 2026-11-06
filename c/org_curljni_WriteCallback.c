@@ -2,7 +2,7 @@
 #include "WriteCallback.h"
 
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteCallback__1allocate
-  (JNIEnv *env, jclass jcls, jobject jhandler) {
+  (JNIEnv *env, jobject this, jobject jbb, jint jbb_size) {
     return (jlong) WriteCallback_create(env, jbb, jbb_size, this);
 }
 

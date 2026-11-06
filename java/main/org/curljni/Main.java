@@ -3,6 +3,7 @@ package org.curljni;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 public class Main {
@@ -13,7 +14,10 @@ public class Main {
              FILE wf = FILE.open("aaa.txt", "wb");
              OutputStream out = new ByteArrayOutputStream(32);
              Accumulator acc = Accumulator.create(2048);
-             WriteStream ws = WriteStream.create(out)
+             WriteStream ws = WriteStream.create(out);
+             WriteCallback wc = WriteCallback.create(bb -> {
+                 System.out.println(bb);
+             })
         ) {
             c
                 .resetOptions()
@@ -22,8 +26,9 @@ public class Main {
                 .setHeaders(hh)
                 .setUserAgent(null)
                 .setFollowLocation(CURLFOLLOW.ALL)
-                .setAccumulator(acc)
+                // .setAccumulator(acc)
                 .setServerResponseTimeoutMs(15000)
+                    .setWriteCallback(wc)
                 .setTimeoutMs(15000)
                     .setBufferSize(9999)
                 .setConnectTimeoutMs(15000)
@@ -38,24 +43,20 @@ public class Main {
             // System.out.println(Foo.getFoo(333));
             // System.out.println(out.toString().substring(0, 5));
 
-            System.out.println(acc.getBytes().length);
+            // System.out.println(acc.getBytes().length);
+            c.perform();
 
-            try {
-                c.perform();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
             // System.out.println(acc.getString());
-            System.out.println(c.getResponseCode());
-            System.out.println(c.getConnectTimeMs());
-            System.out.println(c.getContentLengthDownload());
-            System.out.println(c.getRedirectTime());
-            System.out.println(c.getOsErrno());
-            System.out.println(c.getLocalIP());
-            System.out.println(c.getLocalPort());
-            System.out.println(c.getPrimaryIP());
-            System.out.println(c.getPrimaryPort());
-            System.out.println(c.getEffectiveURL());
+//            System.out.println(c.getResponseCode());
+//            System.out.println(c.getConnectTimeMs());
+//            System.out.println(c.getContentLengthDownload());
+//            System.out.println(c.getRedirectTime());
+//            System.out.println(c.getOsErrno());
+//            System.out.println(c.getLocalIP());
+//            System.out.println(c.getLocalPort());
+//            System.out.println(c.getPrimaryIP());
+//            System.out.println(c.getPrimaryPort());
+//            System.out.println(c.getEffectiveURL());
             System.out.println(c.getHeaders());
         }
     }

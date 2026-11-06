@@ -6,8 +6,9 @@ public class WriteCallback implements IResource {
 
     private long ptr;
     private boolean isClosed;
-    private final ByteBuffer bb;
-    private final int bbSize;
+    private ByteBuffer bb;
+    private int bbSize;
+    private IHandler handler;
 
     static {
         Native.loadLib();
@@ -18,23 +19,31 @@ public class WriteCallback implements IResource {
         void handle(ByteBuffer bb);
     }
 
-    private WriteCallback(IHandler handler) {
-        this.hashCode()
-        this.ptr = ptr;
-        this.isClosed = isClosed;
-    }
+    private WriteCallback() {}
 
-    private void callback(long size) {
-
+    private void callback(int size) {
+        bb.clear();
+        bb.limit(size);
+        handler.handle(bb);
     }
 
     @SuppressWarnings("unused")
     public static WriteCallback create(IHandler handler) {
+        int bbSize = 1024 * 16;
+        ByteBuffer bb = ByteBuffer.allocateDirect(bbSize);
+
         WriteCallback wc = new WriteCallback();
-        long ptr = wc._allocate();
+
+        long ptr = wc._allocate(bb, bbSize);
         if (ptr == Native.NULL) {
             throw Err.error("failed to allocate WriteCallback");
         }
+
+        wc.ptr = ptr;
+        wc.bb = bb;
+        wc.bbSize = bbSize;
+        wc.handler = handler;
+        wc.isClosed = false;
         return wc;
     }
 
@@ -46,7 +55,7 @@ public class WriteCallback implements IResource {
         }
     }
 
-    private native long _allocate(ByteBuffer bb, int bbSize );
+    private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 
     @Override

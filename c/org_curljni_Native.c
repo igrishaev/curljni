@@ -73,8 +73,8 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         _g.vm = vm;
 
         /* WriteCallback */
-        GET_CLASS(env, "org/curljni/WriteCallback$IHandler", jcls);
-        SET_METHOD(env, jcls, "handle", "([BII)V", _g.WriteCallback_IHandler.handle_BaII);
+        GET_CLASS(env, "org/curljni/WriteCallback", jcls);
+        SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteCallback.callback);
 
         /* OutputStream */
         GET_CLASS(env, "java/io/OutputStream", jcls);

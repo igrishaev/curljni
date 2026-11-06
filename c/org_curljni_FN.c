@@ -3,6 +3,7 @@
 #include "write_data.h"
 #include "read_data.h"
 #include "accum.h"
+#include "WriteCallback.h"
 
 JNIEXPORT jlongArray JNICALL Java_org_curljni_FN__1get_1values
   (JNIEnv *env, jclass jcls) {
@@ -10,7 +11,7 @@ JNIEXPORT jlongArray JNICALL Java_org_curljni_FN__1get_1values
     jlong values[] = {
         (jlong) fwrite,
         (jlong) write_callback_stream,
-        (jlong) write_callback_handler,
+        (jlong) WriteCallback_handler,
         (jlong) accum_write_callback,
         (jlong) fread,
         (jlong) read_callback_file,

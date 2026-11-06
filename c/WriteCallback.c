@@ -1,6 +1,11 @@
 #include <jni.h>
+#include <string.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "macros.h"
+#include "curl/curl.h"
+#include "WriteCallback.h"
+#include "logging.h"
 
 struct WriteCallback {
     char *bb;
@@ -10,8 +15,13 @@ struct WriteCallback {
     jmethodID callback;
 };
 
-struct WriteCallback * WriteCallback_create(JNIEnv *env, char *bb, size_t bb_size, jobject this) {
-    struct WriteCallback *wc = malloc(sizeof(struct WriteCallback));
+WriteCallback * WriteCallback_create(JNIEnv *env, jobject jbb, size_t bb_size, jobject this) {
+    WriteCallback *wc = malloc(sizeof(WriteCallback));
+
+    void *bb = JNI_CALL(env, GetDirectBufferAddress, jbb);
+    if (!bb) {
+        return NULL;
+    }
 
     jobject thisGlobal = JNI_CALL(env, NewGlobalRef, this);
     if (!thisGlobal) {
@@ -26,20 +36,22 @@ struct WriteCallback * WriteCallback_create(JNIEnv *env, char *bb, size_t bb_siz
     return wc;
 }
 
-void * WriteCallback_delete(JNIEnv *env struct WriteCallback *wc) {
+void WriteCallback_delete(JNIEnv *env, WriteCallback *wc) {
     JNI_CALL(env, DeleteLocalRef, wc->this);
     free(wc);
 }
 
 size_t WriteCallback_handler(char *data, size_t size, size_t nmemb, void *userdata) {
-    struct WriteCallback *wc = (struct WriteCallback *) userdata;
+    WriteCallback *wc = (WriteCallback *) userdata;
     size_t total = size * nmemb;
+
+    log_debug("total: %lu", total);
 
     memcpy(wc->bb, data, size);
     JNI_CALL(wc->env, CallVoidMethod, wc->this, wc->callback, total);
     if (JNI_CALL(wc->env, ExceptionCheck)) {
         return CURL_WRITEFUNC_ERROR;
     } else {
-        return size;
+        return total;
     }
 }
