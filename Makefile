@@ -40,6 +40,7 @@ MODULES = \
 	$(C_PATH)/org_curljni_Arena.c \
 	$(C_PATH)/org_curljni_ReadStream.c \
 	$(C_PATH)/WriteCallback.c \
+	$(C_PATH)/WriteStream.c \
 	$(C_PATH)/org_curljni_WriteCallback.c \
 	$(C_PATH)/org_curljni_WriteStream.c \
 	$(C_PATH)/org_curljni_Accumulator.c \
@@ -79,7 +80,7 @@ sep:
 	$(info .........................................)
 
 headers:
-	javac -h $(C_PATH) $(JAVAFILES)
+	javac -Xlint:deprecation -h $(C_PATH) $(JAVAFILES)
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $*.c

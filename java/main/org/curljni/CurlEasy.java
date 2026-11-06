@@ -158,7 +158,7 @@ public class CurlEasy implements IResource {
 
     public CurlEasy setWriteStream(IResource stream) {
         Objects.requireNonNull(stream, "the stream object cannot be null");
-        return setWriteParams(stream.ptr(), FN.write_callback_stream);
+        return setWriteParams(stream.ptr(), FN.WriteStream_handler);
     }
 
     public CurlEasy setWriteCallback(IResource callback) {

@@ -5,7 +5,7 @@ import java.nio.LongBuffer;
 public class FN {
 
     public final static long fwrite;
-    public final static long write_callback_stream;
+    public final static long WriteStream_handler;
     public final static long WriteCallback_handler;
     public final static long accum_write_callback;
     public final static long fread;
@@ -22,7 +22,7 @@ public class FN {
         final LongBuffer bb = LongBuffer.wrap(values);
 
         fwrite                 = bb.get();
-        write_callback_stream  = bb.get();
+        WriteStream_handler    = bb.get();
         WriteCallback_handler  = bb.get();
         accum_write_callback   = bb.get();
         fread                  = bb.get();
@@ -34,7 +34,7 @@ public class FN {
 
     public static void main(String... args) {
         System.out.println(fwrite);
-        System.out.println(write_callback_stream);
+        System.out.println(WriteStream_handler);
     }
 
 

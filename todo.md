@@ -1,4 +1,11 @@
 
+- drop curl_data
+
+- CURL_MAX_WRITE_SIZE
+- CURL_MAX_HTTP_HEADER
+
+- rename WriteStrem to WriteChannel
+- rename WriteCallback to WriteHandler
 - use direct buffer for write handler?
 - process_callback function
 

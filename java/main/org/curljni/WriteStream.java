@@ -3,29 +3,49 @@ package org.curljni;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
 
 public class WriteStream implements IResource {
 
-    private final long ptr;
-    private final OutputStream out;
+    private long ptr;
+    private WritableByteChannel channel;
     private boolean isClosed;
+    private ByteBuffer bb;
+    private int bbSize;
 
     static {
         Native.loadLib();
     }
 
-    private WriteStream(long ptr, OutputStream out, boolean isClosed) {
-        this.ptr = ptr;
-        this.out = out;
-        this.isClosed = isClosed;
+    private WriteStream() {}
+
+    @SuppressWarnings("unused")
+    void callback(int size) throws IOException {
+        bb.clear();
+        bb.limit(size);
+        channel.write(bb);
     }
 
     public static WriteStream create(OutputStream out) {
-        long ptr = _allocate(out);
+        return create(Channels.newChannel(out));
+    }
+
+    public static WriteStream create(WritableByteChannel channel) {
+        int bbSize = 1024 * 16; // TODO
+        ByteBuffer bb = ByteBuffer.allocateDirect(bbSize);
+        WriteStream ws = new WriteStream();
+        long ptr = ws._allocate(bb, bbSize);
         if (ptr == Native.NULL) {
-            throw Err.error("failed to allocate write stream");
+            throw Err.error("failed to allocate a write stream");
         }
-        return new WriteStream(ptr, out, false);
+        ws.bb = bb;
+        ws.bbSize = bbSize;
+        ws.isClosed = false;
+        ws.ptr = ptr;
+        ws.channel = channel;
+        return ws;
     }
 
     public static WriteStream maybeCreate(OutputStream out) {
@@ -36,7 +56,7 @@ public class WriteStream implements IResource {
         }
     }
 
-    private static native long _allocate(OutputStream out);
+    private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 
     @Override
@@ -55,7 +75,7 @@ public class WriteStream implements IResource {
         final long code = _free(ptr);
         isClosed = true;
         try {
-            out.close();
+            channel.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

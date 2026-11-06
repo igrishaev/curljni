@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     org_curljni_WriteStream
  * Method:    _allocate
- * Signature: (Ljava/io/OutputStream;)J
+ * Signature: (Ljava/nio/ByteBuffer;I)J
  */
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteStream__1allocate
-  (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jobject, jobject, jint);
 
 /*
  * Class:     org_curljni_WriteStream

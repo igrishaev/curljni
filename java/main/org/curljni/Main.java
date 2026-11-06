@@ -28,23 +28,21 @@ public class Main {
                 .setFollowLocation(CURLFOLLOW.ALL)
                 // .setAccumulator(acc)
                 .setServerResponseTimeoutMs(15000)
-                    .setWriteCallback(wc)
+                // .setWriteCallback(wc)
                 .setTimeoutMs(15000)
-                    .setBufferSize(9999)
+                // .setBufferSize(9999)
                 .setConnectTimeoutMs(15000)
                     .setUsername("Ivan")
                     .setPassword("secret")
                 // .setWriteFile(wf)
-                // .setWriteStream(ws)
-                        .setHTTPGet(true);
+                .setWriteStream(ws)
+                .setHTTPGet(true);
                 // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
-            // System.out.println(Foo.getFoo(333));
-            // System.out.println(out.toString().substring(0, 5));
-
             // System.out.println(acc.getBytes().length);
             c.perform();
+            System.out.println(out.toString().substring(0, 5));
 
             // System.out.println(acc.getString());
 //            System.out.println(c.getResponseCode());

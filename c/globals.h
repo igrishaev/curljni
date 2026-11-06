@@ -7,6 +7,9 @@ struct J_WriteCallback {
     jmethodID callback;
 };
 
+struct J_WriteStream {
+    jmethodID callback;
+};
 
 struct J_OutputStream {
     jmethodID write_BaII;
@@ -20,9 +23,10 @@ struct J_InputStream {
 
 struct J_Globals {
     JavaVM *vm;
-    struct J_OutputStream OutputStream;
-    struct J_InputStream InputStream;
-    struct J_WriteCallback WriteCallback;
+    struct J_OutputStream OutputStream; // TODO
+    struct J_InputStream InputStream;   // TODO
+    struct J_WriteStream WriteStream;
+    struct J_WriteCallback WriteCallback; // TODO rename
 };
 
 extern struct J_Globals _g;

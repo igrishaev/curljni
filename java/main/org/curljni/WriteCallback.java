@@ -21,6 +21,7 @@ public class WriteCallback implements IResource {
 
     private WriteCallback() {}
 
+    @SuppressWarnings("unused")
     private void callback(int size) {
         bb.clear();
         bb.limit(size);
@@ -29,7 +30,7 @@ public class WriteCallback implements IResource {
 
     @SuppressWarnings("unused")
     public static WriteCallback create(IHandler handler) {
-        int bbSize = 1024 * 16;
+        int bbSize = 1024 * 16; // TODO
         ByteBuffer bb = ByteBuffer.allocateDirect(bbSize);
 
         WriteCallback wc = new WriteCallback();

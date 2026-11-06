@@ -1,0 +1,57 @@
+#include <jni.h>
+#include <string.h>
+#include <stdlib.h>
+#include "globals.h"
+#include "macros.h"
+#include "curl/curl.h"
+#include "WriteStream.h"
+#include "logging.h"
+
+struct WriteStream {
+    char *bb;
+    size_t bb_size;
+    JNIEnv *env;
+    jobject this;
+    jmethodID callback;
+};
+
+WriteStream * WriteStream_create(JNIEnv *env, jobject jbb, size_t bb_size, jobject this) {
+    WriteStream *wc = malloc(sizeof(WriteStream));
+
+    void *bb = JNI_CALL(env, GetDirectBufferAddress, jbb);
+    if (!bb) {
+        return NULL;
+    }
+
+    jobject thisGlobal = JNI_CALL(env, NewGlobalRef, this);
+    if (!thisGlobal) {
+        return NULL;
+    }
+
+    wc->bb = bb;
+    wc->bb_size = bb_size;
+    wc->env = env;
+    wc->this = thisGlobal;
+    wc->callback = _g.WriteStream.callback;
+    return wc;
+}
+
+void WriteStream_delete(JNIEnv *env, WriteStream *wc) {
+    JNI_CALL(env, DeleteGlobalRef, wc->this);
+    free(wc);
+}
+
+size_t WriteStream_handler(char *data, size_t size, size_t nmemb, void *userdata) {
+    WriteStream *wc = (WriteStream *) userdata;
+    size_t total = size * nmemb;
+
+    log_debug("total: %lu", total);
+
+    memcpy(wc->bb, data, total);
+    JNI_CALL(wc->env, CallVoidMethod, wc->this, wc->callback, total);
+    if (JNI_CALL(wc->env, ExceptionCheck)) {
+        return CURL_WRITEFUNC_ERROR;
+    } else {
+        return total;
+    }
+}

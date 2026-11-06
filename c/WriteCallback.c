@@ -5,7 +5,6 @@
 #include "macros.h"
 #include "curl/curl.h"
 #include "WriteCallback.h"
-#include "logging.h"
 
 struct WriteCallback {
     char *bb;
@@ -37,7 +36,7 @@ WriteCallback * WriteCallback_create(JNIEnv *env, jobject jbb, size_t bb_size, j
 }
 
 void WriteCallback_delete(JNIEnv *env, WriteCallback *wc) {
-    JNI_CALL(env, DeleteLocalRef, wc->this);
+    JNI_CALL(env, DeleteGlobalRef, wc->this);
     free(wc);
 }
 
@@ -45,9 +44,7 @@ size_t WriteCallback_handler(char *data, size_t size, size_t nmemb, void *userda
     WriteCallback *wc = (WriteCallback *) userdata;
     size_t total = size * nmemb;
 
-    log_debug("total: %lu", total);
-
-    memcpy(wc->bb, data, size);
+    memcpy(wc->bb, data, total);
     JNI_CALL(wc->env, CallVoidMethod, wc->this, wc->callback, total);
     if (JNI_CALL(wc->env, ExceptionCheck)) {
         return CURL_WRITEFUNC_ERROR;

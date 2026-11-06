@@ -1,16 +1,13 @@
 #include <jni.h>
-#include "curl_data.h"
-
+#include "WriteStream.h"
 
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteStream__1allocate
-  (JNIEnv *env, jclass jcls, jobject jstream) {
-    return (jlong) curl_data_init(env, jstream);
+  (JNIEnv *env, jobject this, jobject jbb, jint jbb_size) {
+    return (jlong) WriteStream_create(env, jbb, jbb_size, this);
 }
-
 
 JNIEXPORT jlong JNICALL Java_org_curljni_WriteStream__1free
   (JNIEnv *env, jclass jobj, jlong jptr) {
-    void *ptr = (void *) jptr;
-    curl_data_free(ptr);
+    WriteStream_delete(env, (struct WriteStream *) jptr);
     return 0;
 }
