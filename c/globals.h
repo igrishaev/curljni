@@ -7,6 +7,11 @@ struct J_WriteCallback_IHandler {
     jmethodID handle_BaII;
 };
 
+struct J_WriteCallback {
+    jmethodID callback;
+};
+
+
 struct J_OutputStream {
     jmethodID write_BaII;
     jmethodID close;
@@ -21,6 +26,7 @@ struct J_Globals {
     JavaVM *vm;
     struct J_OutputStream OutputStream;
     struct J_InputStream InputStream;
+    struct J_WriteCallback WriteCallback;
     struct J_WriteCallback_IHandler WriteCallback_IHandler;
 };
 
