@@ -11,6 +11,8 @@
    [clj-http.client :as client]))
 
 (def URL "http://127.0.0.1:3099")
+#_
+(def URL "http://google.com")
 
 (defn test-bb []
   (quick-bench
@@ -24,6 +26,7 @@
     (quick-bench
         (let [response
               (client/get URL
+                          #_
                           {:connection-manager cm
                            :cache true})
               {:keys [body]}
@@ -71,16 +74,17 @@
 
 
 (defn test-curl []
-  (with-open [c (curl/init)]
-    (let [opt {:url URL
-               :method 1
-               :follow-redirects 3
-               :headers {"foo" "bar"}
-               :accumulate? true}]
-      (quick-bench
-          (curl/perform c opt))))
 
-  #_
-  (with-open [c (CurlEasy/make)]
+  (let [opt {:url URL
+             :method :get
+             :follow-redirects true
+             :headers {"foo" "bar"}
+             :as :bytes}]
+
+    #_
     (quick-bench
-        (Main/test c))))
+        (curl/request opt))
+
+    (with-open [c (curl/init)]
+      (quick-bench
+          (curl/request c opt)))))

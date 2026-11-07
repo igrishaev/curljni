@@ -2,114 +2,159 @@
   (:import
    (java.util Map)
    (org.curljni CurlEasy
+                WriteCallback
+                WriteCallback$IHandler
+                CURLFOLLOW
                 IResource
                 Headers
                 Dummy
                 FILE
                 Accumulator)))
 
-#_
-(defn ->request ^Request [opts]
-
-  (let [{:keys [url
-                method
-                follow-location
-                resource-headers
-                resource-write-file
-                resource-accum]}
-        opts]
-
-    (cond-> (Request/builder)
-
-      ;; TODO URL URI
-      (string? url)
-      (.url ^String url)
-
-      method
-      (.method method)
-
-      follow-location
-      (.followLocation follow-location)
-
-      resource-write-file
-      (.writeFile resource-write-file)
-
-      resource-headers
-      (.headers resource-headers)
-
-      resource-accum
-      (.accum resource-accum)
-
-      :finally
-      (.build))))
+(set! *warn-on-reflection* true)
 
 (defn init ^CurlEasy []
   (CurlEasy/make))
 
-#_
-(defn perform [^CurlEasy curl opts]
-  (.perform curl (->request opts)))
+(defmacro with-resources [bindings & body]
+  (if (= (count bindings) 0)
+    `(do ~@body)
+    `(let ~(subvec bindings 0 2)
+       (try
+         (with-resources ~(subvec bindings 2)
+           ~@body)
+         (finally
+           (when (some? ~(bindings 0))
+             (.close ~(bindings 0))))))))
 
-(defn open-headers ^IResource [headers]
-  (if headers
-    (Headers/create ^Map headers)
-    Dummy/INSTANCE))
+(defn request
+  ([opts]
+   (with-open [c (CurlEasy/make)]
+     (request c opts)))
 
-(defn open-write-file ^IResource [write-file]
-  (if write-file
-    (FILE/open ^String write-file "wb")
-    Dummy/INSTANCE))
+  ([^CurlEasy c opts]
+   (let [{:keys [url
+                 method
+                 headers
+                 as
+                 follow-redirects
+                 body
+                 ]}
+         opts]
 
-(defn open-accum ^IResource [accumulate?]
-  (if accumulate?
-    (Accumulator/create 4096)
-    Dummy/INSTANCE))
+     (.resetOptions c)
 
-(defn ->response [^CurlEasy curl accumulate? ^Accumulator acc]
-  {:status (.getResponseCode curl)
-   :headers (.getHeaders curl)
-   :body (when accumulate?
-           (.getBytes acc))})
+     (case follow-redirects
 
-(defn perform ^CurlEasy [^CurlEasy curl opts]
-  (let [{:keys [url
-                method
-                headers
-                follow-location
-                write-file
-                accumulate?]}
-        opts]
-    (with-open [h (open-headers headers)
-                f (open-write-file write-file)
-                a (open-accum accumulate?)]
-      (cond-> (.resetOptions curl)
+       (true :all :yes)
+       (.setFollowLocation c CURLFOLLOW/ALL)
 
-        url
-        (.setUrl url)
+       (:first :one)
+       (.setFollowLocation c CURLFOLLOW/FIRSTONLY)
 
-        method
-        (.setMethod method)
+       (:code)
+       (.setFollowLocation c CURLFOLLOW/OBEYCODE)
 
-        follow-location
-        (.setFollowLocation follow-location)
+       (false :no :off)
+       (.setFollowLocation c CURLFOLLOW/OFF))
 
-        :true
-        (.setAccumulator a)
+     (case method
+       (:get "GET")
+       (.setHTTPGet c true)
 
-        :true
-        (.setHeaders h)
+       (:post "POST")
+       (.setHTTPPost c true)
 
-        :then
-        (.perform)
+       ;; else
+       (when method
+         (.setCustomRequest c method)))
 
-        :finally
-        (->response accumulate? a)))))
+     (let [accum?
+           (or (= as :bytes)
+               (= as :string))
+
+           file?
+           (instance? java.io.File as)
+
+           handler?
+           (fn? as)]
+
+       (with-resources
+           [accum
+            (when accum?
+              (Accumulator/create))
+
+            file
+            (when file?
+              (FILE/open (.getAbsolutePath ^java.io.File as) "wb"))
+
+            jheaders
+            (when (seq headers)
+              (Headers/create ^Map headers))
+
+            handler
+            (when handler?
+              (WriteCallback/create
+               (reify WriteCallback$IHandler
+                 (handle [this bb]
+                   (as bb)))))]
+
+           (cond-> c
+
+             url
+             (.setUrl url)
+
+             accum
+             (.setAccumulator accum)
+
+             file
+             (.setWriteFile file)
+
+             handler
+             (.setWriteCallback handler)
+
+             jheaders
+             (.setHeaders jheaders)
+
+             :finally
+             (.perform))
+
+           {:status (.getResponseCode c)
+            :headers (.getHeaders c)
+            :body
+            (cond
+
+              (= as :bytes)
+              (.getBytes accum)
+
+              (= as :string)
+              (.getString accum)
+
+              file
+              as
+
+              )})))))
 
 (comment
 
+  (request {:url "https://habr.com"
+            :method "GET"
+            :follow-redirects true
+            :as :string
+            :headers {"foo" "bar"}})
+
+  (request {:url "https://habr.com"
+            :method "GET"
+            :follow-redirects true
+            :as (fn [bb]
+                  (println bb))
+            :headers {"foo" "bar"}})
+
   (with-open [c (init)]
-    (perform c {:url "https://habr.com" ;; "http://127.0.0.1:3000"
-                :method 1
-                :follow-location 3
-                :headers {"foo" "bar"}
-                :accumulate? true})))
+    (time (request c {:url "https://habr.com"
+                      :method "GET"
+                      :follow-redirects true
+                      :as (clojure.java.io/file "output.html")
+                      :headers {"foo" "bar"}})))
+
+)
