@@ -6,7 +6,6 @@
                 WriteCallback$IHandler
                 CURLFOLLOW
                 Headers
-                Dummy
                 FILE
                 Accumulator)))
 
@@ -33,15 +32,32 @@
 
   ([^CurlEasy c opts]
    (let [{:keys [url
+                 ;; query-params
+                 ;; body form-encode multipart file input-stream read-channel bytes string callback
+                 ;; as bytes string file output-stream write-channel callback
+
                  method
+                 timeout-ms
+                 connect-timeout-ms
                  headers
+                 max-redirects
                  as
                  follow-redirects
                  body
+                 user-agent
+                 proxy
+                 ;; proxy-user
+                 ;; proxy-password
+                 ;; username
+                 ;; password
+                 tcp-fast-open
+                 ;; other tcp opts
+                 ;; no-body
+                 ;; fail-on-error
                  ]}
          opts]
 
-     ;; TODO: option to keep options
+     ;; TODO: param to keep options
      (.resetOptions c)
 
      ;; method
@@ -102,9 +118,26 @@
                  (handle [this bb]
                    (as bb)))))]
 
-
-         ;; set resources
+         ;; common options
          (cond-> c
+
+           timeout-ms
+           (.setTimeoutMs ^long timeout-ms)
+
+           connect-timeout-ms
+           (.setConnectTimeoutMs ^long connect-timeout-ms)
+
+           max-redirects
+           (.setMaxRedirects max-redirects)
+
+           (some? tcp-fast-open)
+           (.setTCPFastOpen tcp-fast-open)
+
+           user-agent
+           (.setUserAgent user-agent)
+
+           proxy
+           (.setProxy proxy)
 
            url
            (.setUrl url)
