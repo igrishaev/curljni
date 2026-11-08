@@ -17,7 +17,7 @@ JAVAFILES = \
 	$(SRC_PATH)/OS.java \
 	$(SRC_PATH)/WriteCallback.java \
 	$(SRC_PATH)/WriteStream.java \
-	$(SRC_PATH)/IResource.java \
+	$(SRC_PATH)/IPeer.java \
 	$(SRC_PATH)/Accumulator.java \
 	$(SRC_PATH)/Headers.java \
 	$(SRC_PATH)/FILE.java \

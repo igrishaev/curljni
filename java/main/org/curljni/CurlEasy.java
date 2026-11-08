@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class CurlEasy implements IResource {
+public class CurlEasy implements IPeer {
 
     static {
         Native.loadLib();
@@ -134,12 +134,12 @@ public class CurlEasy implements IResource {
 
     native private static String _curl_easy_strerror(long curlCode);
 
-    public CurlEasy setHeaders(IResource headers) {
+    public CurlEasy setHeaders(IPeer headers) {
         final long hhPtr = (headers == null) ? Native.NULL : headers.ptr();
         return setOptionLong(CURLOPT.HTTPHEADER, hhPtr);
     }
 
-    public CurlEasy setWriteFile(IResource file) {
+    public CurlEasy setWriteFile(IPeer file) {
         Objects.requireNonNull(file, "the file object cannot be null");
         return setWriteParams(file.ptr(), FN.fwrite);
     }
@@ -156,12 +156,12 @@ public class CurlEasy implements IResource {
         return setOptionLong2(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
     }
 
-    public CurlEasy setWriteStream(IResource stream) {
+    public CurlEasy setWriteStream(IPeer stream) {
         Objects.requireNonNull(stream, "the stream object cannot be null");
         return setWriteParams(stream.ptr(), FN.WriteStream_handler);
     }
 
-    public CurlEasy setWriteCallback(IResource callback) {
+    public CurlEasy setWriteCallback(IPeer callback) {
         Objects.requireNonNull(callback, "write callback cannot be null");
         return setWriteParams(callback.ptr(), FN.WriteCallback_handler);
     }
@@ -308,7 +308,7 @@ public class CurlEasy implements IResource {
         return setOptionString(CURLOPT.COOKIE, cookie);
     }
 
-    public CurlEasy setAccumulator(IResource acc) {
+    public CurlEasy setAccumulator(IPeer acc) {
         Objects.requireNonNull(acc, "the accumulator cannot be null");
         return setWriteParams(acc.ptr(), FN.accum_write_callback);
     }
@@ -331,7 +331,7 @@ public class CurlEasy implements IResource {
         return setOptionBool(CURLOPT.VERBOSE, flag);
     }
 
-    public CurlEasy setReadFile(IResource file) {
+    public CurlEasy setReadFile(IPeer file) {
         Objects.requireNonNull(file, "read file cannot be null");
         return setReadParams(file.ptr(), FN.fread);
         // setSeekParams

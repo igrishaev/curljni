@@ -5,7 +5,6 @@
                 WriteCallback
                 WriteCallback$IHandler
                 CURLFOLLOW
-                IResource
                 Headers
                 Dummy
                 FILE

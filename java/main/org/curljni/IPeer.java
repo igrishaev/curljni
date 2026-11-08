@@ -1,6 +1,6 @@
 package org.curljni;
 
-public interface IResource extends AutoCloseable {
+public interface IPeer extends AutoCloseable {
     long ptr();
     boolean isClosed();
 }

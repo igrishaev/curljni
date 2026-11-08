@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Headers implements IResource {
+public class Headers implements IPeer {
 
     private final long ptr;
     private final String[] headers;

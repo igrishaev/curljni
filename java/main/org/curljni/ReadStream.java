@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-public class ReadStream implements IResource {
+public class ReadStream implements IPeer {
 
     private long ptr;
     private boolean isClosed;

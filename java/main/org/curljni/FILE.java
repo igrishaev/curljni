@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
-public class FILE implements IResource {
+public class FILE implements IPeer {
 
     private final long ptr;
     private final String path;

@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 
-public class WriteStream implements IResource {
+public class WriteStream implements IPeer {
 
     private long ptr;
     private WritableByteChannel channel;

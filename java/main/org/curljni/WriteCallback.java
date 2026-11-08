@@ -2,7 +2,7 @@ package org.curljni;
 
 import java.nio.ByteBuffer;
 
-public class WriteCallback implements IResource {
+public class WriteCallback implements IPeer {
 
     private long ptr;
     private boolean isClosed;
@@ -47,7 +47,7 @@ public class WriteCallback implements IResource {
         wc.isClosed = false;
         return wc;
     }
-    
+
     private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 
@@ -67,7 +67,7 @@ public class WriteCallback implements IResource {
         long code = _free(ptr);
         isClosed = true;
         if (code != 0) {
-            throw Err.error("failed to close WriteCallback, code: %s", code);
+            throw Err.error("failed to close write callback, code: %s", code);
         }
     }
 }
