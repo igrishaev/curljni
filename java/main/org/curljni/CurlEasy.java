@@ -16,23 +16,26 @@ public class CurlEasy implements IPeer {
     private final long ptr;
     private final Arena arena;
     private boolean isClosed;
+    private final TryLock lock;
 
-    private CurlEasy(long threadId, long ptr, Arena arena, boolean isClosed) {
+    private CurlEasy(long threadId, long ptr, Arena arena, boolean isClosed, TryLock lock) {
         this.threadId = threadId;
         this.ptr = ptr;
         this.arena = arena;
         this.isClosed = isClosed;
+        this.lock = lock;
     }
 
     native private static long _curl_easy_init();
     public static CurlEasy make() {
+        final TryLock lock = TryLock.create();
         final long threadId = Thread.currentThread().getId();
         final long ptr = _curl_easy_init();
         if (ptr == Native.NULL) {
             throw Err.error("failed to initialize cURL");
         }
         Arena arena = Arena.create(Const.ARENA_SIZE);
-        return new CurlEasy(threadId, ptr, arena, false).setErrorBuffer();
+        return new CurlEasy(threadId, ptr, arena, false, lock).setErrorBuffer();
     }
 
     @Override
@@ -43,6 +46,11 @@ public class CurlEasy implements IPeer {
     @Override
     public boolean isClosed() {
         return isClosed;
+    }
+
+    @SuppressWarnings("unused")
+    public TryLock lock() {
+        return lock.lock();
     }
 
     private CurlEasy checkClosed() {
