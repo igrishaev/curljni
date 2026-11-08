@@ -41,8 +41,22 @@
                  ]}
          opts]
 
+     ;; TODO: option to keep options
      (.resetOptions c)
 
+     ;; method
+     (case method
+       ("GET" :get :GET "get")
+       (.setHTTPGet c true)
+
+       ("POST" :post :POST "post")
+       (.setHTTPPost c true)
+
+       ;; else
+       (when method
+         (.setCustomRequest c method)))
+
+     ;; redirects
      (case follow-redirects
 
        (true :all :yes)
@@ -57,17 +71,6 @@
        (false :no :off)
        (.setFollowLocation c CURLFOLLOW/OFF))
 
-     (case method
-       (:get "GET")
-       (.setHTTPGet c true)
-
-       (:post "POST")
-       (.setHTTPPost c true)
-
-       ;; else
-       (when method
-         (.setCustomRequest c method)))
-
      (let [accum?
            (or (= as :bytes)
                (= as :string))
@@ -78,6 +81,7 @@
            handler?
            (fn? as)]
 
+       ;; open resources
        (with-resources
            [accum
             (when accum?
@@ -98,41 +102,87 @@
                  (handle [this bb]
                    (as bb)))))]
 
-           (cond-> c
 
-             url
-             (.setUrl url)
+         ;; set resources
+         (cond-> c
 
-             accum
-             (.setAccumulator accum)
+           url
+           (.setUrl url)
 
-             file
-             (.setWriteFile file)
+           accum
+           (.setAccumulator accum)
 
-             handler
-             (.setWriteCallback handler)
+           file
+           (.setWriteFile file)
 
-             jheaders
-             (.setHeaders jheaders)
+           handler
+           (.setWriteCallback handler)
 
-             :finally
-             (.perform))
+           jheaders
+           (.setHeaders jheaders)
 
-           {:status (.getResponseCode c)
-            :headers (.getHeaders c)
-            :body
-            (cond
+           :finally
+           (.perform))
 
-              (= as :bytes)
-              (.getBytes accum)
+         ;; response
+         {:status
+          (.getResponseCode c)
 
-              (= as :string)
-              (.getString accum)
+          :headers
+          (.getHeaders c)
 
-              file
-              as
+          :connect-time-ms
+          (.getConnectTimeMs c)
 
-              )})))))
+          :content-length
+          (.getContentLengthDownload c)
+
+          :redirect-time-ms
+          (.getRedirectTime c)
+
+          :retry-after
+          (.getRetryAfter c)
+
+          :speed-download
+          (.getSpeedDownload c)
+
+          :redirect-count
+          (.getRedirectCount c)
+
+          :http-version
+          (.getHTTPVersion c)
+
+          :primary-ip
+          (.getPrimaryIP c)
+
+          :primary-port
+          (.getPrimaryPort c)
+
+          :local-ip
+          (.getLocalIP c)
+
+          :local-port
+          (.getLocalPort c)
+
+          :effective-url
+          (.getEffectiveURL c)
+
+          :proxy-used?
+          (.getUsedProxy c)
+
+          :body
+          (cond
+
+            (= as :bytes)
+            (.getBytes accum)
+
+            (= as :string)
+            (.getString accum)
+
+            file
+            as
+
+            )})))))
 
 (comment
 
@@ -156,4 +206,4 @@
                       :as (clojure.java.io/file "output.html")
                       :headers {"foo" "bar"}})))
 
-)
+  )

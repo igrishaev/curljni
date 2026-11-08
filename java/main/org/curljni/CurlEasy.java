@@ -408,7 +408,7 @@ public class CurlEasy implements IPeer {
         return getInfoLong(CURLINFO.REDIRECT_TIME_T);
     }
 
-    public long getRetryCount() {
+    public long getRetryAfter() {
         return getInfoLong(CURLINFO.RETRY_AFTER);
     }
 
