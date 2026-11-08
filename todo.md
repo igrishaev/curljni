@@ -1,4 +1,7 @@
 
+- set post data: share arena if possible
+- common arena instance
+
 - drop read_data
 
 - CURL_MAX_WRITE_SIZE
