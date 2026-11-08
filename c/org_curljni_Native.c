@@ -26,11 +26,11 @@
         return JNI_ERR; \
     }
 
-static int J_VERSION = JNI_VERSION_1_8;
+int J_VERSION = JNI_VERSION_1_8;
 
 struct J_Globals _g;
 
-jint register_natives(JNIEnv *env) {
+static jint register_natives(JNIEnv *env) {
 
     jclass jcls = JNI_CALL(env, FindClass, "org/curljni/Foo");
     if (!jcls) return JNI_ERR;
@@ -50,43 +50,42 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv* env;
     if ((*vm)->GetEnv(vm, (void **) &env, J_VERSION) != JNI_OK) {
         return JNI_ERR;
-    } else {
-
-        jint res = register_natives(env);
-        if (res != JNI_OK) {
-            return res;
-        }
-
-        CURLcode code = curl_global_init(CURL_GLOBAL_DEFAULT);
-        if (code != CURLE_OK) {
-            return JNI_ERR;
-        }
-        log_debug("cURL has been initialized globally");
-
-        char * version = curl_version();
-        log_debug("cURL version: %s", version);
-
-        jclass jcls;
-        jmethodID jmeth;
-        jfieldID jfield;
-
-        _g.vm = vm;
-
-        /* WriteCallback */
-        GET_CLASS(env, "org/curljni/WriteCallback", jcls);
-        SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteCallback.callback);
-
-        /* WriteStream */
-        GET_CLASS(env, "org/curljni/WriteStream", jcls);
-        SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteStream.callback);
-
-        /* ReadStream */
-        GET_CLASS(env, "org/curljni/ReadStream", jcls);
-        SET_METHOD(env, jcls, "callback", "(I)I", _g.ReadStream.callback);
-
-        log_debug("JNI_OnLoad end");
-        return J_VERSION;
     }
+
+    jint res = register_natives(env);
+    if (res != JNI_OK) {
+        return res;
+    }
+
+    CURLcode code = curl_global_init(CURL_GLOBAL_DEFAULT);
+    if (code != CURLE_OK) {
+        return JNI_ERR;
+    }
+    log_debug("cURL has been initialized globally");
+
+    char * version = curl_version();
+    log_debug("cURL version: %s", version);
+
+    jclass jcls;
+    jmethodID jmeth;
+    jfieldID jfield;
+
+    _g.vm = vm;
+
+    /* WriteCallback */
+    GET_CLASS(env, "org/curljni/WriteCallback", jcls);
+    SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteCallback.callback);
+
+    /* WriteStream */
+    GET_CLASS(env, "org/curljni/WriteStream", jcls);
+    SET_METHOD(env, jcls, "callback", "(I)V", _g.WriteStream.callback);
+
+    /* ReadStream */
+    GET_CLASS(env, "org/curljni/ReadStream", jcls);
+    SET_METHOD(env, jcls, "callback", "(I)I", _g.ReadStream.callback);
+
+    log_debug("JNI_OnLoad end");
+    return J_VERSION;
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
@@ -97,6 +96,6 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT jlong JNICALL Java_org_curljni_Native__1get_1null
-  (JNIEnv *env, jclass jcls) {
+(JNIEnv *env, jclass jcls) {
     return (jlong) NULL;
 }
