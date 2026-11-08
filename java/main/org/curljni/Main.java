@@ -39,7 +39,8 @@ public class Main {
                 // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
-            // System.out.println(acc.getBytes().length);
+
+            System.out.println(Foo.getFoo(123));
             c.perform();
             System.out.println(out.toString().substring(0, 5));
 

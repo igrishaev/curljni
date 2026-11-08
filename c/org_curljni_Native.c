@@ -35,10 +35,10 @@ jint register_natives(JNIEnv *env) {
     jclass jcls = JNI_CALL(env, FindClass, "org/curljni/Foo");
     if (!jcls) return JNI_ERR;
 
-    jint nMethods = 1;
-    JNINativeMethod methods[1] = {
+    JNINativeMethod methods[] = {
         {"getFoo", "(J)J", Foo_getFoo}
     };
+    jint nMethods = sizeof(methods) / sizeof(JNINativeMethod);
 
     return JNI_CALL(env, RegisterNatives, jcls, methods, nMethods);
 }

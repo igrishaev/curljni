@@ -23,6 +23,7 @@ JAVAFILES = \
 	$(SRC_PATH)/FILE.java \
 	$(SRC_PATH)/Native.java \
 	$(SRC_PATH)/CurlEasy.java \
+    $(SRC_PATH)/TryLock.java \
 	$(SRC_PATH)/Err.java
 
 MODULES = \
