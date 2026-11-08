@@ -48,14 +48,6 @@ public class WriteStream implements IResource {
         return ws;
     }
 
-    public static WriteStream maybeCreate(OutputStream out) {
-        if (out == null) {
-            return null;
-        } else {
-            return create(out);
-        }
-    }
-
     private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 

@@ -40,14 +40,6 @@ public class Headers implements IResource {
         return new Headers(ptr, headers, false);
     }
 
-    public static Headers maybeCreate(final Map<String, String> headersMap) {
-        if (headersMap == null) {
-            return null;
-        } else {
-            return create(headersMap);
-        }
-    }
-
     public static Headers create(final Map<String, String> headersMap) {
         return create(convertHeaders(headersMap));
     }

@@ -49,14 +49,6 @@ public class ReadStream implements IResource {
         return rs;
     }
 
-    public static ReadStream maybeCreate(InputStream in) {
-        if (in == null) {
-            return null;
-        } else {
-            return create(in);
-        }
-    }
-
     private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 

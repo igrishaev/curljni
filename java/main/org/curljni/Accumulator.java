@@ -45,14 +45,6 @@ public class Accumulator implements IResource {
         return create(Const.ACCUM_SIZE);
     }
 
-    public static Accumulator maybeCreate(boolean flag, int size) {
-        if (flag) {
-            return create(size);
-        } else {
-            return null;
-        }
-    }
-
     public static Accumulator create(long initSize) {
         long ptr = _allocate(initSize);
         if (ptr == Native.NULL) {

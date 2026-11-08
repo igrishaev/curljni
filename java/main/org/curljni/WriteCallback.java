@@ -47,15 +47,7 @@ public class WriteCallback implements IResource {
         wc.isClosed = false;
         return wc;
     }
-
-    public static WriteCallback maybeCreate(IHandler handler) {
-        if (handler == null) {
-            return null;
-        } else {
-            return create(handler);
-        }
-    }
-
+    
     private native long _allocate(ByteBuffer bb, int bbSize);
     private static native long _free(long ptr);
 
