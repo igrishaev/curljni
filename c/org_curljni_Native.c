@@ -5,23 +5,16 @@
 #include "curl/curl.h"
 #include "Foo.h"
 
-#define GET_CLASS(env, clsname, clsvar) \
-    clsvar = JNI_CALL(env, FindClass, clsname); \
-    if (!clsvar) { \
-        log_error("JNI failed to find class: " clsname); \
-        return JNI_ERR; \
-    }
-
-#define SET_FIELD(env, jcls, fname, ftype, fvar) \
-    fvar = JNI_CALL(env, GetFieldID, jcls, fname, ftype); \
-    if (!fvar) { \
-        log_error("JNI failed to find field: " fname " " ftype); \
+#define GET_CLASS(env, name, var) \
+    var = JNI_CALL(env, FindClass, name); \
+    if (var == NULL) { \
+        log_error("JNI failed to find class: " name); \
         return JNI_ERR; \
     }
 
 #define SET_METHOD(env, jcls, name, sig, var) \
     var = JNI_CALL(env, GetMethodID, jcls, name, sig); \
-    if (!var) { \
+    if (var == NULL) { \
         log_error("JNI failed to find method: " name " " sig); \
         return JNI_ERR; \
     }

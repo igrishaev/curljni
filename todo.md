@@ -9,6 +9,12 @@
 - bb default size everywhere
 - share arena bb?
 
+- set query params (encoded)
+
+https://curl.se/libcurl/c/CURLOPT_UPKEEP_INTERVAL_MS.html
+https://curl.se/libcurl/c/curl_easy_upkeep.html
+
+
 - rename WriteStrem to WriteChannel
 - rename WriteCallback to WriteHandler
 - use direct buffer for write handler?
