@@ -38,6 +38,12 @@ public class CurlEasy implements IPeer {
         return new CurlEasy(threadId, ptr, arena, false, lock).setErrorBuffer();
     }
 
+    public CurlEasy setOption(int opt, long value) {
+        arena.putInt(opt);
+        arena.putLong(value);
+        return this;
+    }
+
     @Override
     public long ptr() {
         return ptr;
@@ -96,13 +102,15 @@ public class CurlEasy implements IPeer {
     }
 
     // CURLOPT_HTTPGET
+    // https://curl.se/libcurl/c/CURLOPT_HTTPGET.html
     public CurlEasy setHTTPGet(boolean flag) {
         return setOptionBool(CURLOPT.HTTPGET, flag);
     }
 
-    // CURLOPT_HTTPPOST
-    public CurlEasy setHTTPPost(boolean flag) {
-        return setOptionBool(CURLOPT.HTTPPOST, flag);
+    // CURLOPT_POST
+    // https://curl.se/libcurl/c/CURLOPT_POST.html
+    public CurlEasy setPost(boolean flag) {
+        return setOptionBool(CURLOPT.POST, flag);
     }
 
     native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);

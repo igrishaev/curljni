@@ -23,6 +23,7 @@
    [http-kit "2.3.0"]
    [criterium "0.4.6"]
    [clj-http "3.12.0"]
+   [cheshire "5.10.0"]
    [org.babashka/http-client "0.4.22"]]
 
   :dependencies
@@ -47,6 +48,7 @@
     :dependencies
     [[ring/ring-core]
      [ring/ring-jetty-adapter]
+     [cheshire]
      [http-kit]
      [criterium]
      [clj-http]
