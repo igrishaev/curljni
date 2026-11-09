@@ -21,21 +21,18 @@ public class Main {
             c
                 .resetOptions()
                 .setUrl("https://habr.com")
-                .setProxy(null)
-                .setHeaders(hh)
-                .setUserAgent(null)
-                .setFollowLocation(CURLFOLLOW.ALL)
+
                 // .setAccumulator(acc)
-                .setServerResponseTimeoutMs(15000)
+
                 // .setWriteCallback(wc)
-                .setTimeoutMs(15000)
+
                 // .setBufferSize(9999)
-                .setConnectTimeoutMs(15000)
+
                     .setUsername("Ivan")
                     .setPassword("secret")
                 // .setWriteFile(wf)
-                .setWriteStream(ws)
-                .setHTTPGet(true);
+                .setWriteStream(ws);
+
                 // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 

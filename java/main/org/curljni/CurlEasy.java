@@ -101,18 +101,6 @@ public class CurlEasy implements IPeer {
         return setOptionLong(option, value ? 1L : 0L);
     }
 
-    // CURLOPT_HTTPGET
-    // https://curl.se/libcurl/c/CURLOPT_HTTPGET.html
-    public CurlEasy setHTTPGet(boolean flag) {
-        return setOptionBool(CURLOPT.HTTPGET, flag);
-    }
-
-    // CURLOPT_POST
-    // https://curl.se/libcurl/c/CURLOPT_POST.html
-    public CurlEasy setPost(boolean flag) {
-        return setOptionBool(CURLOPT.POST, flag);
-    }
-
     native private static long _set_option_long2(long curl, int opt1, long val1, int opt2, long val2);
     public CurlEasy setOptionLong2(int opt1, long val1, int opt2, long val2) {
         return checkClosed().checkCode(_set_option_long2(ptr, opt1, val1, opt2, val2));
@@ -150,11 +138,6 @@ public class CurlEasy implements IPeer {
 
     native private static String _curl_easy_strerror(long curlCode);
 
-    public CurlEasy setHeaders(IPeer headers) {
-        final long hhPtr = (headers == null) ? Native.NULL : headers.ptr();
-        return setOptionLong(CURLOPT.HTTPHEADER, hhPtr);
-    }
-
     public CurlEasy setWriteFile(IPeer file) {
         Objects.requireNonNull(file, "the file object cannot be null");
         return setWriteParams(file.ptr(), FN.fwrite);
@@ -182,10 +165,6 @@ public class CurlEasy implements IPeer {
         return setWriteParams(callback.ptr(), FN.WriteCallback_handler);
     }
 
-    public CurlEasy setProxy(String proxy) {
-        return setOptionString(CURLOPT.PROXY, proxy);
-    }
-
     // https://curl.se/libcurl/c/CURLOPT_USERPWD.html
     public CurlEasy setUserPwd(String userPwd) {
         return setOptionString(CURLOPT.USERPWD, userPwd);
@@ -206,52 +185,9 @@ public class CurlEasy implements IPeer {
         return setOptionString(CURLOPT.PROXYUSERNAME, username);
     }
 
-    public CurlEasy setUserAgent(String userAgent) {
-        return setOptionString(CURLOPT.USERAGENT, userAgent);
-    }
-
-    // SERVER_RESPONSE_TIMEOUT_MS
-    public CurlEasy setServerResponseTimeoutMs(long ms) {
-        return setOptionLong(CURLOPT.SERVER_RESPONSE_TIMEOUT_MS, ms);
-    }
-    public CurlEasy setServerResponseTimeout(Duration duration) {
-        return setServerResponseTimeoutMs(duration.toMillis());
-    }
-
-    // TIMEOUT_MS
-    public CurlEasy setTimeoutMs(long ms) {
-        return setOptionLong(CURLOPT.TIMEOUT_MS, ms);
-    }
-    public CurlEasy setTimeoutMs(Duration duration) {
-        return setTimeoutMs(duration.toMillis());
-    }
-
     // CURLOPT_UPLOAD
     public CurlEasy setUpload(boolean flag) {
         return setOptionBool(CURLOPT.UPLOAD, flag);
-    }
-
-    // CURLOPT_POSTFIELDSIZE
-    public CurlEasy setPostFieldSize(long value) {
-        return setOptionLong(CURLOPT.POSTFIELDSIZE, value);
-    }
-
-    // CONNECTTIMEOUT_MS
-    public CurlEasy setConnectTimeoutMs(long ms) {
-        return setOptionLong(CURLOPT.CONNECTTIMEOUT_MS, ms);
-    }
-    public CurlEasy setConnectTimeoutMs(Duration duration) {
-        return setConnectTimeoutMs(duration.toMillis());
-    }
-
-    // MAXCONNECTS
-    public CurlEasy setMaxConnects(long amount) {
-        return setOptionLong(CURLOPT.MAXCONNECTS, amount);
-    }
-
-    // MAXREDIRS
-    public CurlEasy setMaxRedirects(long amount) {
-        return setOptionLong(CURLOPT.MAXREDIRS, amount);
     }
 
     // PASSWORD
@@ -355,10 +291,6 @@ public class CurlEasy implements IPeer {
         // TODO: seek file, read_seek_file
         // TODO: CURLOPT_UPLOAD=1
         // TODO: CURLOPT_POSTFIELDSIZE
-    }
-
-    public CurlEasy setFollowLocation(long value) {
-        return setOptionLong(CURLOPT.FOLLOWLOCATION, value);
     }
 
     // https://curl.se/libcurl/c/CURLOPT_SSLCERT.html

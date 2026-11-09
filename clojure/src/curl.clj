@@ -5,8 +5,10 @@
                 WriteCallback
                 WriteCallback$IHandler
                 CURLFOLLOW
+                CURLOPT
                 Headers
                 FILE
+                FN
                 Accumulator)))
 
 (set! *warn-on-reflection* true)
@@ -44,24 +46,15 @@
 (defn named? [x]
   (instance? clojure.lang.Named x))
 
-(defmacro set-opt-long [c opt value]
-  `(.setOption ~c ~opt ~value))
-
-(defmacro set-opt-bool [c opt value]
-  `(.setOption ~c ~opt (if ~value 1 0)))
-
-(defmacro set-opt-string [c opt value]
-  `(.setOption ~c ~opt (if ~value 1 0)))
-
 (defn set-method ^CurlEasy [^CurlEasy c method]
   (case method
     ("GET" :get)
-    (set-opt-long c CURLOPT/HTTPGET 1)
+    (.setOptionLong c CURLOPT/HTTPGET 1)
 
     ("POST" :post)
     (-> c
-        (set-opt-long CURLOPT/POST 1)
-        (set-opt-long CURLOPT/POSTFIELDSIZE 0))
+        (.setOptionLong CURLOPT/POST 1)
+        (.setOptionLong CURLOPT/POSTFIELDSIZE 0))
 
     (cond
       (string? method)
@@ -79,16 +72,16 @@
 (defn set-follow-redirects ^CurlEasy [^CurlEasy c value]
   (case value
     (true :all :yes)
-    (.setFollowLocation c CURLFOLLOW/ALL)
+    (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/ALL)
 
     (:first :one)
-    (.setFollowLocation c CURLFOLLOW/FIRSTONLY)
+    (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/FIRSTONLY)
 
     (:code)
-    (.setFollowLocation c CURLFOLLOW/OBEYCODE)
+    (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/OBEYCODE)
 
     (false :no :off)
-    (.setFollowLocation c CURLFOLLOW/OFF)
+    (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/OFF)
 
     (nil)
     c
@@ -117,7 +110,7 @@
 
                  ;; timeouts
                  timeout-ms
-                 response-timeout-ms
+                 server-response-timeout-ms
                  connect-timeout-ms
 
                  ;; redirects
@@ -144,6 +137,7 @@
                  ;; other tcp opts
 
                  ;; misc
+                 max-connects
                  ;; no-body
                  ;; fail-on-error
                  ]}
@@ -197,31 +191,40 @@
            (cond-> c
 
              timeout-ms
-             (.setTimeoutMs ^long timeout-ms)
+             (.setOptionLong CURLOPT/TIMEOUT_MS timeout-ms)
 
              connect-timeout-ms
-             (.setConnectTimeoutMs ^long connect-timeout-ms)
+             (.setOptionLong CURLOPT/CONNECTTIMEOUT_MS connect-timeout-ms)
 
-             response-timeout-ms
-             (.setServerResponseTimeoutMs ^long response-timeout-ms)
+             server-response-timeout-ms
+             (.setOptionLong CURLOPT/SERVER_RESPONSE_TIMEOUT_MS server-response-timeout-ms)
+
+             max-connects
+             (.setOptionLong CURLOPT/MAXCONNECTS max-connects)
 
              max-redirects
-             (.setMaxRedirects max-redirects)
+             (.setOptionLong CURLOPT/MAXREDIRS max-redirects)
 
              (some? tcp-fast-open)
              (.setTCPFastOpen tcp-fast-open)
 
              user-agent
-             (.setUserAgent user-agent)
+             (.setOptionString CURLOPT/USERAGENT user-agent)
 
              proxy
-             (.setProxy proxy)
+             (.setOptionString CURLOPT/PROXY proxy)
 
              url
              (.setUrl url)
 
+             ;; accum
+             ;; (.setWriteParams (.ptr accum) FN/accum_write_callback)
+
              accum
-             (.setAccumulator accum)
+             (.setOptionLong2 CURLOPT/WRITEDATA
+                              (.ptr accum)
+                              CURLOPT/WRITEFUNCTION
+                              FN/accum_write_callback)
 
              file
              (.setWriteFile file)
@@ -230,7 +233,7 @@
              (.setWriteCallback handler)
 
              jheaders
-             (.setHeaders jheaders)
+             (.setOptionLong CURLOPT/HTTPHEADER (.ptr jheaders))
 
              :finally
              (.perform))
