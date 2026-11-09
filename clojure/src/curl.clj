@@ -31,27 +31,48 @@
      (request c opts)))
 
   ([^CurlEasy c opts]
-   (let [{:keys [url
-                 ;; query-params
-                 ;; body form-encode multipart file input-stream read-channel bytes string callback
-                 ;; as bytes string file output-stream write-channel callback
+   (let [{:keys [
 
+                 ;; keep options?
+
+                 ;; common
+                 url
                  method
-                 timeout-ms
-                 connect-timeout-ms
                  headers
-                 max-redirects
-                 as
-                 follow-redirects
-                 body
                  user-agent
+                 ;; query-params
+
+                 ;; cookies (string, map, file, jar)
+
+                 ;; timeouts
+                 timeout-ms
+                 response-timeout-ms
+                 connect-timeout-ms
+
+                 ;; redirects
+                 follow-redirects
+                 max-redirects
+
+                 ;; input & output
+                 ;; body: form-encode multipart file input-stream read-channel bytes string callback
+                 ;; as: bytes string file output-stream write-channel callback
+                 as
+                 body
+
+                 ;; auth and proxy
                  proxy
                  ;; proxy-user
                  ;; proxy-password
                  ;; username
                  ;; password
+
+                 ;; cert options
+
+                 ;; tcp options
                  tcp-fast-open
                  ;; other tcp opts
+
+                 ;; misc
                  ;; no-body
                  ;; fail-on-error
                  ]}
@@ -126,6 +147,9 @@
 
            connect-timeout-ms
            (.setConnectTimeoutMs ^long connect-timeout-ms)
+
+           response-timeout-ms
+           (.setServerResponseTimeoutMs ^long response-timeout-ms)
 
            max-redirects
            (.setMaxRedirects max-redirects)
