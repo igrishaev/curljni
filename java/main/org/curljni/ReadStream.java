@@ -24,16 +24,17 @@ public class ReadStream implements IPeer {
     @SuppressWarnings("unused")
     private int callback(int limit) throws IOException {
         bb.clear();
-        bb.limit(limit);
+        bb.limit(Math.min(limit, bbSize));
         return channel.read(bb);
     }
 
-    public static ReadStream create(InputStream in) {
-        return create(Channels.newChannel(in));
+    @SuppressWarnings("unused")
+    public static ReadStream open(InputStream in) {
+        return open(Channels.newChannel(in));
     }
 
     @SuppressWarnings("unused")
-    public static ReadStream create(ReadableByteChannel channel) {
+    public static ReadStream open(ReadableByteChannel channel) {
         int bbSize = 1024 * 16; // TODO
         ByteBuffer bb = ByteBuffer.allocateDirect(bbSize);
         ReadStream rs = new ReadStream();

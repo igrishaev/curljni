@@ -1,6 +1,7 @@
 package org.curljni;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,11 +148,11 @@ public class CurlEasy implements IPeer {
         return setOptionLong2(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
     }
 
-    private CurlEasy setReadParams(long readData, long readFunc) {
+    public CurlEasy setReadParams(long readData, long readFunc) {
         return setOptionLong2(CURLOPT.READDATA, readData, CURLOPT.READFUNCTION, readFunc);
     }
 
-    private CurlEasy setSeekParams(long seekData, long seekFunc) {
+    public CurlEasy setSeekParams(long seekData, long seekFunc) {
         return setOptionLong2(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
     }
 
@@ -200,22 +201,17 @@ public class CurlEasy implements IPeer {
         return checkClosed().checkCode(_set_post_fields_bytes(ptr, buf, buf.length));
     }
 
+    @SuppressWarnings("unused")
+    public CurlEasy setPostData(String string) {
+        return setPostData(string, StandardCharsets.UTF_8);
+    }
+
     public CurlEasy setPostData(String string, Charset charset) {
         return setPostData(string.getBytes(charset));
     }
 
     public CurlEasy setPostData(String string, String charset) {
         return setPostData(string, Charset.forName(charset)); // TODO fallback?
-    }
-
-    public CurlEasy setReadFile(IPeer file) {
-        Objects.requireNonNull(file, "read file cannot be null");
-        return setReadParams(file.ptr(), FN.fread);
-        // setSeekParams
-        // TODO: windows: read_callback_file
-        // TODO: seek file, read_seek_file
-        // TODO: CURLOPT_UPLOAD=1
-        // TODO: CURLOPT_POSTFIELDSIZE
     }
 
     // TODO: set3 opts

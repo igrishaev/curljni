@@ -21,6 +21,7 @@
    [ring/ring-core "1.10.0"]
    [ring/ring-jetty-adapter "1.10.0"]
    [http-kit "2.3.0"]
+   [com.github.igrishaev/any "0.1.1"]
    [criterium "0.4.6"]
    [clj-http "3.12.0"]
    [cheshire "5.10.0"]
@@ -48,6 +49,7 @@
     :dependencies
     [[ring/ring-core]
      [ring/ring-jetty-adapter]
+     [com.github.igrishaev/any]
      [cheshire]
      [http-kit]
      [criterium]

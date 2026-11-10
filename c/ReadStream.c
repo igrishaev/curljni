@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "globals.h"
+#include "logging.h"
 #include "macros.h"
 #include "curl/curl.h"
 #include "ReadStream.h"
@@ -48,7 +49,11 @@ size_t ReadStream_handler(char *ptr, size_t size, size_t nmemb, void *userdata) 
     if (JNI_CALL(rs->env, ExceptionCheck)) {
         return CURL_READFUNC_ABORT;
     }
+    log_debug("bytes read: %i", read);
 
+    if (read == 0 || read == -1) {
+        return 0;
+    }
     memcpy(ptr, rs->bb, read);
     return read;
 }

@@ -3,12 +3,13 @@ package org.curljni;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FILE implements IPeer {
 
     private final long ptr;
-    private final String path;
+    private final File file;
     private final String mode;
     private boolean isClosed;
 
@@ -16,18 +17,19 @@ public class FILE implements IPeer {
         Native.loadLib();
     }
 
-    private FILE(final long ptr, final String path, final String mode, final boolean isClosed) {
+    private FILE(final long ptr, final File file, final String mode, final boolean isClosed) {
         this.ptr = ptr;
-        this.path = path;
+        this.file = file;
         this.mode = mode;
         this.isClosed = isClosed;
     }
 
-    public File asFile() {
-        return new File(path);
+    public File file() {
+        return file;
     }
 
-    public static FILE asTemp(String prefix, String suffix) {
+    @SuppressWarnings("unused")
+    public static FILE openTemp(String prefix, String suffix, String mode) {
         final File f;
         try {
             f = File.createTempFile(prefix, suffix);
@@ -35,7 +37,7 @@ public class FILE implements IPeer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        return open(f.getAbsolutePath(), "wb");
+        return open(f, mode);
     }
 
     @Override
@@ -50,25 +52,30 @@ public class FILE implements IPeer {
 
     @Override
     public String toString() {
-        return String.format("<FILE %s %s>", mode, path);
+        return String.format("<FILE %s %s>", mode, file.getAbsolutePath());
+    }
+
+    @SuppressWarnings("unused")
+    public long fileSize() throws IOException {
+        return Files.size(file.toPath());
     }
 
     public static FILE open(final String path, final String mode) {
+        return open(new File(path), mode);
+    }
+
+    public static FILE open(File file, String mode) {
+        final String path = file.getAbsolutePath();
         final long fd = _fopen(path, mode);
         if (fd < 0) {
             throw Err.error("fopen failed, code: %s, mode: %s, path: %s", fd, mode, path);
         }
-        return new FILE(fd, path, mode, false);
-    }
-
-    @SuppressWarnings("unused")
-    public static FILE open(final File file, final String mode) {
-        return open(file.getAbsolutePath(), mode);
+        return new FILE(fd, file, mode, false);
     }
 
     @SuppressWarnings("unused")
     public static FILE open(final Path path, final String mode) {
-        return open(path.toAbsolutePath().toString(), mode);
+        return open(path.toFile(), mode);
     }
 
     private native static long _fopen(final String path, final String mode);
@@ -81,7 +88,7 @@ public class FILE implements IPeer {
         final long code = _fclose(ptr);
         isClosed = true;
         if (code != 0) {
-            throw Err.error("fclose failed, code: %s, mode: %s, path: %s", code, mode, path);
+            throw Err.error("fclose failed, code: %s, mode: %s, path: %s", code, mode, file.getAbsolutePath());
         }
     }
 
