@@ -95,25 +95,37 @@
     ;; else
     (error! "wrong follow-redirects value: %s" value)))
 
+
+(defn set-write-params ^CurlEasy [^CurlEasy c write-data write-func]
+  (.setOptionLong2 c CURLOPT/WRITEDATA write-data CURLOPT/WRITEFUNCTION write-func))
+
+(defn set-seek-params ^CurlEasy [^CurlEasy c seek-data seek-func]
+  (.setOptionLong2 c CURLOPT/SEEKDATA seek-data CURLOPT/SEEKFUNCTION seek-func))
+
+(defn set-read-params ^CurlEasy [^CurlEasy c read-data read-func]
+  (.setOptionLong2 c CURLOPT/READDATA read-data CURLOPT/READFUNCTION read-func))
+
 (defn set-write-file ^CurlEasy [^CurlEasy c ^IPeer wf]
-  (.setWriteParams c (.ptr wf) FN/fwrite))
+  (set-write-params c (.ptr wf) FN/fwrite))
 
 (defn set-read-stream ^CurlEasy [^CurlEasy c ^IPeer read-stream]
   (-> c
       (.setOptionLong CURLOPT/UPLOAD 1)
       (.setReadParams (.ptr read-stream) FN/ReadStream_handler)
-      (.setSeekParams Native/NULL FN/ReadStream_seek)))
+      (set-seek-params Native/NULL FN/ReadStream_seek)))
 
 (defn set-read-file ^CurlEasy [^CurlEasy c ^FILE f]
   ;; TODO
   ;; windows read_callback_file
   ;; windows read_seek_file
-  (.setOptionLong c CURLOPT/UPLOAD 1)
-  (.setOptionLong c CURLOPT/INFILESIZE (.fileSize f))
-  (.setReadParams c (.ptr f) FN/fread))
+  (-> c
+      (.setOptionLong CURLOPT/UPLOAD 1)
+      (.setOptionLong CURLOPT/INFILESIZE (.fileSize f))
+      (set-read-params (.ptr f) FN/fread)))
 
 
 ;; todo test
+;; read callback
 ;; query params
 ;; form mime data
 ;; form multipart
@@ -125,6 +137,7 @@
 ;; proxy
 ;; ssl cert
 ;; fail on error
+;; bulk get info long
 
 (defn request
   ([opts]
@@ -164,10 +177,10 @@
 
                  ;; auth and proxy
                  proxy
-                 ;; proxy-user
-                 ;; proxy-password
-                 ;; username
-                 ;; password
+                 proxy-username
+                 proxy-password
+                 username
+                 password
 
                  ;; cert options
                  ssl-cert
@@ -221,204 +234,216 @@
 
        ;; open resources
        (with-resources
-         [accum
-          (when accum?
-            (Accumulator/create))
-
-          write-file
-          (cond
-            (instance? File as)
-            (FILE/open ^File as "wb"))
-
-          read-file
-          (when read-file?
-            (FILE/open ^File body "rb"))
-
-          read-stream
-          (cond
-            (instance? InputStream body)
-            (ReadStream/open ^InputStream body)
-            (instance? ReadableByteChannel body)
-            (ReadStream/open ^ReadableByteChannel body))
-
-          jheaders
-          (when (seq headers)
-            (Headers/create ^Map headers))
-
-          handler
-          (when handler?
-            (WriteCallback/create
-             (reify WriteCallback$IHandler
-               (handle [this bb]
-                 (as bb)))))]
-
-         ;; common options
-         (cond-> c
-
-           timeout-ms
-           (.setOptionLong CURLOPT/TIMEOUT_MS timeout-ms)
-
-           connect-timeout-ms
-           (.setOptionLong CURLOPT/CONNECTTIMEOUT_MS connect-timeout-ms)
-
-           server-response-timeout-ms
-           (.setOptionLong CURLOPT/SERVER_RESPONSE_TIMEOUT_MS server-response-timeout-ms)
-
-           max-connects
-           (.setOptionLong CURLOPT/MAXCONNECTS max-connects)
-
-           max-redirects
-           (.setOptionLong CURLOPT/MAXREDIRS max-redirects)
-
-           ;; TCP
-           (some? tcp-fast-open?)
-           (.setOptionBool CURLOPT/TCP_FASTOPEN tcp-fast-open?)
-
-           (some? tcp-keep-alive?)
-           (.setOptionBool CURLOPT/TCP_KEEPALIVE tcp-keep-alive?)
-
-           tcp-keep-cnt
-           (.setOptionLong CURLOPT/TCP_KEEPCNT tcp-keep-cnt)
-
-           tcp-keep-idle
-           (.setOptionLong CURLOPT/TCP_KEEPIDLE tcp-keep-idle)
-
-           tcp-keep-intvl
-           (.setOptionLong CURLOPT/TCP_KEEPINTVL tcp-keep-intvl)
-
-           (some? tcp-no-delay?)
-           (.setOptionBool CURLOPT/TCP_NODELAY tcp-no-delay?)
-
-           (some? fail-on-error?)
-           (.setOptionBool CURLOPT/FAILONERROR fail-on-error?)
-
-           (some? no-body?)
-           (.setOptionBool CURLOPT/NOBODY no-body?)
-
-           oauth2-bearer
-           (.setOptionString CURLOPT/XOAUTH2_BEARER oauth2-bearer)
-
-           user-agent
-           (.setOptionString CURLOPT/USERAGENT user-agent)
-
-           proxy
-           (.setOptionString CURLOPT/PROXY proxy)
-
-           url
-           (.setUrl url)
-
-           (bytes? body)
-           (.setPostData ^bytes body)
-
-           (string? body)
-           (.setPostData ^String body)
-
-           accum
-           (.setOptionLong2 CURLOPT/WRITEDATA
-                            (.ptr accum)
-                            CURLOPT/WRITEFUNCTION
-                            FN/accum_write_callback)
-
-           read-stream
-           (set-read-stream read-stream)
-
-           read-file
-           (set-read-file read-file)
-
-           (some? verbose?)
-           (.setOptionBool CURLOPT/VERBOSE verbose?)
-
-           write-file
-           (set-write-file write-file)
-
-           ssl-cert
-           (.setOptionString CURLOPT/SSLCERT ssl-cert)
-
-           ssl-key
-           (.setOptionString CURLOPT/SSLKEY ssl-key)
-
-           ssl-key-password
-           (.setOptionString CURLOPT/KEYPASSWD ssl-key-password)
-
-           handler
-           (.setWriteCallback handler)
-
-           jheaders
-           (.setOptionLong CURLOPT/HTTPHEADER (.ptr jheaders))
-
-           ;; cookie
-           cookie
-           (.setOptionString CURLOPT/COOKIE cookie)
-
-           ;; misc
-           buffer-size
-           (.setOptionLong CURLOPT/BUFFERSIZE buffer-size)
-
-           ;; (some? upload?)
-           ;; (.setOptionBool CURLOPT/UPLOAD upload?)
-
-           :finally
-           (.perform))
-
-         ;; response
-         {:status
-          (.getResponseCode c)
-
-          :headers
-          (.getHeaders c)
-
-          :connect-time-ms
-          (.getConnectTimeMs c)
-
-          :content-length
-          (.getContentLengthDownload c)
-
-          :redirect-time-ms
-          (.getRedirectTime c)
-
-          :retry-after
-          (.getRetryAfter c)
-
-          :speed-download
-          (.getSpeedDownload c)
-
-          :redirect-count
-          (.getRedirectCount c)
-
-          :http-version
-          (.getHTTPVersion c)
-
-          :primary-ip
-          (.getPrimaryIP c)
-
-          :primary-port
-          (.getPrimaryPort c)
-
-          :local-ip
-          (.getLocalIP c)
-
-          :local-port
-          (.getLocalPort c)
-
-          :effective-url
-          (.getEffectiveURL c)
-
-          :proxy-used?
-          (.getUsedProxy c)
-
-          :body
-          (cond
-
-            as-bytes?
-            (.getBytes accum)
-
-            as-string?
-            (.getString accum)
+           [accum
+            (when accum?
+              (Accumulator/create))
 
             write-file
-            as
+            (cond
+              (instance? File as)
+              (FILE/open ^File as "wb"))
 
-            )})))))
+            read-file
+            (when read-file?
+              (FILE/open ^File body "rb"))
+
+            read-stream
+            (cond
+              (instance? InputStream body)
+              (ReadStream/open ^InputStream body)
+              (instance? ReadableByteChannel body)
+              (ReadStream/open ^ReadableByteChannel body))
+
+            jheaders
+            (when (seq headers)
+              (Headers/create ^Map headers))
+
+            handler
+            (when handler?
+              (WriteCallback/create
+               (reify WriteCallback$IHandler
+                 (handle [this bb]
+                   (as bb)))))]
+
+         ;; common options
+           (cond-> c
+
+             timeout-ms
+             (.setOptionLong CURLOPT/TIMEOUT_MS timeout-ms)
+
+             connect-timeout-ms
+             (.setOptionLong CURLOPT/CONNECTTIMEOUT_MS connect-timeout-ms)
+
+             server-response-timeout-ms
+             (.setOptionLong CURLOPT/SERVER_RESPONSE_TIMEOUT_MS server-response-timeout-ms)
+
+             max-connects
+             (.setOptionLong CURLOPT/MAXCONNECTS max-connects)
+
+             max-redirects
+             (.setOptionLong CURLOPT/MAXREDIRS max-redirects)
+
+             ;; TCP
+             (some? tcp-fast-open?)
+             (.setOptionBool CURLOPT/TCP_FASTOPEN tcp-fast-open?)
+
+             (some? tcp-keep-alive?)
+             (.setOptionBool CURLOPT/TCP_KEEPALIVE tcp-keep-alive?)
+
+             tcp-keep-cnt
+             (.setOptionLong CURLOPT/TCP_KEEPCNT tcp-keep-cnt)
+
+             tcp-keep-idle
+             (.setOptionLong CURLOPT/TCP_KEEPIDLE tcp-keep-idle)
+
+             tcp-keep-intvl
+             (.setOptionLong CURLOPT/TCP_KEEPINTVL tcp-keep-intvl)
+
+             (some? tcp-no-delay?)
+             (.setOptionBool CURLOPT/TCP_NODELAY tcp-no-delay?)
+
+             (some? fail-on-error?)
+             (.setOptionBool CURLOPT/FAILONERROR fail-on-error?)
+
+             (some? no-body?)
+             (.setOptionBool CURLOPT/NOBODY no-body?)
+
+             oauth2-bearer
+             (.setOptionString CURLOPT/XOAUTH2_BEARER oauth2-bearer)
+
+             user-agent
+             (.setOptionString CURLOPT/USERAGENT user-agent)
+
+             proxy
+             (.setOptionString CURLOPT/PROXY proxy)
+
+             proxy-username
+             (.setOptionString CURLOPT/PROXYUSERNAME proxy-username)
+
+             proxy-password
+             (.setOptionString CURLOPT/PROXYPASSWORD proxy-password)
+
+             username
+             (.setOptionString CURLOPT/USERNAME username)
+
+             password
+             (.setOptionString CURLOPT/PASSWORD password)
+
+             url
+             (.setUrl url)
+
+             (bytes? body)
+             (.setPostData ^bytes body)
+
+             (string? body)
+             (.setPostData ^String body)
+
+             accum
+             (.setOptionLong2 CURLOPT/WRITEDATA
+                              (.ptr accum)
+                              CURLOPT/WRITEFUNCTION
+                              FN/accum_write_callback)
+
+             read-stream
+             (set-read-stream read-stream)
+
+             read-file
+             (set-read-file read-file)
+
+             (some? verbose?)
+             (.setOptionBool CURLOPT/VERBOSE verbose?)
+
+             write-file
+             (set-write-file write-file)
+
+             ssl-cert
+             (.setOptionString CURLOPT/SSLCERT ssl-cert)
+
+             ssl-key
+             (.setOptionString CURLOPT/SSLKEY ssl-key)
+
+             ssl-key-password
+             (.setOptionString CURLOPT/KEYPASSWD ssl-key-password)
+
+             handler
+             (.setWriteCallback handler)
+
+             jheaders
+             (.setOptionLong CURLOPT/HTTPHEADER (.ptr jheaders))
+
+             ;; cookie
+             cookie
+             (.setOptionString CURLOPT/COOKIE cookie)
+
+             ;; misc
+             buffer-size
+             (.setOptionLong CURLOPT/BUFFERSIZE buffer-size)
+
+             ;; (some? upload?)
+             ;; (.setOptionBool CURLOPT/UPLOAD upload?)
+
+             :finally
+             (.perform))
+
+           ;; response
+           {:status
+            (.getResponseCode c)
+
+            :headers
+            (.getHeaders c)
+
+            :connect-time-ms
+            (.getConnectTimeMs c)
+
+            :content-length
+            (.getContentLengthDownload c)
+
+            :redirect-time-ms
+            (.getRedirectTime c)
+
+            :retry-after
+            (.getRetryAfter c)
+
+            :speed-download
+            (.getSpeedDownload c)
+
+            :redirect-count
+            (.getRedirectCount c)
+
+            :http-version
+            (.getHTTPVersion c)
+
+            :primary-ip
+            (.getPrimaryIP c)
+
+            :primary-port
+            (.getPrimaryPort c)
+
+            :local-ip
+            (.getLocalIP c)
+
+            :local-port
+            (.getLocalPort c)
+
+            :effective-url
+            (.getEffectiveURL c)
+
+            :proxy-used?
+            (.getUsedProxy c)
+
+            :body
+            (cond
+
+              as-bytes?
+              (.getBytes accum)
+
+              as-string?
+              (.getString accum)
+
+              write-file
+              as
+
+              )})))))
 
 (comment
 

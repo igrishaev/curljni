@@ -122,10 +122,6 @@ public class CurlEasy implements IPeer {
         return checkClosed().checkTread().checkCode(_perform(ptr));
     }
 
-    public CurlEasy setUrl(final String url) {
-        return setOptionString(CURLOPT.URL, url);
-    }
-
     private CurlEasy setErrorBuffer() {
         return setOptionLong(CURLOPT.ERRORBUFFER, arena.ptr);
     }
@@ -139,56 +135,26 @@ public class CurlEasy implements IPeer {
 
     native private static String _curl_easy_strerror(long curlCode);
 
+    // TODO delete
     public CurlEasy setWriteParams(long writeData, long writeFunc) {
         return setOptionLong2(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
     }
 
+    // TODO delete
     public CurlEasy setReadParams(long readData, long readFunc) {
         return setOptionLong2(CURLOPT.READDATA, readData, CURLOPT.READFUNCTION, readFunc);
     }
 
-    public CurlEasy setSeekParams(long seekData, long seekFunc) {
-        return setOptionLong2(CURLOPT.SEEKDATA, seekData, CURLOPT.SEEKFUNCTION, seekFunc);
-    }
-
+    // TODO delete
     public CurlEasy setWriteStream(IPeer stream) {
         Objects.requireNonNull(stream, "the stream object cannot be null");
         return setWriteParams(stream.ptr(), FN.WriteStream_handler);
     }
 
+    // TODO delete
     public CurlEasy setWriteCallback(IPeer callback) {
         Objects.requireNonNull(callback, "write callback cannot be null");
         return setWriteParams(callback.ptr(), FN.WriteCallback_handler);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_USERPWD.html
-    public CurlEasy setUserPwd(String userPwd) {
-        return setOptionString(CURLOPT.USERPWD, userPwd);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_PROXYUSERPWD.html
-    public CurlEasy setProxyUserPwd(String proxyUserPwd) {
-        return setOptionString(CURLOPT.PROXYUSERPWD, proxyUserPwd);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_PROXYPASSWORD.html
-    public CurlEasy setProxyPassword(String password) {
-        return setOptionString(CURLOPT.PROXYPASSWORD, password);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_PROXYUSERNAME.html
-    public CurlEasy setProxyUsername(String username) {
-        return setOptionString(CURLOPT.PROXYUSERNAME, username);
-    }
-
-    // PASSWORD
-    public CurlEasy setPassword(String password) {
-        return setOptionString(CURLOPT.PASSWORD, password);
-    }
-
-    // USERNAME
-    public CurlEasy setUsername(String username) {
-        return setOptionString(CURLOPT.USERNAME, username);
     }
 
     native private static long _set_post_fields_bytes(long curl, byte[] buf, int len);
