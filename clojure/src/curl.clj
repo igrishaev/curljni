@@ -83,7 +83,7 @@
     (:first :one)
     (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/FIRSTONLY)
 
-    (:code)
+    (:code :obey)
     (.setOptionLong c CURLOPT/FOLLOWLOCATION CURLFOLLOW/OBEYCODE)
 
     (false :no :off)
@@ -111,6 +111,20 @@
   (.setOptionLong c CURLOPT/UPLOAD 1)
   (.setOptionLong c CURLOPT/INFILESIZE (.fileSize f))
   (.setReadParams c (.ptr f) FN/fread))
+
+
+;; todo test
+;; query params
+;; form mime data
+;; form multipart
+;; max redirects
+;; read callback
+;; write file
+;; write stream
+;; write callback
+;; proxy
+;; ssl cert
+;; fail on error
 
 (defn request
   ([opts]
@@ -210,35 +224,35 @@
 
        ;; open resources
        (with-resources
-           [accum
-            (when accum?
-              (Accumulator/create))
+         [accum
+          (when accum?
+            (Accumulator/create))
 
-            write-file
-            (when write-file?
-              (FILE/open ^File as "wb"))
+          write-file
+          (when write-file?
+            (FILE/open ^File as "wb"))
 
-            read-file
-            (when read-file?
-              (FILE/open ^File body "rb"))
+          read-file
+          (when read-file?
+            (FILE/open ^File body "rb"))
 
-            read-stream
-            (cond
-              (instance? InputStream body)
-              (ReadStream/open ^InputStream body)
-              (instance? ReadableByteChannel body)
-              (ReadStream/open ^ReadableByteChannel body))
+          read-stream
+          (cond
+            (instance? InputStream body)
+            (ReadStream/open ^InputStream body)
+            (instance? ReadableByteChannel body)
+            (ReadStream/open ^ReadableByteChannel body))
 
-            jheaders
-            (when (seq headers)
-              (Headers/create ^Map headers))
+          jheaders
+          (when (seq headers)
+            (Headers/create ^Map headers))
 
-            handler
-            (when handler?
-              (WriteCallback/create
-               (reify WriteCallback$IHandler
-                 (handle [this bb]
-                   (as bb)))))]
+          handler
+          (when handler?
+            (WriteCallback/create
+             (reify WriteCallback$IHandler
+               (handle [this bb]
+                 (as bb)))))]
 
          ;; common options
          (cond-> c
@@ -348,65 +362,65 @@
            :finally
            (.perform))
 
-           ;; response
-           {:status
-            (.getResponseCode c)
+         ;; response
+         {:status
+          (.getResponseCode c)
 
-            :headers
-            (.getHeaders c)
+          :headers
+          (.getHeaders c)
 
-            :connect-time-ms
-            (.getConnectTimeMs c)
+          :connect-time-ms
+          (.getConnectTimeMs c)
 
-            :content-length
-            (.getContentLengthDownload c)
+          :content-length
+          (.getContentLengthDownload c)
 
-            :redirect-time-ms
-            (.getRedirectTime c)
+          :redirect-time-ms
+          (.getRedirectTime c)
 
-            :retry-after
-            (.getRetryAfter c)
+          :retry-after
+          (.getRetryAfter c)
 
-            :speed-download
-            (.getSpeedDownload c)
+          :speed-download
+          (.getSpeedDownload c)
 
-            :redirect-count
-            (.getRedirectCount c)
+          :redirect-count
+          (.getRedirectCount c)
 
-            :http-version
-            (.getHTTPVersion c)
+          :http-version
+          (.getHTTPVersion c)
 
-            :primary-ip
-            (.getPrimaryIP c)
+          :primary-ip
+          (.getPrimaryIP c)
 
-            :primary-port
-            (.getPrimaryPort c)
+          :primary-port
+          (.getPrimaryPort c)
 
-            :local-ip
-            (.getLocalIP c)
+          :local-ip
+          (.getLocalIP c)
 
-            :local-port
-            (.getLocalPort c)
+          :local-port
+          (.getLocalPort c)
 
-            :effective-url
-            (.getEffectiveURL c)
+          :effective-url
+          (.getEffectiveURL c)
 
-            :proxy-used?
-            (.getUsedProxy c)
+          :proxy-used?
+          (.getUsedProxy c)
 
-            :body
-            (cond
+          :body
+          (cond
 
-              as-bytes?
-              (.getBytes accum)
+            as-bytes?
+            (.getBytes accum)
 
-              as-string?
-              (.getString accum)
+            as-string?
+            (.getString accum)
 
-              write-file?
-              as
+            write-file?
+            as
 
-              )})))))
+            )})))))
 
 (comment
 
