@@ -73,7 +73,7 @@ public class ReadStream implements IPeer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        if (code != 0) {
+        if (code != CURLE.OK) {
             throw Err.error("failed to close read stream, code: %s", code);
         }
     }

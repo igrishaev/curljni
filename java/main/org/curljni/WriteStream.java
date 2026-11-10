@@ -71,7 +71,7 @@ public class WriteStream implements IPeer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        if (code != 0) {
+        if (code != CURLE.OK) {
             throw Err.error("failed to close write stream, code: %s", code);
         }
     }

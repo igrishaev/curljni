@@ -3,7 +3,6 @@
 #include "globals.h"
 #include "macros.h"
 #include "curl/curl.h"
-#include "Foo.h"
 
 #define GET_CLASS(env, name, var) \
     var = JNI_CALL(env, FindClass, name); \
@@ -23,19 +22,6 @@ int J_VERSION = JNI_VERSION_1_8;
 
 struct J_Globals _g;
 
-static jint register_natives(JNIEnv *env) {
-
-    jclass jcls = JNI_CALL(env, FindClass, "org/curljni/Foo");
-    if (!jcls) return JNI_ERR;
-
-    JNINativeMethod methods[] = {
-        {"getFoo", "(J)J", Foo_getFoo}
-    };
-    jint nMethods = sizeof(methods) / sizeof(JNINativeMethod);
-
-    return JNI_CALL(env, RegisterNatives, jcls, methods, nMethods);
-}
-
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     log_debug("JNI_OnLoad start");
@@ -43,11 +29,6 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv* env;
     if ((*vm)->GetEnv(vm, (void **) &env, J_VERSION) != JNI_OK) {
         return JNI_ERR;
-    }
-
-    jint res = register_natives(env);
-    if (res != JNI_OK) {
-        return res;
     }
 
     CURLcode code = curl_global_init(CURL_GLOBAL_DEFAULT);

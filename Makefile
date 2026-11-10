@@ -27,7 +27,6 @@ JAVAFILES = \
 	$(SRC_PATH)/Err.java
 
 MODULES = \
-	$(C_PATH)/Foo.c \
 	$(C_PATH)/bytebuffer.c \
 	$(C_PATH)/accum.c \
 	$(C_PATH)/read_data.c \

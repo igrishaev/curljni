@@ -73,7 +73,7 @@
       c
 
       :else
-      (error! "wrong method: %s" method))))
+      (error! "wrong method value: %s" method))))
 
 (defn set-follow-redirects ^CurlEasy [^CurlEasy c value]
   (case value
@@ -93,7 +93,7 @@
     c
 
     ;; else
-    (error! "wrong follow-redirects: %s" value)))
+    (error! "wrong follow-redirects value: %s" value)))
 
 (defn set-write-file ^CurlEasy [^CurlEasy c ^IPeer wf]
   (.setWriteParams c (.ptr wf) FN/fwrite))
@@ -216,9 +216,6 @@
            read-file?
            (instance? File body)
 
-           write-file?
-           (instance? File as)
-
            handler?
            (fn? as)]
 
@@ -229,7 +226,8 @@
             (Accumulator/create))
 
           write-file
-          (when write-file?
+          (cond
+            (instance? File as)
             (FILE/open ^File as "wb"))
 
           read-file
@@ -417,7 +415,7 @@
             as-string?
             (.getString accum)
 
-            write-file?
+            write-file
             as
 
             )})))))

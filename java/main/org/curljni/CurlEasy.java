@@ -139,11 +139,6 @@ public class CurlEasy implements IPeer {
 
     native private static String _curl_easy_strerror(long curlCode);
 
-    public CurlEasy setWriteFile(IPeer file) {
-        Objects.requireNonNull(file, "the file object cannot be null");
-        return setWriteParams(file.ptr(), FN.fwrite);
-    }
-
     public CurlEasy setWriteParams(long writeData, long writeFunc) {
         return setOptionLong2(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
     }
@@ -210,17 +205,9 @@ public class CurlEasy implements IPeer {
         return setPostData(string.getBytes(charset));
     }
 
+    @SuppressWarnings("unused")
     public CurlEasy setPostData(String string, String charset) {
-        return setPostData(string, Charset.forName(charset)); // TODO fallback?
-    }
-
-    // TODO: set3 opts
-    // TODO: rename set1opt set2opts
-    public CurlEasy setReadStream(ReadStream stream) {
-        Objects.requireNonNull(stream, "read stream cannot be null");
-        return setReadParams(stream.ptr(), FN.ReadStream_handler)
-                .setSeekParams(Native.NULL, FN.ReadStream_seek);
-        // TODO: curl_easy_setopt(curl, CURLOPT_UPLOAD, 1);
+        return setPostData(string, Charset.forName(charset));
     }
 
     native private static long _get_info_as_long(long curl, int info, long bb);

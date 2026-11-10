@@ -66,7 +66,7 @@ public class WriteCallback implements IPeer {
         if (isClosed) return;
         long code = _free(ptr);
         isClosed = true;
-        if (code != 0) {
+        if (code != CURLE.OK) {
             throw Err.error("failed to close write callback, code: %s", code);
         }
     }
