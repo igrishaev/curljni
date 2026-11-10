@@ -25,6 +25,14 @@
 
     (case [request-method uri]
 
+      [:get "/goto-a"]
+      {:status 302
+       :headers {"location" (->url "/goto-b")}}
+
+      [:get "/goto-b"]
+      {:status 302
+       :headers {"location" (->url "/goto-a")}}
+
       [:get "/foo"]
       {:status 302
        :headers {"location" (->url "/bar")}}
@@ -97,6 +105,43 @@
             "body" any/string
             "content-length" "1409"}
            data))))
+
+;; TODO test HEAD
+;; todo reuse after response
+;; todo resources from another thread
+;; share c across multiple threads
+;; TODO organize clj namespaces
+
+(deftest test-get-redirect-loop
+  (let [opts
+        {:url (->url "/goto-a")
+         :method :get
+         :as :string
+         :follow-redirects true}]
+
+    (try
+      (curl/request opts)
+      (is false)
+      (catch CURLException e
+        (is (-> e
+                (ex-message)
+                (str/includes? "Maximum (30) redirects followed"))))))
+
+  (let [opts
+        {:url (->url "/goto-a")
+         :method :get
+         :as :string
+         :max-redirects 12
+         :follow-redirects true}]
+
+    (try
+      (curl/request opts)
+      (is false)
+      (catch CURLException e
+        (is (-> e
+                (ex-message)
+                (str/includes? "Maximum (12) redirects followed")))))))
+
 
 (deftest test-redirect-with-stream
   (let [in
