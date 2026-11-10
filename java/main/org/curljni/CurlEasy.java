@@ -205,56 +205,6 @@ public class CurlEasy implements IPeer {
         return setOptionLong(CURLOPT.BUFFERSIZE, size);
     }
 
-    // NOBODY
-    public CurlEasy setNoBody(boolean value) {
-        return setOptionBool(CURLOPT.NOBODY, value);
-    }
-
-    // FAILONERROR
-    public CurlEasy setFailOnError(boolean value) {
-        return setOptionBool(CURLOPT.FAILONERROR, value);
-    }
-
-    // CURLOPT_TCP_FASTOPEN
-    public CurlEasy setTCPFastOpen(boolean value) {
-        return setOptionBool(CURLOPT.TCP_FASTOPEN, value);
-    }
-
-    // CURLOPT_TCP_KEEPALIVE
-    public CurlEasy setTPCKeepAlive(boolean value) {
-        return setOptionBool(CURLOPT.TCP_KEEPALIVE, value);
-    }
-
-    // CURLOPT_TCP_KEEPCNT
-    public CurlEasy setTCPKeepCNT(long cnt) {
-        return setOptionLong(CURLOPT.TCP_KEEPCNT, cnt);
-    }
-
-    // CURLOPT_TCP_KEEPIDLE
-    public CurlEasy setTPCKeepIdle(long delay) {
-        return setOptionLong(CURLOPT.TCP_KEEPIDLE, delay);
-    }
-
-    // CURLOPT_TCP_KEEPINTVL
-    public CurlEasy setTCPKeepIntvl(long value) {
-        return setOptionLong(CURLOPT.TCP_KEEPINTVL, value);
-    }
-
-    // CURLOPT_TCP_NODELAY
-    public CurlEasy setTPCNoDelay(boolean flag) {
-        return setOptionLong(CURLOPT.TCP_NODELAY, flag ? 1 : 0);
-    }
-
-    // CURLOPT_XOAUTH2_BEARER
-    public CurlEasy setXOauth2Bearer(String value) {
-        return setOptionString(CURLOPT.XOAUTH2_BEARER, value);
-    }
-
-    // CURLOPT_CUSTOMREQUEST
-    public CurlEasy setCustomRequest(String method) {
-        return setOptionString(CURLOPT.CUSTOMREQUEST, method);
-    }
-
     // CURLOPT_COOKIE
     public CurlEasy setCookie(String cookie) {
         return setOptionString(CURLOPT.COOKIE, cookie);
@@ -279,10 +229,6 @@ public class CurlEasy implements IPeer {
         return setPostData(string, Charset.forName(charset)); // TODO fallback?
     }
 
-    public CurlEasy setVerbose(boolean flag) {
-        return setOptionBool(CURLOPT.VERBOSE, flag);
-    }
-
     public CurlEasy setReadFile(IPeer file) {
         Objects.requireNonNull(file, "read file cannot be null");
         return setReadParams(file.ptr(), FN.fread);
@@ -291,21 +237,6 @@ public class CurlEasy implements IPeer {
         // TODO: seek file, read_seek_file
         // TODO: CURLOPT_UPLOAD=1
         // TODO: CURLOPT_POSTFIELDSIZE
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_SSLCERT.html
-    public CurlEasy setSSLCert(String path) {
-        return setOptionString(CURLOPT.SSLCERT, path);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_SSLKEY.html
-    public CurlEasy setSSLKey(String path){
-        return setOptionString(CURLOPT.SSLKEY, path);
-    }
-
-    // https://curl.se/libcurl/c/CURLOPT_KEYPASSWD.html
-    public CurlEasy setKeyPasswd(String passwd){
-        return setOptionString(CURLOPT.KEYPASSWD, passwd);
     }
 
     // TODO: set3 opts

@@ -58,10 +58,10 @@
 
     (cond
       (string? method)
-      (.setCustomRequest c method)
+      (.setOptionString c CURLOPT/CUSTOMREQUEST method)
 
       (named? method)
-      (.setCustomRequest c (name method))
+      (.setOptionString c CURLOPT/CUSTOMREQUEST (name method))
 
       (nil? method)
       c
@@ -104,6 +104,7 @@
                  method
                  headers
                  user-agent
+                 oauth2-bearer
                  ;; query-params
 
                  ;; cookies (string, map, file, jar)
@@ -131,15 +132,25 @@
                  ;; password
 
                  ;; cert options
+                 ssl-cert
+                 ssl-key
+                 ssl-key-password
 
-                 ;; tcp options
-                 tcp-fast-open
-                 ;; other tcp opts
+                 ;; tcp
+                 tcp-fast-open?
+                 tcp-keep-alive?
+                 tcp-keep-cnt
+                 tcp-keep-idle
+                 tcp-keep-intvl
+                 tcp-no-delay?
 
                  ;; misc
+                 verbose?
                  max-connects
-                 ;; no-body
-                 ;; fail-on-error
+                 fail-on-error?
+                 no-body?
+
+                 ;;
                  ]}
          opts]
 
@@ -205,8 +216,32 @@
              max-redirects
              (.setOptionLong CURLOPT/MAXREDIRS max-redirects)
 
-             (some? tcp-fast-open)
-             (.setTCPFastOpen tcp-fast-open)
+             (some? tcp-fast-open?)
+             (.setOptionBool CURLOPT/TCP_FASTOPEN tcp-fast-open?)
+
+             (some? tcp-keep-alive?)
+             (.setOptionBool CURLOPT/TCP_KEEPALIVE tcp-keep-alive?)
+
+             tcp-keep-cnt
+             (.setOptionLong CURLOPT/TCP_KEEPCNT tcp-keep-cnt)
+
+             tcp-keep-idle
+             (.setOptionLong CURLOPT/TCP_KEEPIDLE tcp-keep-idle)
+
+             tcp-keep-intvl
+             (.setOptionLong CURLOPT/TCP_KEEPINTVL tcp-keep-intvl)
+
+             (some? tcp-no-delay?)
+             (.setOptionBool CURLOPT/TCP_NODELAY tcp-no-delay?)
+
+             (some? fail-on-error?)
+             (.setOptionBool CURLOPT/FAILONERROR fail-on-error?)
+
+             (some? no-body?)
+             (.setOptionBool CURLOPT/NOBODY no-body?)
+
+             oauth2-bearer
+             (.setOptionString CURLOPT/XOAUTH2_BEARER oauth2-bearer)
 
              user-agent
              (.setOptionString CURLOPT/USERAGENT user-agent)
@@ -217,17 +252,26 @@
              url
              (.setUrl url)
 
-             ;; accum
-             ;; (.setWriteParams (.ptr accum) FN/accum_write_callback)
-
              accum
              (.setOptionLong2 CURLOPT/WRITEDATA
                               (.ptr accum)
                               CURLOPT/WRITEFUNCTION
                               FN/accum_write_callback)
 
+             (some? verbose?)
+             (.setOptionBool CURLOPT/VERBOSE verbose?)
+
              file
              (.setWriteFile file)
+
+             ssl-cert
+             (.setOptionString CURLOPT/SSLCERT ssl-cert)
+
+             ssl-key
+             (.setOptionString CURLOPT/SSLKEY ssl-key)
+
+             ssl-key-password
+             (.setOptionString CURLOPT/KEYPASSWD ssl-key-password)
 
              handler
              (.setWriteCallback handler)

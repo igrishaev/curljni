@@ -2,17 +2,12 @@
   (:import
    (org.curljni CURLException))
   (:require
+   [fixtures]
    [cheshire.core :as json]
    [curl :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
-   [clojure.test :refer [is deftest testing use-fixtures]]
-   [ring.adapter.jetty :as jetty]))
-
-(def PORT 3099)
-
-(def jetty-opts
-  {:port PORT :join? false})
+   [clojure.test :refer [is deftest testing]]))
 
 (defn app [request]
   (let [{:keys [request-method
@@ -67,64 +62,13 @@
 
       )))
 
-(use-fixtures :once
-  (fn [t]
-    (let [server (jetty/run-jetty #'app jetty-opts)]
-      (t)
-      (.stop server))))
+(fixtures/use-server app)
 
 (defn ->url [path]
-  (format "http://127.0.0.1:%s%s" PORT path))
-
-(deftest test-ok
-  (let [opts
-        {:url (->url "/")
-         :method :get}
-
-        {:keys [status ^bytes body]}
-        (curl/request opts)]
-
-    (is (= 200 status))
-    (is (bytes? body))
-    (is (= "test" (new String body)))))
+  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
 
 
-(deftest test-as-string
-  (let [opts
-        {:url "http://127.0.0.1:3099/"
-         :method :get
-         :as :string}
 
-        {:keys [status body]}
-        (curl/request opts)]
-
-    (is (= 200 status))
-    (is (= "test" body))))
-
-
-(deftest test-server-response-timeout
-  (let [opts
-        {:url (->url "/too-slow")
-         :method :get
-         :timeout-ms 900}]
-
-    (testing "timeout triggered"
-      (try
-        (curl/request opts)
-        (is false)
-        (catch CURLException e
-          (is (-> e
-                  (ex-message)
-                  (str/includes? "Operation timed out after"))))))
-
-    (testing "this is fine"
-      (let [opts
-            (merge opts {:timeout-ms 1100})
-
-            {:keys [status]}
-            (curl/request opts)]
-
-        (is (= 200 status))))))
 
 (deftest test-pass-headers
   (testing "simple"
@@ -173,31 +117,6 @@
       (is (= {} headers)))))
 
 
-(deftest test-get
-  (testing "get"
-    (let [opts
-          {:url (->url "/get")
-           :method :get
-           :as :string}
-
-          {:keys [status body]}
-          (curl/request opts)]
-
-      (is (= 200 status))
-      (is (= "it was get" body)))
-
-    (let [opts
-          {:url (->url "/get")
-           :method "GET"
-           :as :string}
-
-          {:keys [status body]}
-          (curl/request opts)]
-
-      (is (= 200 status))
-      (is (= "it was get" body)))))
-
-
 (deftest test-post
   (testing "post"
     (let [opts
@@ -232,42 +151,3 @@
   ;; test head
 
   )
-
-(deftest test-user-agent
-  (testing "a string value"
-    (let [opts
-          {:url (->url "/check-headers")
-           :method :get
-           :as :string
-           :user-agent "a teapot"}
-
-          {:keys [status body]}
-          (curl/request opts)
-
-          headers
-          (-> body
-              json/parse-string
-              (get "headers")
-              (dissoc "host" "accept"))]
-
-      (is (= 200 status))
-      (is (= {"user-agent" "a teapot"} headers))))
-
-  (testing "null"
-    (let [opts
-          {:url (->url "/check-headers")
-           :method :get
-           :as :string
-           :user-agent nil}
-
-          {:keys [status body]}
-          (curl/request opts)
-
-          headers
-          (-> body
-              json/parse-string
-              (get "headers")
-              (dissoc "host" "accept"))]
-
-      (is (= 200 status))
-      (is (= {} headers)))))
