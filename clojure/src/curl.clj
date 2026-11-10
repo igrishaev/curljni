@@ -7,6 +7,7 @@
                 CURLFOLLOW
                 CURLOPT
                 Headers
+                IPeer
                 FILE
                 FN
                 Accumulator)))
@@ -89,6 +90,9 @@
     ;; else
     (error! "wrong follow-redirects: %s" value)))
 
+(defn set-write-file ^CurlEasy [^CurlEasy c ^IPeer wf]
+  (.setWriteParams c (.ptr wf) FN/fwrite))
+
 (defn request
   ([opts]
    (with-open [c (CurlEasy/make)]
@@ -108,6 +112,7 @@
                  ;; query-params
 
                  ;; cookies (string, map, file, jar)
+                 cookie
 
                  ;; timeouts
                  timeout-ms
@@ -149,6 +154,10 @@
                  max-connects
                  fail-on-error?
                  no-body?
+                 buffer-size
+                 upload?
+
+
 
                  ;;
                  ]}
@@ -171,7 +180,7 @@
            accum?
            (or as-bytes? as-string?)
 
-           file?
+           write-file?
            (instance? java.io.File as)
 
            handler?
@@ -183,8 +192,8 @@
             (when accum?
               (Accumulator/create))
 
-            file
-            (when file?
+            write-file
+            (when write-file?
               (FILE/open (.getAbsolutePath ^java.io.File as) "wb"))
 
             jheaders
@@ -216,6 +225,7 @@
              max-redirects
              (.setOptionLong CURLOPT/MAXREDIRS max-redirects)
 
+             ;; TCP
              (some? tcp-fast-open?)
              (.setOptionBool CURLOPT/TCP_FASTOPEN tcp-fast-open?)
 
@@ -252,6 +262,15 @@
              url
              (.setUrl url)
 
+             (bytes? body)
+             (.setPostData ^bytes body)
+             #_
+             (doto
+                 (.setOptionLong CURLOPT/POSTFIELDSIZE (alength ^bytes body)))
+
+             (string? body)
+             (.setPostData ^String body "UTF-8")
+
              accum
              (.setOptionLong2 CURLOPT/WRITEDATA
                               (.ptr accum)
@@ -261,8 +280,8 @@
              (some? verbose?)
              (.setOptionBool CURLOPT/VERBOSE verbose?)
 
-             file
-             (.setWriteFile file)
+             write-file
+             (set-write-file write-file)
 
              ssl-cert
              (.setOptionString CURLOPT/SSLCERT ssl-cert)
@@ -278,6 +297,17 @@
 
              jheaders
              (.setOptionLong CURLOPT/HTTPHEADER (.ptr jheaders))
+
+             ;; cookie
+             cookie
+             (.setOptionString CURLOPT/COOKIE cookie)
+
+             ;; misc
+             buffer-size
+             (.setOptionLong CURLOPT/BUFFERSIZE buffer-size)
+
+             ;; (some? upload?)
+             ;; (.setOptionBool CURLOPT/UPLOAD upload?)
 
              :finally
              (.perform))
@@ -337,7 +367,7 @@
               as-string?
               (.getString accum)
 
-              file
+              write-file?
               as
 
               )})))))

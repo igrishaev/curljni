@@ -143,7 +143,7 @@ public class CurlEasy implements IPeer {
         return setWriteParams(file.ptr(), FN.fwrite);
     }
 
-    private CurlEasy setWriteParams(long writeData, long writeFunc) {
+    public CurlEasy setWriteParams(long writeData, long writeFunc) {
         return setOptionLong2(CURLOPT.WRITEDATA, writeData, CURLOPT.WRITEFUNCTION, writeFunc);
     }
 
@@ -185,11 +185,6 @@ public class CurlEasy implements IPeer {
         return setOptionString(CURLOPT.PROXYUSERNAME, username);
     }
 
-    // CURLOPT_UPLOAD
-    public CurlEasy setUpload(boolean flag) {
-        return setOptionBool(CURLOPT.UPLOAD, flag);
-    }
-
     // PASSWORD
     public CurlEasy setPassword(String password) {
         return setOptionString(CURLOPT.PASSWORD, password);
@@ -200,22 +195,6 @@ public class CurlEasy implements IPeer {
         return setOptionString(CURLOPT.USERNAME, username);
     }
 
-    // BUFFERSIZE
-    public CurlEasy setBufferSize(long size) {
-        return setOptionLong(CURLOPT.BUFFERSIZE, size);
-    }
-
-    // CURLOPT_COOKIE
-    public CurlEasy setCookie(String cookie) {
-        return setOptionString(CURLOPT.COOKIE, cookie);
-    }
-
-    public CurlEasy setAccumulator(IPeer acc) {
-        Objects.requireNonNull(acc, "the accumulator cannot be null");
-        return setWriteParams(acc.ptr(), FN.accum_write_callback);
-    }
-
-    // TODO: check for null
     native private static long _set_post_fields_bytes(long curl, byte[] buf, int len);
     public CurlEasy setPostData(byte[] buf) {
         return checkClosed().checkCode(_set_post_fields_bytes(ptr, buf, buf.length));

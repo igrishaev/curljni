@@ -67,12 +67,14 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1post_1fields_1bytes
         goto exit;
     }
 
+    code = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, jlen);
+    if (code != CURLE_OK) goto exit;
+
     code = curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, buf);
     JNI_CALL(env, ReleasePrimitiveArrayCritical, jbuf, buf, JNI_ABORT);
     if (code != CURLE_OK) goto exit;
 
-    code = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, jlen);
-    if (code != CURLE_OK) goto exit;
+    log_debug("set_post_fields, code: %lu", code);
 
 exit:
     return code;
