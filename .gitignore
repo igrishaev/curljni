@@ -42,3 +42,4 @@ build/
 *.o
 
 aaa.txt
+.lein-failures

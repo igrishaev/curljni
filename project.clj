@@ -51,7 +51,7 @@
      [org.babashka/http-client]]}
 
    :test
-   {:source-paths ["clojure/test"]
+   {:test-paths ["clojure/test"]
     :resource-paths ["clojure/test/resources"]
     :dependencies
     [[ring/ring-core]

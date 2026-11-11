@@ -1,4 +1,4 @@
-(ns curl.test-test
+(ns curl.test-get
   (:import
    (org.curljni CURLException))
   (:require
