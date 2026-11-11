@@ -107,7 +107,11 @@
              :body DATA
              :follow-redirects true
              :headers {"foo" "bar"}
-             :as :bytes}]
+             :as :bytes
+             ;; :as (io/file "foo.out")
+             ;; :buffer-size 10000000
+             ;; :no-body? true
+             }]
 
     #_
     (quick-bench

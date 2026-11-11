@@ -239,7 +239,7 @@
        (with-resources
            [accum
             (when accum?
-              (Accumulator/create))
+              (Accumulator/create #_500000))
 
             write-file
             (cond
@@ -387,6 +387,9 @@
 
              :finally
              (.perform))
+
+           ;; (.setOptionLong c CURLOPT/UPLOAD_BUFFERSIZE 2000000)
+           ;; (.setOptionLong c CURLOPT/BUFFERSIZE 2000000)
 
            ;; response
            {:status
