@@ -1,12 +1,12 @@
-(ns curl-test-upload
+(ns curl.test-upload
   (:import
    (java.io InputStream)
    (org.curljni CURLException))
   (:require
    [any.core :as any]
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
@@ -26,14 +26,11 @@
              :body (slurp body)
              :content-length content-length})}))
 
-(fixtures/use-server app)
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
+(fix/use-server app)
 
 (deftest test-post-bytes
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :post
          :as :string
          :body (.getBytes "foobarbaz")}
@@ -52,7 +49,7 @@
 
 (deftest test-post-string
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method "POST"
          :as :string
          :body "hello"}
@@ -71,7 +68,7 @@
 
 (deftest test-get-with-bytes
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :get
          :as :string
          :body (.getBytes "foobarbaz")}
@@ -91,7 +88,7 @@
 
 (deftest test-put-with-bytes
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :put
          :as :string
          :body (.getBytes "foobarbaz")}
@@ -110,7 +107,7 @@
 
 (deftest test-delete-with-bytes
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method "DELETE"
          :as :string
          :body (.getBytes "foobarbaz")}
@@ -129,7 +126,7 @@
 
 (deftest test-delete-empty
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method "DELETE"
          :as :string}
 
@@ -147,7 +144,7 @@
 
 (deftest test-custom-method
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method "DUNNO"
          :body "test"
          :as :string}
@@ -169,7 +166,7 @@
         (io/file "project.clj")
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :put
          :as :string
          :body read-file}
@@ -191,7 +188,7 @@
         (io/file "dunno-missing.clj")
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :put
          :as :string
          :body read-file}]
@@ -211,7 +208,7 @@
             (io/input-stream))
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :patch
          :as :string
          :body in}
@@ -244,7 +241,7 @@
             ([a b c d] (f))))
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :patch
          :as :string
          :body in}]

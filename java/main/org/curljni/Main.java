@@ -20,23 +20,11 @@ public class Main {
         ) {
             c
                 .resetOptions()
-                .setUrl("https://habr.com")
-
-                // .setAccumulator(acc)
-
                 // .setWriteCallback(wc)
-
-                // .setBufferSize(9999)
-
-                    .setUsername("Ivan")
-                    .setPassword("secret")
                 // .setWriteFile(wf)
                 .setWriteStream(ws);
-
-                // .setVerbose(true);
                 // .setPostData(new byte[] {1, 2, 3})
 
-            
             c.perform();
             System.out.println(out.toString().substring(0, 5));
 

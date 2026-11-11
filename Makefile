@@ -115,7 +115,7 @@ new-module:
 	mv $(module).* c
 
 repl:
-	DEBUG=1 lein with-profile +test repl
+	DEBUG=1 lein with-profile +test,+bench repl
 
 test:
 	mvn test

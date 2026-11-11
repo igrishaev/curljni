@@ -1,4 +1,4 @@
-(ns curl
+(ns curl.core
   (:import
    (java.io File
             InputStream)
@@ -202,9 +202,6 @@
                  no-body?
                  buffer-size
                  upload?
-
-
-
                  ;;
                  ]}
          opts]
@@ -330,7 +327,7 @@
              (.setOptionString CURLOPT/PASSWORD password)
 
              url
-             (.setUrl url)
+             (.setOptionString CURLOPT/URL url)
 
              (bytes? body)
              (.setPostData ^bytes body)
@@ -379,8 +376,8 @@
              buffer-size
              (.setOptionLong CURLOPT/BUFFERSIZE buffer-size)
 
-             ;; (some? upload?)
-             ;; (.setOptionBool CURLOPT/UPLOAD upload?)
+             (some? upload?)
+             (.setOptionBool CURLOPT/UPLOAD upload?)
 
              :finally
              (.perform))
