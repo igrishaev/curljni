@@ -61,7 +61,7 @@ JAVA_INC = \
 CURL_HOME = /opt/homebrew/opt/curl
 
 CC = gcc
-CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL_HOME}/lib -DDEBUG
+CFLAGS = -Wall -ansi -pedantic -fPIC ${JAVA_INC} -I${CURL_HOME}/include -L${CURL_HOME}/lib # -DDEBUG
 
 LIBS = -lcurl
 

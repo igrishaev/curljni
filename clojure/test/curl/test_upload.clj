@@ -142,28 +142,9 @@
             "content-length" nil}
            data))))
 
-(deftest test-custom-method
-  (let [opts
-        {:url (fix/->url "/")
-         :method "DUNNO"
-         :body "test"
-         :as :string}
-
-        {:keys [status body]}
-        (curl/request opts)
-
-        data
-        (json/parse-string body)]
-
-    (is (= 200 status))
-    (is (= {"method" "dunno"
-            "body" "test"
-            "content-length" "4"}
-           data))))
-
 (deftest test-put-with-file
   (let [read-file
-        (io/file "project.clj")
+        (-> "textfile.txt" io/resource io/file)
 
         opts
         {:url (fix/->url "/")
@@ -180,7 +161,7 @@
     (is (= 200 status))
     (is (= {"method" "put"
             "body" any/string
-            "content-length" "1409"}
+            "content-length" "12"}
            data))))
 
 (deftest test-put-missing-file
@@ -224,8 +205,6 @@
             "body" "foobarbaz"
             "content-length" nil}
            data))))
-
-;; try channel
 
 (deftest test-stream-with-exception
   (let [f

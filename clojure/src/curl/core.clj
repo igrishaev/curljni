@@ -138,6 +138,12 @@
 ;; ssl cert
 ;; fail on error
 ;; bulk get info long
+;; try read channel
+;; test head
+;; todo reuse after response
+;; todo resources from another thread
+;; share c across multiple threads
+
 
 (defn request
   ([opts]

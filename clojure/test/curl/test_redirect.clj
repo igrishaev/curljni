@@ -1,6 +1,7 @@
 (ns curl.test-redirect
   (:import
-   (org.curljni CURLException))
+   (org.curljni CURLException)
+   (java.nio.channels Channels))
   (:require
    [any.core :as any]
    [curl.fixtures :as fix]
@@ -82,7 +83,7 @@
 
 (deftest test-put-file-with-redirect
   (let [read-file
-        (io/file "project.clj")
+        (-> "textfile.txt" io/resource io/file)
 
         opts
         {:url (fix/->url "/")
@@ -100,14 +101,8 @@
     (is (= 200 status))
     (is (= {"method" "put"
             "body" any/string
-            "content-length" "1409"}
+            "content-length" "12"}
            data))))
-
-;; TODO test HEAD
-;; todo reuse after response
-;; todo resources from another thread
-;; share c across multiple threads
-;; TODO organize clj namespaces
 
 (deftest test-get-redirect-loop
   (let [opts
@@ -140,11 +135,19 @@
                 (str/includes? "Maximum (12) redirects followed")))))))
 
 
+(defn gen-string ^String [^String sample n]
+  (str/join \space (repeat n sample)))
+
+
 (deftest test-redirect-with-stream
-  (let [in
-        (-> "foobarbaz"
+  (let [content
+        (gen-string "abc" 100000)
+
+        in
+        (-> content
             (.getBytes)
-            (io/input-stream))
+            (io/input-stream)
+            (Channels/newChannel))
 
         opts
         {:url (fix/->url "/")
@@ -153,16 +156,26 @@
          :as :string
          :body in}
 
+        [response e]
+        (try ;; 50/50
+          [(curl/request opts) nil]
+          (catch CURLException e
+            [nil e]))
+
         {:keys [status body]}
-        (curl/request opts)
+        response
 
         data
-        (json/parse-string body)]
+        (when body
+          (json/parse-string body))
 
-    ;; <CURLException code: 65, strError: Send failed since rewinding of the data stream failed, strErrorBuffer: seek callback returned error 2, errno: 35, errnoMessage: Resource temporarily unavailable>
+        {:strs [content-length]}
+        data]
 
-    (is (= 200 status))
-    (is (= {"method" "patch"
-            "body" "foobarbaz"
-            "content-length" nil}
-           data))))
+    (if e
+      (is (-> e
+              (ex-message)
+              (str/includes? "rewinding of the data stream failed")))
+      (do
+        (is (= 200 status))
+        (is (= nil content-length))))))

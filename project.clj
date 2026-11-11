@@ -51,7 +51,12 @@
      [org.babashka/http-client]]}
 
    :test
-   {:test-paths ["clojure/test"]
+   {
+    :jvm-opts ["--enable-native-access=ALL-UNNAMED"
+               "-Dorg.eclipse.jetty.LEVEL=OFF"
+               "-Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.StdErrLog"]
+
+    :test-paths ["clojure/test"]
     :resource-paths ["clojure/test/resources"]
     :dependencies
     [[ring/ring-core]
