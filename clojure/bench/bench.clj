@@ -18,16 +18,16 @@
 (def URL (format "http://127.0.0.1:%d" PORT))
 
 (def ^String DATA
-  (str/join "" (repeat 100000 "ABC")))
+  (str/join "" (repeat 900000 "ABC")))
 
 (defn app [request]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body DATA})
+   :body "123" #_DATA})
 
 (defonce server
   (delay
-    (jetty/run-jetty app {:port PORT :join? false})))
+    (jetty/run-jetty #'app {:port PORT :join? false})))
 
 (defn test-bb []
   (quick-bench
@@ -85,7 +85,6 @@
 
       (.transferTo body out)
       (.close out))))
-
 
 (defn test-curl []
 

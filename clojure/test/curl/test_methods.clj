@@ -32,6 +32,10 @@
       {:status 200
        :body "it was get"}
 
+      [:post "/post-no-body"]
+      {:status 266
+       :body "post no body"}
+
       [:post "/post"]
       {:status 200
        :body "it was post"}
@@ -78,7 +82,19 @@
           (is (= 200 status))
           (is (= "it was put" body)))))))
 
-;; TODO test head
+(deftest test-no-body
+  (let [opts
+        {:url (fix/->url "/post-no-body")
+         :method "post"
+         :body "test"
+         :as :string
+         :no-body? true}
+
+        {:keys [status body]}
+        (curl/request opts)]
+
+    (is (= 266 status))
+    (is (= "" body))))
 
 (deftest test-custom-method
   (let [opts
