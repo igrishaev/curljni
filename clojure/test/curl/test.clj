@@ -1,10 +1,10 @@
-(ns curl-test
+(ns curl.test
   (:import
    (org.curljni CURLException))
   (:require
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
@@ -62,18 +62,12 @@
 
       )))
 
-(fixtures/use-server app)
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
-
-
-
+(fix/use-server app)
 
 (deftest test-pass-headers
   (testing "simple"
     (let [opts
-          {:url (->url "/check-headers")
+          {:url (fix/->url "/check-headers")
            :method :get
            :as :string
            :headers {"foo" nil
@@ -99,7 +93,7 @@
 
   (testing "nil"
     (let [opts
-          {:url (->url "/check-headers")
+          {:url (fix/->url "/check-headers")
            :method :get
            :as :string
            :headers nil}
@@ -120,7 +114,7 @@
 (deftest test-post
   (testing "post"
     (let [opts
-          {:url (->url "/post")
+          {:url (fix/->url "/post")
            :method :post
            :as :string}
 
@@ -138,7 +132,7 @@
     (doseq [method [:put :pUt :PUT "pUt" "Put" "PUT" 'put 'PUT]]
       (testing (str method)
         (let [opts
-              {:url (->url "/put")
+              {:url (fix/->url "/put")
                :as :string
                :method method}
 

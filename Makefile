@@ -117,5 +117,6 @@ new-module:
 repl:
 	DEBUG=1 lein with-profile +test,+bench repl
 
+.PHONY: test
 test:
-	mvn test
+	lein with-profile +test test

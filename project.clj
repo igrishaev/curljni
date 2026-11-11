@@ -14,7 +14,6 @@
 
   :source-paths ["clojure/src"]
   :java-source-paths ["java/main"]
-  :resource-paths ["resources"]
 
   :managed-dependencies
   [[org.clojure/clojure "1.10.0" :scope "provided"]
@@ -39,8 +38,6 @@
                   "-Xlint:preview"
                   "--release" ~MIN_JAVA_VERSION]
 
-  :target-path "target/%s"
-
   :profiles
   {:bench
    {:source-paths ["clojure/bench"]
@@ -55,6 +52,7 @@
 
    :test
    {:source-paths ["clojure/test"]
+    :resource-paths ["clojure/test/resources"]
     :dependencies
     [[ring/ring-core]
      [ring/ring-jetty-adapter]

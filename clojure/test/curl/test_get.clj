@@ -1,10 +1,10 @@
-(ns curl-test
+(ns curl.test-test
   (:import
    (org.curljni CURLException))
   (:require
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
@@ -19,15 +19,12 @@
       {:status 200
        :body "it was get"})))
 
-(fixtures/use-server app)
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
+(fix/use-server app)
 
 (deftest test-get
   (testing "get"
     (let [opts
-          {:url (->url "/get")
+          {:url (fix/->url "/get")
            :method :get
            :as :string}
 
@@ -38,7 +35,7 @@
       (is (= "it was get" body)))
 
     (let [opts
-          {:url (->url "/get")
+          {:url (fix/->url "/get")
            :method "GET"
            :as :string}
 

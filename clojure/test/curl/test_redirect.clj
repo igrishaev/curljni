@@ -1,17 +1,14 @@
-(ns curl-test-upload
+(ns curl.test-redirect
   (:import
    (org.curljni CURLException))
   (:require
    [any.core :as any]
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
 
 (defn app [request]
   (let [{:keys [request-method
@@ -27,15 +24,15 @@
 
       [:get "/goto-a"]
       {:status 302
-       :headers {"location" (->url "/goto-b")}}
+       :headers {"location" (fix/->url "/goto-b")}}
 
       [:get "/goto-b"]
       {:status 302
-       :headers {"location" (->url "/goto-a")}}
+       :headers {"location" (fix/->url "/goto-a")}}
 
       [:get "/foo"]
       {:status 302
-       :headers {"location" (->url "/bar")}}
+       :headers {"location" (fix/->url "/bar")}}
 
       [:get "/bar"]
       {:status 200
@@ -43,7 +40,7 @@
 
       [:put "/"]
       {:status 302
-       :headers {"location" (->url "/new-url")}}
+       :headers {"location" (fix/->url "/new-url")}}
 
       [:put "/new-url"]
       {:status 200
@@ -55,11 +52,11 @@
       {:status 404
        :body (json/generate-string {:message "not found"})})))
 
-(fixtures/use-server app)
+(fix/use-server app)
 
 (deftest test-get-no-redirects
   (let [opts
-        {:url (->url "/foo")
+        {:url (fix/->url "/foo")
          :method :get
          :as :string}
 
@@ -71,7 +68,7 @@
 
 (deftest test-get-redirects-all
   (let [opts
-        {:url (->url "/foo")
+        {:url (fix/->url "/foo")
          :method :get
          :follow-redirects true
          :as :string}
@@ -81,14 +78,14 @@
 
     (is (= 200 status))
     (is (= "OK" body))
-    (is (= (->url "/bar") effective-url))))
+    (is (= (fix/->url "/bar") effective-url))))
 
 (deftest test-put-file-with-redirect
   (let [read-file
         (io/file "project.clj")
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :put
          :as :string
          :follow-redirects true
@@ -114,7 +111,7 @@
 
 (deftest test-get-redirect-loop
   (let [opts
-        {:url (->url "/goto-a")
+        {:url (fix/->url "/goto-a")
          :method :get
          :as :string
          :follow-redirects true}]
@@ -128,7 +125,7 @@
                 (str/includes? "Maximum (30) redirects followed"))))))
 
   (let [opts
-        {:url (->url "/goto-a")
+        {:url (fix/->url "/goto-a")
          :method :get
          :as :string
          :max-redirects 12
@@ -150,7 +147,7 @@
             (io/input-stream))
 
         opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :put
          :follow-redirects true
          :as :string

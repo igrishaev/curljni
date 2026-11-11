@@ -1,10 +1,10 @@
-(ns curl-test
+(ns curl.test-simple
   (:import
    (org.curljni CURLException))
   (:require
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
@@ -50,14 +50,11 @@
        :body "no such method"
        :headers {"content-type" "text/plain"}})))
 
-(fixtures/use-server app)
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
+(fix/use-server app)
 
 (deftest test-ok
   (let [opts
-        {:url (->url "/")
+        {:url (fix/->url "/")
          :method :get}
 
         {:keys [status ^bytes body]}
@@ -82,7 +79,7 @@
 (deftest test-user-agent
   (testing "a string value"
     (let [opts
-          {:url (->url "/check-headers")
+          {:url (fix/->url "/check-headers")
            :method :get
            :as :string
            :user-agent "a teapot"}
@@ -101,7 +98,7 @@
 
   (testing "null"
     (let [opts
-          {:url (->url "/check-headers")
+          {:url (fix/->url "/check-headers")
            :method :get
            :as :string
            :user-agent nil}

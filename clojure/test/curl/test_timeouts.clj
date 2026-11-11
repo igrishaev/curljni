@@ -1,10 +1,10 @@
-(ns curl-test
+(ns curl.test-timeouts
   (:import
    (org.curljni CURLException))
   (:require
-   [fixtures]
+   [curl.fixtures :as fix]
    [cheshire.core :as json]
-   [curl :as curl]
+   [curl.core :as curl]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [is deftest testing]]))
@@ -20,14 +20,11 @@
         {:status 200
          :body "finally!"}))))
 
-(fixtures/use-server app)
-
-(defn ->url [path]
-  (format "http://127.0.0.1:%s%s" fixtures/PORT path))
+(fix/use-server app)
 
 (deftest test-server-response-timeout
   (let [opts
-        {:url (->url "/too-slow")
+        {:url (fix/->url "/too-slow")
          :method :get
          :timeout-ms 900}]
 
