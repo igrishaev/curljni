@@ -21,7 +21,7 @@
 (def URL2 (format "http://127.0.0.1:%d" PORT2))
 
 (def ^String DATA
-  (str/join "" (repeat 99999999 "A")))
+  (str/join "" (repeat 99999 "A")))
 
 (defn app [request]
   {:status 200
@@ -126,7 +126,7 @@
 
   (let [opt {:url URL
              :method :post
-             :body (.getBytes DATA)
+             :body DATA
              :follow-redirects true
              ;; :as nil
              :headers {"foo" "bar"
