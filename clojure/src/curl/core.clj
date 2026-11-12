@@ -219,7 +219,7 @@
      (set-follow-redirects c follow-redirects)
 
      (let [as-bytes?
-           (or (nil? as)
+           (or #_(nil? as)
                (= as :bytes)
                (= as :byte-array))
 
@@ -388,8 +388,9 @@
              :finally
              (.perform))
 
-           ;; (.setOptionLong c CURLOPT/UPLOAD_BUFFERSIZE 2000000)
-           ;; (.setOptionLong c CURLOPT/BUFFERSIZE 2000000)
+           ;; (.setOptionLong c CURLOPT/HTTP_VERSION 2) ;; 1.1
+           ;; (.setOptionLong c CURLOPT/UPLOAD_BUFFERSIZE 10000000)
+           ;; (.setOptionLong c CURLOPT/BUFFERSIZE 10000000)
 
            ;; response
            {:status
