@@ -219,7 +219,7 @@
      (set-follow-redirects c follow-redirects)
 
      (let [as-bytes?
-           (or #_(nil? as)
+           (or (nil? as)
                (= as :bytes)
                (= as :byte-array))
 

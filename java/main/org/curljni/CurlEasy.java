@@ -114,8 +114,6 @@ public class CurlEasy implements IPeer {
     }
 
     @SuppressWarnings("unused")
-    native private static long _set_option_string(long curl, int option, String value);
-    @SuppressWarnings("unused")
     public CurlEasy setOptionString(int option, String value) {
         long charPtr = arena.clear().charPtr(value);
         return checkClosed().checkCode(_set_option_long(ptr, option, charPtr));
@@ -193,7 +191,6 @@ public class CurlEasy implements IPeer {
         checkCode(code);
         return result;
     }
-
 
     public long getResponseCode() {
         return getInfoLong(CURLINFO.RESPONSE_CODE);

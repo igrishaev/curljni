@@ -125,6 +125,16 @@ public class Arena {
         return ptr + pos;
     }
 
+    public long bufPtr(byte[] buf) {
+        int pos = bb.position();
+        if (buf == null) {
+            bb.putLong(NULL);
+        } else {
+            bb.put(buf);
+            bb.put((byte) 0);
+        }
+        return ptr + pos;
+    }
 
     public Arena putInt(final int index, final int i) {
         bb.putInt(index, i);

@@ -110,33 +110,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1long3
     return code;
 }
 
-
-JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1set_1option_1string
-  (JNIEnv *env, jclass jcls, jlong jcurl, jint joption, jstring jvalue) {
-
-    CURL *curl = (CURL *) jcurl;
-    CURLcode code;
-    char *value = NULL;
-
-    if (jvalue == NULL) {
-        code = curl_easy_setopt(curl, joption, NULL);
-        goto cleanup;
-    }
-
-    value = JNI_CALL(env, GetStringUTFChars, jvalue, NULL);
-    if (!value) {
-        code = CURLE_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-
-    code = curl_easy_setopt(curl, joption, value);
-
-cleanup:
-    if (value) JNI_CALL(env, ReleaseStringUTFChars, jvalue, value);
-    return code;
-}
-
-
 //
 // Getters
 //
@@ -150,7 +123,6 @@ JNIEXPORT jlong JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1long
     bb_put_long(bb, value);
     return code;
 }
-
 
 JNIEXPORT jstring JNICALL Java_org_curljni_CurlEasy__1get_1info_1as_1string
   (JNIEnv *env, jclass jcls, jlong jcurl, jint jinfo, jlong jbb) {
