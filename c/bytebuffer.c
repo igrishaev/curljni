@@ -17,5 +17,5 @@ char * bb_put_long(char *bb, long value) {
 }
 
 char * bb_put_char(char *bb, char *str) {
-    return stpcpy(bb, str);
+    return stpcpy(bb, str) + 1;
 }
