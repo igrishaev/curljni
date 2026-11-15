@@ -129,6 +129,7 @@
              :body DATA
              :follow-redirects true
              ;; :as nil
+             :user-agent "foobar"
              :headers {"foo" "bar"
                        "Expect" nil
                        "Content-Length" (str (count DATA))

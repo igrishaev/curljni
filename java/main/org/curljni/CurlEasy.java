@@ -98,6 +98,7 @@ public class CurlEasy implements IPeer {
         return checkClosed().checkCode(_set_option_long(ptr, option, value));
     }
 
+    @SuppressWarnings("unused")
     public CurlEasy setOptionBool(int option, boolean value) {
         return setOptionLong(option, value ? 1L : 0L);
     }
@@ -112,9 +113,12 @@ public class CurlEasy implements IPeer {
         return checkClosed().checkCode(_set_option_long3(ptr, opt1, val1, opt2, val2, opt3, val3));
     }
 
+    @SuppressWarnings("unused")
     native private static long _set_option_string(long curl, int option, String value);
+    @SuppressWarnings("unused")
     public CurlEasy setOptionString(int option, String value) {
-        return checkClosed().checkCode(_set_option_string(ptr, option, value));
+        long charPtr = arena.clear().charPtr(value);
+        return checkClosed().checkCode(_set_option_long(ptr, option, charPtr));
     }
 
     native private static long _perform(final long curlPtr);

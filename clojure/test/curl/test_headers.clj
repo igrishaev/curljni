@@ -26,6 +26,7 @@
           {:url (fix/->url "/")
            :method :get
            :as :string
+           :user-agent "clojure-test"
            :headers {"foo" nil
                      nil "kek"
                      "abc" "xyz"
@@ -44,7 +45,8 @@
 
       (is (= 200 status))
       (is (= {"123" "456"
-              "abc" "xyz"}
+              "abc" "xyz"
+              "user-agent" "clojure-test"}
              headers))))
 
   (testing "nil"
